@@ -28,6 +28,12 @@ body {
   /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
+  font-family: 'Alumni Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  color: #d8d8d8;
 }
 
 h1 {
