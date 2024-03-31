@@ -9,6 +9,7 @@ export type Dish = {
   rating: number
   recipe: string
   image: string
+  timeToCook: string
 }
 
 export type Category = 'Pasta' | 'Cocktails'

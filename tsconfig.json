@@ -20,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "src/database/bd.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

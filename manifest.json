@@ -1,0 +1,21 @@
+{
+  "short_name": "Menu",
+  "name": "Delicious Menu",
+  "icons": [
+    {
+      "src": "/menu/vite.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+
+  "id": "/menu",
+  "start_url": "/menu",
+  "background_color": "#242424",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#242424",
+  "shortcuts": [],
+  "description": "A menu for delicious dishes.",
+  "screenshots": []
+}

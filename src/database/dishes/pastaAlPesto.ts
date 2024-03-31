@@ -1,9 +1,10 @@
-import { Dish } from './types'
+import { Dish } from '../types'
 
-export const PastaElPesto: Dish = {
+export const pastaElPesto: Dish = {
   name: 'Pasta Al Pesto',
   description: 'Pasta with pesto sauce, basil, and olives',
   category: 'Pasta',
+  timeToCook: '30 min',
   ingredients: [
     {
       ingridient: {

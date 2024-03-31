@@ -18,7 +18,7 @@ function App() {
             ))}
           </ul>
           <p>{dish.recipe}</p>
-          <img src={dish.image} alt={dish.name} />
+          <img src={dish.image} alt={dish.name} style={{maxWidth: '100%'}}/>
 
         </div>
       ))}
