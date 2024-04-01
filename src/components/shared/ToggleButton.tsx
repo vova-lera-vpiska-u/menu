@@ -36,6 +36,7 @@ const Label = styled.label`
 `
 
 const Title = styled.div`
+  max-width: fit-content;
   display: flex;
   justify-content: center;
   align-items: center;

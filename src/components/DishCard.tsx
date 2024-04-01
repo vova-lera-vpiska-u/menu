@@ -6,17 +6,19 @@ import { Clock } from '../icons/Clock'
 export const DishCard = ({ dish }: { dish: Dish }) => {
   return (
     <Layout imgurl={dish.image}>
-      <Ingridients>
-        Ingridients
-        <Divider />
-        <IngridientsGrid>
-          {dish.ingredients.map((ingridient) => (
-            <div key={ingridient.ingridient.name}>
-              {ingridient.ingridient.name}
-            </div>
-          ))}
-        </IngridientsGrid>
-      </Ingridients>
+      {dish.ingredients && (
+        <Ingredients>
+          Ingridients
+          <Divider />
+          <IngredientsGrid amount={dish.ingredients.length}>
+            {dish.ingredients.map((ingridient) => (
+              <div key={ingridient.ingridient.name}>
+                {ingridient.ingridient.name}
+              </div>
+            ))}
+          </IngredientsGrid>
+        </Ingredients>
+      )}
       <Flex direction="column">
         <Title>{dish.name}</Title>
         <Time>
@@ -39,6 +41,7 @@ const Layout = styled.div<{ imgurl: string }>`
   flex-direction: column-reverse;
   gap: 20px;
 
+  min-height: 266px;
   max-height: 298px;
   box-sizing: border-box;
 
@@ -85,7 +88,7 @@ const Rating = styled.div`
   line-height: 14px;
   color: #d8d8d8;
 `
-const Ingridients = styled.div`
+const Ingredients = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -104,9 +107,12 @@ const Flex = styled.div<{ direction?: string }>`
   justify-content: space-between;
 `
 
-const IngridientsGrid = styled.div`
+const IngredientsGrid = styled.div<{ amount: number }>`
   display: grid;
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-rows: repeat(
+    ${(props) => (props.amount > 5 ? 5 : props.amount)},
+    1fr
+  );
   grid-auto-flow: column;
   column-gap: 20px;
   text-align: start;

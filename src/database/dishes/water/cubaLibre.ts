@@ -1,11 +1,11 @@
-import { Dish } from '../types'
+import { Dish } from '../../types'
 
 export const cubaLibre: Dish = {
   name: 'Cuba Libre',
   category: 'cocktails',
   description:
     'Cuba Libre is a classic cocktail made with gin, lime juice, and simple syrup.',
-  timeToCook: '20 min',
+  timeToCook: '20 min*',
   ingredients: [
     {
       ingridient: {

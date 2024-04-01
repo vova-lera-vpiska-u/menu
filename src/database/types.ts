@@ -1,13 +1,13 @@
 export type Dish = {
   name: string
-  description: string
+  description?: string
   category: Category
-  ingredients: {
+  ingredients?: {
     ingridient: Ingridient
     amount: string
   }[]
   rating: number
-  recipe: string
+  recipe?: string
   image: string
   timeToCook: string
 }
@@ -19,6 +19,9 @@ export type Category =
   | 'eggs'
   | 'asia'
   | 'fastfood'
+  | 'breakfast'
+  | 'cake'
+  | 'salad'
 
 export type Ingridient = {
   name: string

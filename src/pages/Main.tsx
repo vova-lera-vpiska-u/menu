@@ -9,7 +9,7 @@ export const Main = () => {
       <Element to={'/water'}>WATER</Element>
       <Element to={'/earth'}>EARTH</Element>
       <WideElement to={'/desserts'}>DESSERTS</WideElement>
-      <Carousel></Carousel>
+      <Carousel to={'/all'}>ALL</Carousel>
     </Layout>
   )
 }
@@ -36,7 +36,7 @@ const WideElement = styled(Element)`
   aspect-ratio: 5 / 1;
 `
 
-const Carousel = styled.div`
+const Carousel = styled(Link)`
   grid-column: span 2;
   aspect-ratio: 2 / 1;
   display: grid;

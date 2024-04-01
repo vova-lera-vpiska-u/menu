@@ -5,54 +5,26 @@ import { Category } from '../database/types'
 export const Filters = ({
   filters,
   setFilters,
+  filterList,
 }: {
   filters: Category[]
   setFilters: (labels: Category[]) => void
+  filterList: Category[]
 }) => {
   return (
     <Layout>
-      <ToggleButton<Category>
-        label="pizza"
-        labels={filters}
-        setLabels={(labels) => {
-          setFilters(labels)
-        }}
-      />
-      <ToggleButton<Category>
-        label="pasta"
-        labels={filters}
-        setLabels={(labels) => {
-          setFilters(labels)
-        }}
-      />
-      <ToggleButton<Category>
-        label="eggs"
-        labels={filters}
-        setLabels={(labels) => {
-          setFilters(labels)
-        }}
-      />
-      <ToggleButton<Category>
-        label="asia"
-        labels={filters}
-        setLabels={(labels) => {
-          setFilters(labels)
-        }}
-      />
-      <ToggleButton<Category>
-        label="fastfood"
-        labels={filters}
-        setLabels={(labels) => {
-          setFilters(labels)
-        }}
-      />
-      <ToggleButton<Category>
-        label="cocktails"
-        labels={filters}
-        setLabels={(labels) => {
-          setFilters(labels)
-        }}
-      />
+      {filterList.map((filter) => {
+        return (
+          <ToggleButton<Category>
+            key={filter}
+            label={filter}
+            labels={filters}
+            setLabels={(labels) => {
+              setFilters(labels)
+            }}
+          />
+        )
+      })}
     </Layout>
   )
 }
@@ -63,8 +35,9 @@ const Layout = styled.div`
   flex-direction: column;
   gap: 10px;
   height: 52px;
-  align-items: center;
-  overflow-x: scroll;
+  align-content: flex-start;
+  justify-content: flex-start;
+  overflow-x: auto;
 
   &::-webkit-scrollbar {
     height: 4px;

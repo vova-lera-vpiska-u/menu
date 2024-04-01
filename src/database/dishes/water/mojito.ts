@@ -1,11 +1,11 @@
-import { Dish } from '../types'
+import { Dish } from '../../types'
 
 export const mojito: Dish = {
   name: 'Mojito',
   description:
     'Mojito is a classic cocktail made with mint, lime juice, and club soda.',
   category: 'cocktails',
-  timeToCook: '20 min',
+  timeToCook: '20 min*',
   ingredients: [
     {
       ingridient: {

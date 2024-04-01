@@ -1,12 +1,11 @@
 import styled from 'styled-components'
 import { GoBackButton } from './GoBackButton'
-import { menu } from '../database/bd'
 import { DishCard } from './DishCard'
 import { Filters } from './Filters'
 import { useMemo, useState } from 'react'
-import { Category } from '../database/types'
+import { Category, Dish } from '../database/types'
 
-export const DishList = ({ title }: { title: string }) => {
+export const DishList = ({ title, menu }: { title: string; menu: Dish[] }) => {
   const [filters, setFilters] = useState<Category[]>([])
 
   const filteredMenu = useMemo(() => {
@@ -14,12 +13,16 @@ export const DishList = ({ title }: { title: string }) => {
       return menu.filter((dish) => filters.includes(dish.category))
     }
     return menu
-  }, [filters])
+  }, [filters, menu])
   return (
     <Layout>
       <GoBackButton to={'/'} />
       <Title>{title}</Title>
-      <Filters filters={filters} setFilters={setFilters} />
+      <Filters
+        filters={filters}
+        setFilters={setFilters}
+        filterList={[...new Set(menu.map((dish) => dish.category))]}
+      />
       <Flex>
         {filteredMenu.map((dish) => (
           <DishCard key={dish.name} dish={dish} />

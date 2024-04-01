@@ -7,6 +7,7 @@ import { createGlobalStyle } from 'styled-components'
 import RozoviiChulokTtf from '/fonts/Rozovii Chulok.ttf'
 import Enthlapy298Otf from '/fonts/enthalpy298regular.otf'
 import AlumniSansRegularTtf from '/fonts/AlumniSans-Regular.ttf'
+import { air, desserts, earth, fire, menu, water } from './database/bd'
 
 const FontStyles = createGlobalStyle`
 
@@ -35,23 +36,27 @@ function App() {
       },
       {
         path: '/air',
-        element: <DishList title="AIR" />,
+        element: <DishList menu={air} title="AIR" />,
       },
       {
         path: '/fire',
-        element: <DishList title="FIRE" />,
+        element: <DishList menu={fire} title="FIRE" />,
       },
       {
         path: '/water',
-        element: <DishList title="WATER" />,
+        element: <DishList menu={water} title="WATER" />,
       },
       {
         path: '/earth',
-        element: <DishList title="EARTH" />,
+        element: <DishList menu={earth} title="EARTH" />,
       },
       {
         path: '/desserts',
-        element: <DishList title="DESSERTS" />,
+        element: <DishList menu={desserts} title="DESSERTS" />,
+      },
+      {
+        path: '/all',
+        element: <DishList menu={menu} title="ALL" />,
       },
     ],
     {
