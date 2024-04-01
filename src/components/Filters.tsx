@@ -1,14 +1,58 @@
 import styled from 'styled-components'
+import { ToggleButton } from './shared/ToggleButton'
+import { Category } from '../database/types'
 
-export const Filters = () => {
+export const Filters = ({
+  filters,
+  setFilters,
+}: {
+  filters: Category[]
+  setFilters: (labels: Category[]) => void
+}) => {
   return (
     <Layout>
-      <Chip>pizza</Chip>
-      <Chip>pasta</Chip>
-      <Chip>eggs</Chip>
-      <Chip>asia</Chip>
-      <Chip>fastfood</Chip>
-      <Chip>cocktails</Chip>
+      <ToggleButton<Category>
+        label="pizza"
+        labels={filters}
+        setLabels={(labels) => {
+          setFilters(labels)
+        }}
+      />
+      <ToggleButton<Category>
+        label="pasta"
+        labels={filters}
+        setLabels={(labels) => {
+          setFilters(labels)
+        }}
+      />
+      <ToggleButton<Category>
+        label="eggs"
+        labels={filters}
+        setLabels={(labels) => {
+          setFilters(labels)
+        }}
+      />
+      <ToggleButton<Category>
+        label="asia"
+        labels={filters}
+        setLabels={(labels) => {
+          setFilters(labels)
+        }}
+      />
+      <ToggleButton<Category>
+        label="fastfood"
+        labels={filters}
+        setLabels={(labels) => {
+          setFilters(labels)
+        }}
+      />
+      <ToggleButton<Category>
+        label="cocktails"
+        labels={filters}
+        setLabels={(labels) => {
+          setFilters(labels)
+        }}
+      />
     </Layout>
   )
 }
@@ -35,22 +79,4 @@ const Layout = styled.div`
     background: #8fa847;
     border-radius: 9px;
   }
-`
-
-const Chip = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #ffffff;
-  cursor: pointer;
-  padding: 6px 20px 5px 20px;
-  box-sizing: border-box;
-  border: 1px solid #ffffff;
-  border-radius: 3px;
-  font-family: 'Alumni Sans';
-  font-style: normal;
-  font-weight: 300;
-  font-size: 24px;
-  line-height: 29px;
-  color: #ffffff;
 `

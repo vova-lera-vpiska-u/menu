@@ -12,7 +12,13 @@ export type Dish = {
   timeToCook: string
 }
 
-export type Category = 'Pasta' | 'Cocktails'
+export type Category =
+  | 'pasta'
+  | 'cocktails'
+  | 'pizza'
+  | 'eggs'
+  | 'asia'
+  | 'fastfood'
 
 export type Ingridient = {
   name: string

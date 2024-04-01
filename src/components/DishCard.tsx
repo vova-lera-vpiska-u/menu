@@ -5,13 +5,15 @@ import { Clock } from '../icons/Clock'
 
 export const DishCard = ({ dish }: { dish: Dish }) => {
   return (
-    <Layout imgUrl={dish.image}>
+    <Layout imgurl={dish.image}>
       <Ingridients>
         Ingridients
         <Divider />
         <IngridientsGrid>
           {dish.ingredients.map((ingridient) => (
-            <div>{ingridient.ingridient.name}</div>
+            <div key={ingridient.ingridient.name}>
+              {ingridient.ingridient.name}
+            </div>
           ))}
         </IngridientsGrid>
       </Ingridients>
@@ -30,7 +32,7 @@ export const DishCard = ({ dish }: { dish: Dish }) => {
   )
 }
 
-const Layout = styled.div<{ imgUrl: string }>`
+const Layout = styled.div<{ imgurl: string }>`
   position: relative;
   display: flex;
   padding: 15px 20px;
@@ -46,7 +48,7 @@ const Layout = styled.div<{ imgUrl: string }>`
       rgba(19, 13, 13, 0) 100%,
       rgba(0, 0, 0, 0) 100.01%
     ),
-    url(${(props) => props.imgUrl}) center / cover no-repeat;
+    url(${(props) => props.imgurl}) center / cover no-repeat;
   border-radius: 7px;
 `
 

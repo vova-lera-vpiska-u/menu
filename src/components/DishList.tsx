@@ -3,15 +3,25 @@ import { GoBackButton } from './GoBackButton'
 import { menu } from '../database/bd'
 import { DishCard } from './DishCard'
 import { Filters } from './Filters'
+import { useMemo, useState } from 'react'
+import { Category } from '../database/types'
 
 export const DishList = ({ title }: { title: string }) => {
+  const [filters, setFilters] = useState<Category[]>([])
+
+  const filteredMenu = useMemo(() => {
+    if (filters.length > 0) {
+      return menu.filter((dish) => filters.includes(dish.category))
+    }
+    return menu
+  }, [filters])
   return (
     <Layout>
       <GoBackButton to={'/'} />
       <Title>{title}</Title>
-      <Filters />
+      <Filters filters={filters} setFilters={setFilters} />
       <Flex>
-        {menu.map((dish) => (
+        {filteredMenu.map((dish) => (
           <DishCard key={dish.name} dish={dish} />
         ))}
       </Flex>
