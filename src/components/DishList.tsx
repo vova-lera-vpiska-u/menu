@@ -2,13 +2,14 @@ import styled from 'styled-components'
 import { GoBackButton } from './GoBackButton'
 import { menu } from '../database/bd'
 import { DishCard } from './DishCard'
+import { Filters } from './Filters'
 
 export const DishList = ({ title }: { title: string }) => {
   return (
     <Layout>
       <GoBackButton to={'/'} />
       <Title>{title}</Title>
-      {/* <Filters/> */}
+      <Filters />
       <Flex>
         {menu.map((dish) => (
           <DishCard key={dish.name} dish={dish} />

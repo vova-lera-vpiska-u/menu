@@ -37,7 +37,8 @@ const Layout = styled.div<{ imgUrl: string }>`
   flex-direction: column-reverse;
   gap: 20px;
 
-  min-height: 298px;
+  max-height: 298px;
+  box-sizing: border-box;
 
   background: linear-gradient(
       90deg,
