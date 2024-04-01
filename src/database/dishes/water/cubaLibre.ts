@@ -2,7 +2,7 @@ import { Dish } from '../../types'
 
 export const cubaLibre: Dish = {
   name: 'Cuba Libre',
-  category: 'cocktails',
+  categories: ['cocktails'],
   description:
     'Cuba Libre is a classic cocktail made with gin, lime juice, and simple syrup.',
   timeToCook: '20 min*',

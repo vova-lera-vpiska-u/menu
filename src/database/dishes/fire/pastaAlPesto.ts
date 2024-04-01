@@ -3,7 +3,7 @@ import { Dish } from '../../types'
 export const pastaElPesto: Dish = {
   name: 'Pasta Al Pesto',
   description: 'Pasta with pesto sauce, basil, and olives',
-  category: 'pasta',
+  categories: ['pasta', 'italian'],
   timeToCook: '30 min*',
   ingredients: [
     {

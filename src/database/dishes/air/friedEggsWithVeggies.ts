@@ -3,7 +3,7 @@ import { Dish } from '../../types'
 export const friedEggsWithVeggies: Dish = {
   name: 'Fried eggs with viggies',
   description: 'Eggs with viggies',
-  category: 'eggs',
+  categories: ['eggs', 'breakfast'],
   timeToCook: '10 min*',
   ingredients: [
     {

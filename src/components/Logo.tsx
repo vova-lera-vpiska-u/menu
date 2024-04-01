@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components'
+import styled from 'styled-components'
 
 export const Logo = () => {
   return (
@@ -8,9 +8,6 @@ export const Logo = () => {
     </Layout>
   )
 }
-
-export default createGlobalStyle`
-`
 
 const Name = styled.h1`
   width: 74px;
@@ -34,6 +31,7 @@ const Heart = styled.div`
 `
 
 const Layout = styled.div`
+  user-select: none;
   position: relative;
   padding-top: 20px;
   padding-bottom: 10px;

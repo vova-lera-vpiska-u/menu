@@ -3,7 +3,7 @@ import { Dish } from '../../types'
 export const shakshouka: Dish = {
   name: 'Shakshouka',
   description: 'Shakshouka with olive oil, onion, and garlic',
-  category: 'breakfast',
+  categories: ['eggs', 'breakfast'],
   timeToCook: '30 min*',
   ingredients: [
     {

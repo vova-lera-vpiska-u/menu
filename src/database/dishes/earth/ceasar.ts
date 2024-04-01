@@ -2,7 +2,7 @@ import { Dish } from '../../types'
 
 export const caesar: Dish = {
   name: 'Caesar',
-  category: 'salad',
+  categories: ['salad', 'chicken'],
   description:
     'A Caesar salad (also spelled Cesar, César and Cesare) is a green salad of romaine lettuce and croutons dressed with lemon juice (or lime juice), olive oil, eggs or egg yolks, Worcestershire sauce, anchovies, garlic, Dijon mustard, Parmesan cheese, and black pepper.',
   image:

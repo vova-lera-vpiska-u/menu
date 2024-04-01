@@ -2,7 +2,7 @@ import { Dish } from '../../types'
 
 export const potatoPancakes: Dish = {
   name: 'Potato Pancakes',
-  category: 'breakfast',
+  categories: ['breakfast', 'potato', 'russian'],
   description: 'Potato pancakes with butter and maple syrup',
   timeToCook: '10 min*',
   ingredients: [

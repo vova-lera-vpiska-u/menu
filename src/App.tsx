@@ -1,7 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import './App.css'
 import { Main } from './pages/Main'
-import { Logo } from './components/Logo'
 import { DishList } from './components/DishList'
 import { createGlobalStyle } from 'styled-components'
 import RozoviiChulokTtf from '/fonts/Rozovii Chulok.ttf'
@@ -67,7 +66,6 @@ function App() {
   return (
     <>
       <FontStyles />
-      <Logo />
       <RouterProvider router={router} />
     </>
     // <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>

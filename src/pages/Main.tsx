@@ -1,16 +1,20 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { Logo } from '../components/Logo'
 
 export const Main = () => {
   return (
-    <Layout>
-      <Element to={'/air'}>AIR</Element>
-      <Element to={'/fire'}>FIRE</Element>
-      <Element to={'/water'}>WATER</Element>
-      <Element to={'/earth'}>EARTH</Element>
-      <WideElement to={'/desserts'}>DESSERTS</WideElement>
-      <Carousel to={'/all'}>ALL</Carousel>
-    </Layout>
+    <>
+      <Logo />
+      <Layout>
+        <Element to={'/air'}>AIR</Element>
+        <Element to={'/fire'}>FIRE</Element>
+        <Element to={'/water'}>WATER</Element>
+        <Element to={'/earth'}>EARTH</Element>
+        <WideElement to={'/desserts'}>DESSERTS</WideElement>
+        <Carousel to={'/all'}>ALL</Carousel>
+      </Layout>
+    </>
   )
 }
 

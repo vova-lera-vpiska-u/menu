@@ -4,7 +4,7 @@ export const mojito: Dish = {
   name: 'Mojito',
   description:
     'Mojito is a classic cocktail made with mint, lime juice, and club soda.',
-  category: 'cocktails',
+  categories: ['cocktails'],
   timeToCook: '20 min*',
   ingredients: [
     {
