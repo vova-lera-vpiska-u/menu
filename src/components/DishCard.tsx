@@ -22,8 +22,12 @@ export const DishCard = ({ dish }: { dish: Dish }) => {
       <Flex direction="column">
         <Title>{dish.name}</Title>
         <Time>
-          <Clock />
-          {dish.timeToCook}
+          {dish.timeToCook && (
+            <>
+              <Clock />
+              {dish.timeToCook}
+            </>
+          )}
         </Time>
       </Flex>
       <Rating>
