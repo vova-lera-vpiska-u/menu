@@ -9,6 +9,7 @@ import { Dish } from './types'
 import { omlette } from './dishes/air/omelette'
 import { friedEggsWithVeggies } from './dishes/air/friedEggsWithVeggies'
 import { blini } from './dishes/air/blini'
+import { whiteWholeHazelnuts } from './base/ritterSport'
 
 export const air: Dish[] = [
   potatoPancakes,
@@ -20,5 +21,5 @@ export const air: Dish[] = [
 export const fire: Dish[] = [pastaElPesto]
 export const water: Dish[] = [mojito, cubaLibre]
 export const earth: Dish[] = [caesar]
-export const desserts: Dish[] = [cheesecake]
+export const desserts: Dish[] = [cheesecake, whiteWholeHazelnuts]
 export const menu: Dish[] = [...air, ...fire, ...water, ...earth, ...desserts]

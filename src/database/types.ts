@@ -9,7 +9,7 @@ export type Dish = {
   rating: number
   recipe?: string
   image: string
-  timeToCook: string
+  timeToCook?: string
 }
 
 export type Category =
@@ -33,4 +33,4 @@ export type Ingridient = {
   price: number
 }
 
-type CategoryIngredient = 'eggs' | 'chicken' | 'potato' | 'flour'
+type CategoryIngredient = 'eggs' | 'chicken' | 'potato' | 'flour' | 'nut'
