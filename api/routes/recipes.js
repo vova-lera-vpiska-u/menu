@@ -1,18 +1,31 @@
 import { Router } from "express";
+import { Recipe } from "../models/recipe.js";
 
 export const recipesRouter = new Router();
-recipesRouter.get("/", (req, res) => {
-  console.log("getAll", req.body);
-  res.status(500);
-  res.send("Not implemented");
+recipesRouter.post("/", async (req, res) => {
+  const recipe = new Recipe(req.body);
+  await recipe.save();
+  res.send(recipe).status(200);
 });
-recipesRouter.post("/", (req, res) => {
-  console.log("add", req.body);
-  res.status(500);
-  res.send("Not implemented");
+recipesRouter.get("/", async (req, res) => {
+  const recipes = await Recipe.find().populate("categories ingredients");
+  res.send(recipes).status(200);
 });
-recipesRouter.post("/hide", (req, res) => {
-  console.log("hide", req.body);
+recipesRouter.get("/:id", async (req, res) => {
+  const recipes = await Recipe.findById(req.params.id);
+  res.send(recipes).status(200);
+});
+recipesRouter.put("/:id", async (req, res) => {
+  const updatedRecipe = await Recipe.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  res.send(updatedRecipe).status(200);
+});
+recipesRouter.delete("/:id", async (req, res) => {
+  const recipes = await Recipe.findByIdAndDelete(req.params.id);
+  res.send(recipes).status(200);
+});
+recipesRouter.post("/hide", async (req, res) => {
   res.status(500);
   res.send("Not implemented");
 });

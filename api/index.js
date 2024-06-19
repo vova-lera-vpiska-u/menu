@@ -1,23 +1,30 @@
 import express from "express";
 import { recipesRouter } from "./routes/recipes.js";
-import db from "./mongo.js";
-import Recipe from "./models/recipe.js";
+import { catagoriesRouter } from "./routes/categories.js";
+import cors from "cors";
+import { connectMongo } from "./mongo.js";
+import { sectionsRouter } from "./routes/sections.js";
+import { ingredientsRouter } from "./routes/ingredients.js";
 
 const app = express();
+const isVercel = process.env.VERCEL || false;
 
-app.get("/p", async (req, res) => {
-  const recipe = new Recipe({
-    name: "test",
-  });
-  const results = await recipe.save();
-  res.send(results).status(200);
-});
-
+app.use(cors());
+app.use(express.json());
+connectMongo();
 app.get("/", async (req, res) => {
-  const resipe = await Recipe.find();
-  res.send(resipe).status(200);
+  res.send("ok").status(200);
 });
-
 app.use("/recipes", recipesRouter);
+app.use("/categories", catagoriesRouter);
+app.use("/sections", sectionsRouter);
+app.use("/ingredients", ingredientsRouter);
+
+if (!isVercel) {
+  const port = process.env.PORT || 8080;
+  app.listen(port, () => {
+    console.log("Ready to cook on port " + port);
+  });
+}
 
 export default app;
