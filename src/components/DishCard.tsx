@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Dish } from '../database/types'
+import { Dish } from '../api/types'
 import { Star } from '../icons/Star'
 import { Clock } from '../icons/Clock'
 
@@ -8,12 +8,12 @@ export const DishCard = ({ dish }: { dish: Dish }) => {
     <Layout imgurl={dish.image}>
       {dish.ingredients && (
         <Ingredients>
-          Ingridients
+          ingredients
           <Divider />
           <IngredientsGrid amount={dish.ingredients.length}>
-            {dish.ingredients.map((ingridient) => (
-              <div key={ingridient.ingridient.name}>
-                {ingridient.ingridient.name}
+            {dish.ingredients.map((ingredient) => (
+              <div key={ingredient.ingredient.name}>
+                {ingredient.ingredient.name}
               </div>
             ))}
           </IngredientsGrid>

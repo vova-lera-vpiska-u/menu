@@ -1,21 +1,20 @@
 import styled from 'styled-components'
 import { ToggleButton } from './shared/ToggleButton'
-import { Category } from '../database/types'
 
 export const Filters = ({
   filters,
   setFilters,
   filterList,
 }: {
-  filters: Category[]
-  setFilters: (labels: Category[]) => void
-  filterList: Category[]
+  filters: string[]
+  setFilters: (labels: string[]) => void
+  filterList: string[]
 }) => {
   return (
     <Layout>
       {filterList.map((filter) => {
         return (
-          <ToggleButton<Category>
+          <ToggleButton<string>
             key={filter}
             label={filter}
             labels={filters}

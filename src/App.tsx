@@ -6,7 +6,8 @@ import { createGlobalStyle } from 'styled-components'
 import RozoviiChulokTtf from '/fonts/Rozovii Chulok.ttf'
 import Enthlapy298Otf from '/fonts/enthalpy298regular.otf'
 import AlumniSansRegularTtf from '/fonts/AlumniSans-Regular.ttf'
-import { air, desserts, earth, fire, menu, water } from './database/bd'
+import { Admin } from './components/admin/Admin'
+import { Item } from './components/admin/Item'
 
 const FontStyles = createGlobalStyle`
 
@@ -35,27 +36,35 @@ function App() {
       },
       {
         path: '/air',
-        element: <DishList menu={air} title="AIR" />,
+        element: <DishList title="AIR" />,
       },
       {
         path: '/fire',
-        element: <DishList menu={fire} title="FIRE" />,
+        element: <DishList title="FIRE" />,
       },
       {
         path: '/water',
-        element: <DishList menu={water} title="WATER" />,
+        element: <DishList title="WATER" />,
       },
       {
         path: '/earth',
-        element: <DishList menu={earth} title="EARTH" />,
+        element: <DishList title="EARTH" />,
       },
       {
         path: '/desserts',
-        element: <DishList menu={desserts} title="DESSERTS" />,
+        element: <DishList title="DESSERTS" />,
       },
       {
         path: '/all',
-        element: <DishList menu={menu} title="ALL" />,
+        element: <DishList title="ALL" />,
+      },
+      {
+        path: '/admin',
+        element: <Admin />,
+      },
+      {
+        path: '/admin/:id',
+        element: <Item />,
       },
     ],
     {
@@ -75,9 +84,9 @@ function App() {
     //       <h3>{dish.category}</h3>
     //       <h2>{dish.description}</h2>
     //       <ul>
-    //         {dish.ingredients.map((ingridient) => (
-    //           <li key={ingridient.ingridient.name}>
-    //             {ingridient.ingridient.name} - {ingridient.amount}
+    //         {dish.ingredients.map((ingredient) => (
+    //           <li key={ingredient.ingredient.name}>
+    //             {ingredient.ingredient.name} - {ingredient.amount}
     //           </li>
     //         ))}
     //       </ul>

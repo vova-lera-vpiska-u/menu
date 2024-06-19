@@ -3,10 +3,12 @@ import { GoBackButton } from './GoBackButton'
 import { DishCard } from './DishCard'
 import { Filters } from './Filters'
 import { useEffect, useMemo, useState } from 'react'
-import { Category, Dish } from '../database/types'
+import { Dish } from '../api/types'
 import { Logo } from './Logo'
+import { url } from '../api/consts'
 
-export const DishList = ({ title, menu }: { title: string; menu: Dish[] }) => {
+export const DishList = ({ title }: { title: string }) => {
+  const [menu, setMenu] = useState<Dish[]>([])
   const [show, setShow] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const controlNavbar = () => {
@@ -30,12 +32,24 @@ export const DishList = ({ title, menu }: { title: string; menu: Dish[] }) => {
       window.removeEventListener('scroll', controlNavbar)
     }
   }, [lastScrollY])
-  const [filters, setFilters] = useState<Category[]>([])
+  const [filters, setFilters] = useState<string[]>([])
+
+  useEffect(() => {
+    if (title === 'ALL') {
+      fetch(`${url}/recipes/`)
+        .then((res) => res.json())
+        .then((data) => setMenu(data))
+    } else {
+      fetch(`${url}/sections/${title.toLowerCase()}`)
+        .then((res) => res.json())
+        .then((data) => setMenu(data))
+    }
+  }, [title])
 
   const filteredMenu = useMemo(() => {
     if (filters.length > 0) {
       return menu.filter((dish) =>
-        dish.categories.some((category) => filters.includes(category))
+        dish.categories.some((category) => filters.includes(category.name))
       )
     }
     return menu
@@ -57,7 +71,7 @@ export const DishList = ({ title, menu }: { title: string; menu: Dish[] }) => {
           filterList={[
             ...new Set(
               menu
-                .map((dish) => dish.categories.map((category) => category))
+                .map((dish) => dish.categories.map((category) => category.name))
                 .flat()
             ),
           ]}
