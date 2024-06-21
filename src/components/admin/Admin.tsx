@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { url } from '../../api/consts'
 import { Dish } from '../../api/types'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+import { logout } from '../../api/logout'
 
 export const Admin = () => {
   const [name, setName] = useState('')
@@ -25,6 +27,7 @@ export const Admin = () => {
   }, [])
   return (
     <div>
+      <Button onClick={() => logout()}>Logout</Button>
       add category
       <form
         onSubmit={(e) => {
@@ -34,6 +37,7 @@ export const Admin = () => {
             headers: {
               'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify({ name }),
           })
           setName('')
@@ -64,6 +68,7 @@ export const Admin = () => {
             headers: {
               'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify({
               name: recipe,
               categories,
@@ -99,7 +104,10 @@ export const Admin = () => {
           <Link to={`/admin/${dish._id}`}>{dish.name}</Link>
           <button
             onClick={() =>
-              fetch(`${url}/recipes/${dish._id}`, { method: 'DELETE' })
+              fetch(`${url}/recipes/${dish._id}`, {
+                credentials: 'include',
+                method: 'DELETE',
+              })
             }
           >
             x
@@ -127,6 +135,8 @@ export const Admin = () => {
               name: section,
               recipes: dishes,
             }),
+
+            credentials: 'include',
           })
           setSection('')
           e.currentTarget.reset()
@@ -161,6 +171,8 @@ export const Admin = () => {
             headers: {
               'Content-Type': 'application/json',
             },
+
+            credentials: 'include',
             body: JSON.stringify({ name: ingredient, price }),
           })
           setIngredient('')
@@ -190,3 +202,9 @@ export const Admin = () => {
     </div>
   )
 }
+
+const Button = styled.button`
+  position: absolute;
+  top: 16px;
+  right: 32px;
+`

@@ -43,6 +43,8 @@ export const Item = () => {
           console.log(dish)
           fetch(`${url}/recipes/${id}`, {
             method: 'PUT',
+
+            credentials: 'include',
             headers: {
               'Content-Type': 'application/json',
             },

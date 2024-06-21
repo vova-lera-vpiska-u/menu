@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Logo } from '../components/Logo'
+import { LOGIN_PATH } from '../routes/public/paths'
 
 export const Main = () => {
   return (
     <>
       <Logo />
+      <Login to={LOGIN_PATH}>LOGIN</Login>
       <Layout>
         <Element to={'/air'}>AIR</Element>
         <Element to={'/fire'}>FIRE</Element>
@@ -17,6 +19,11 @@ export const Main = () => {
     </>
   )
 }
+const Login = styled(Link)`
+  position: absolute;
+  top: 16px;
+  right: 32px;
+`
 
 const Layout = styled.div`
   padding-top: 34px;

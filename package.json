@@ -2,7 +2,7 @@
   "name": "menu",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://awqsomee.github.io/menu/",
+  "homepage": "https://vova-lera-vpiska-u.github.io/menu/",
   "type": "module",
   "scripts": {
     "dev": "vite",
