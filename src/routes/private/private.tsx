@@ -1,13 +1,14 @@
 import { Admin } from '../../components/admin/Admin'
 import { Item } from '../../components/admin/Item'
+import { ADMIN_ITEM_PATH, ADMIN_PATH } from './paths'
 
 export const privateRoutes = [
   {
-    path: '/admin',
+    path: ADMIN_PATH,
     element: <Admin />,
   },
   {
-    path: '/admin/:id',
+    path: ADMIN_ITEM_PATH,
     element: <Item />,
   },
 ]

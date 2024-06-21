@@ -2,12 +2,20 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Logo } from '../components/Logo'
 import { LOGIN_PATH } from '../routes/public/paths'
+import { useUnit } from 'effector-react'
+import { userModel } from '../entities/user/model'
+import { ADMIN_PATH } from '../routes/private/paths'
 
 export const Main = () => {
+  const [user] = useUnit([userModel.stores.user])
   return (
     <>
       <Logo />
-      <Login to={LOGIN_PATH}>LOGIN</Login>
+      {user ? (
+        <Login to={ADMIN_PATH}>AD</Login>
+      ) : (
+        <Login to={LOGIN_PATH}>LOGIN</Login>
+      )}
       <Layout>
         <Element to={'/air'}>AIR</Element>
         <Element to={'/fire'}>FIRE</Element>

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { url } from '../../api/consts'
 import { Dish } from '../../api/types'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useUnit } from 'effector-react'
 import { userModel } from '../../entities/user/model'
 
 export const Admin = () => {
+  const navigate = useNavigate()
   const [name, setName] = useState('')
   const [section, setSection] = useState('')
   const [ingredient, setIngredient] = useState('')
@@ -30,7 +31,14 @@ export const Admin = () => {
   }, [])
   return (
     <div>
-      <Button onClick={() => logout()}>Logout</Button>
+      <Button
+        onClick={() => {
+          logout()
+          navigate('/', { replace: true })
+        }}
+      >
+        Logout
+      </Button>
       add category
       <form
         onSubmit={(e) => {
