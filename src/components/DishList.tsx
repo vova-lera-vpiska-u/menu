@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Dish } from '../api/types'
 import { Logo } from './Logo'
 import { url } from '../api/consts'
+import { Center } from './shared/ui/Center'
 
 export const DishList = ({ title }: { title: string }) => {
   const [menu, setMenu] = useState<Dish[]>([])
@@ -56,32 +57,42 @@ export const DishList = ({ title }: { title: string }) => {
   }, [filters, menu])
   return (
     <Layout>
-      <Flex>
-        {filteredMenu.map((dish) => (
-          <DishCard key={dish.name} dish={dish} />
-        ))}
-      </Flex>
-      <Navbar hidden={!show}>
-        <Logo />
-        <GoBackButton to={'/'} />
-        <Title>{title}</Title>
-        <Filters
-          filters={filters}
-          setFilters={setFilters}
-          filterList={[
-            ...new Set(
-              menu
-                .map((dish) => dish.categories.map((category) => category.name))
-                .flat()
-            ),
-          ]}
-        />
-      </Navbar>
+      {filteredMenu.length > 0 ? (
+        <>
+          <Flex>
+            {filteredMenu.map((dish) => (
+              <DishCard key={dish.name} dish={dish} />
+            ))}
+          </Flex>
+          <Navbar hidden={!show}>
+            <Logo />
+            <GoBackButton to={'/'} />
+            <Title>{title}</Title>
+            <Filters
+              filters={filters}
+              setFilters={setFilters}
+              filterList={[
+                ...new Set(
+                  menu
+                    .map((dish) =>
+                      dish.categories.map((category) => category.name)
+                    )
+                    .flat()
+                ),
+              ]}
+            />
+          </Navbar>
+        </>
+      ) : (
+        <Center>Loading</Center>
+      )}
     </Layout>
   )
 }
 
-const Layout = styled.div``
+const Layout = styled.div`
+  min-height: 100vh;
+`
 
 const Title = styled.h2`
   height: 20px;
