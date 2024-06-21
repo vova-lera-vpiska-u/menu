@@ -1,14 +1,20 @@
 import styled from 'styled-components'
-import { login } from '../api/login'
 import { useNavigate } from 'react-router-dom'
+import { useUnit } from 'effector-react'
+import { userModel } from '../entities/user/model'
 
 export const Login = () => {
   const navigate = useNavigate()
+
+  const [login] = useUnit([userModel.events.login])
   return (
     <Form
       onSubmit={(e) => {
         e.preventDefault()
-        login(e.currentTarget.username.value, e.currentTarget.password.value)
+        login({
+          username: e.currentTarget.username.value,
+          password: e.currentTarget.password.value,
+        })
         navigate('/admin', { replace: true })
       }}
     >

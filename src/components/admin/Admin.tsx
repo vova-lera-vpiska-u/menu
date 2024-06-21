@@ -3,7 +3,8 @@ import { url } from '../../api/consts'
 import { Dish } from '../../api/types'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { logout } from '../../api/logout'
+import { useUnit } from 'effector-react'
+import { userModel } from '../../entities/user/model'
 
 export const Admin = () => {
   const [name, setName] = useState('')
@@ -15,6 +16,8 @@ export const Admin = () => {
   const [categories, setCategories] = useState<
     { _id: string; name: string; recipes: Dish[] }[]
   >([])
+
+  const [logout] = useUnit([userModel.events.logout])
 
   useEffect(() => {
     fetch(`${url}/recipes/`)
@@ -135,7 +138,6 @@ export const Admin = () => {
               name: section,
               recipes: dishes,
             }),
-
             credentials: 'include',
           })
           setSection('')
