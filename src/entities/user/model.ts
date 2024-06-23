@@ -32,9 +32,7 @@ const logoutFx = createEffect(async () => {
   })
 })
 
-const $user = createStore<string | null>(null)
-  .on(login, (_, user) => user.username)
-  .reset(logout)
+const $user = createStore<string | null>(null).reset(logout)
 
 sample({
   clock: login,
