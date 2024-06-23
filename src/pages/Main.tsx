@@ -5,6 +5,14 @@ import { LOGIN_PATH } from '../routes/public/paths'
 import { useUnit } from 'effector-react'
 import { userModel } from '../entities/user/model'
 import { ADMIN_PATH } from '../routes/private/paths'
+import Earth from '../../public/img/Earth.png'
+import Air from '../../public/img/Air.png'
+import Ethanol from '../../public/img/Ethanol.png'
+import HSL from '../../public/img/HLS.png'
+import Dessert from '../../public/img/5 element.png'
+import Fire from '../../public/img/Fire.png'
+import { text_h1 } from '../styles/fonts'
+import { colors } from '../styles/colors'
 
 export const Main = () => {
   const [user] = useUnit([userModel.stores.user])
@@ -17,12 +25,30 @@ export const Main = () => {
         <Login to={LOGIN_PATH}>LOGIN</Login>
       )}
       <Layout>
-        <Element to={'/air'}>AIR</Element>
-        <Element to={'/fire'}>FIRE</Element>
-        <Element to={'/water'}>WATER</Element>
-        <Element to={'/earth'}>EARTH</Element>
-        <WideElement to={'/desserts'}>DESSERTS</WideElement>
-        <Carousel to={'/all'}>ALL</Carousel>
+        <Element imageURL={Fire} to={'/fire'}>
+          FIRE
+        </Element>
+        <Element imageURL={Air} to={'/air'}>
+          AIR
+        </Element>
+        <Element imageURL={Earth} to={'/earth'}>
+          EARTH
+        </Element>
+        <Element imageURL={Dessert} to={'/desserts'}>
+          DESSERTS
+        </Element>
+        <Element imageURL={Ethanol} to={'/water'}>
+          ETHANOL
+        </Element>
+        <Element imageURL={HSL} to={'/water'}>
+          HSL
+        </Element>
+        <Carousel
+          imageURL="https://avatars.dzeninfra.ru/get-zen_doc/3401641/pub_5f6c490fd2daf865cca18014_5f6c4933d2daf865cca1bbda/scale_1200"
+          to={'/all'}
+        >
+          ALL
+        </Carousel>
       </Layout>
     </>
   )
@@ -42,24 +68,31 @@ const Layout = styled.div`
   grid-template-rows: 1fr 1fr;
 `
 
-const Element = styled(Link)`
+const Element = styled(Link)<{ imageURL: string }>`
+  ${text_h1}
+  ${colors.lightGray}
+
   display: grid;
   place-content: center;
   aspect-ratio: 1;
   border: 1px solid white;
   border-radius: 7px;
+  background: url(${({ imageURL }) => imageURL});
+  background-position: center;
+  background-size: cover;
 `
 
-const WideElement = styled(Element)`
-  grid-column: span 2;
-  aspect-ratio: 5 / 1;
-`
+const Carousel = styled(Link)<{ imageURL: string }>`
+  ${text_h1}
+  ${colors.lightGray}  
 
-const Carousel = styled(Link)`
   grid-column: span 2;
   aspect-ratio: 2 / 1;
   display: grid;
   place-content: center;
   border: 1px dashed white;
   border-radius: 7px;
+  background: url(${({ imageURL }) => imageURL});
+  background-position: center;
+  background-size: cover;
 `
