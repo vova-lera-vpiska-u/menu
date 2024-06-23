@@ -4,7 +4,7 @@ export const text_h1 = css`
   font-family: 'Enthalpy 298';
   font-style: normal;
   font-weight: 400;
-  font-size: 40px;
+  font-size: 2.5rem;
   line-height: 41px;
 `
 

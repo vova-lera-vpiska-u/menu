@@ -80,6 +80,14 @@ const Element = styled(Link)<{ imageURL: string }>`
   background: url(${({ imageURL }) => imageURL});
   background-position: center;
   background-size: cover;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      ${colors.white}
+      background-color: rgba(0, 0, 0, 0.4);
+      background-blend-mode: darken;
+    }
+  }
 `
 
 const Carousel = styled(Link)<{ imageURL: string }>`
