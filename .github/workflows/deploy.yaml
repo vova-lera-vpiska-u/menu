@@ -27,7 +27,7 @@ jobs:
       - name: Build the React app
         run: npm run build
 
-      - name: setup git authentication
+      - name: Deploy
         run: |
           git config --global user.email "awqsome@bk.ru"
           git config --global user.name "awqsomee"
