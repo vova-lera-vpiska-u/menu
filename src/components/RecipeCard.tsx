@@ -2,10 +2,23 @@ import styled from 'styled-components'
 import { Star } from '../icons/Star'
 import { Clock } from '../icons/Clock'
 import { Recipe } from '../api/types'
+import { useNavigate } from 'react-router-dom'
 
-export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
+export const RecipeCard = ({
+  recipe,
+  title,
+}: {
+  recipe: Recipe
+  title: string
+}) => {
+  const navigate = useNavigate()
   return (
-    <Layout imgurl={recipe.image || ''}>
+    <Layout
+      imgurl={recipe.image || ''}
+      onClick={() => {
+        navigate(`/${title}/${recipe._id}`)
+      }}
+    >
       {recipe.ingredients && (
         <Ingredients>
           ingredients
