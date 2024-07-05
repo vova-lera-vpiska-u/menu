@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { useUnit } from 'effector-react'
 import { userModel } from '../entities/user/model'
 import { routingModel } from '../entities/routing/model'
+import { FieldBig } from './FieldBig'
+import { text_h1 } from '../styles/fonts'
+import { colors } from '../styles/colors'
+import { BigButton } from './Buttons/BigButton'
+import { Checkbox } from './Buttons/Ckeckbox'
+import { LogoAdminMode } from './LogoAdminMode'
 
 export const Login = () => {
   const navigate = useNavigate()
@@ -13,29 +19,53 @@ export const Login = () => {
     routingModel.stores.from,
   ])
   return (
-    <Form
-      onSubmit={(e) => {
-        e.preventDefault()
-        login({
-          username: e.currentTarget.username.value,
-          password: e.currentTarget.password.value,
-        })
-        navigate(redirectedFrom || '/admin', { replace: true })
-        clearRedirect()
-      }}
-    >
-      <input type="text" name="username" />
-      <input type="password" name="password" />
-      <button type="submit">Login</button>
-    </Form>
+    <>
+      <LogoAdminMode />
+      <Layout>
+        <Title>AUTORIZATION</Title>
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault()
+            login({
+              username: e.currentTarget.username.value,
+              password: e.currentTarget.password.value,
+            })
+            navigate(redirectedFrom || '/admin', { replace: true })
+            clearRedirect()
+          }}
+        >
+          <FieldBig type="text" name="username" placeholder="Who?"></FieldBig>
+          <FieldBig
+            type="password"
+            name="password"
+            placeholder="Password"
+          ></FieldBig>
+          <Checkbox>
+            By clicking on the button, I confirm that I have no intention of
+            poisoning anyone, and I undertake to provide the information in full
+          </Checkbox>
+          <BigButton>AUF</BigButton>
+        </Form>
+      </Layout>
+    </>
   )
 }
+
+const Layout = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const Title = styled.h1`
+  ${text_h1};
+  color: ${colors.white};
+`
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
+  gap: 24px;
   min-height: 100vh;
+  width: 100%;
 `

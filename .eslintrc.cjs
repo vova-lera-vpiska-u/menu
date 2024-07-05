@@ -19,5 +19,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'effector/strict-effect-handlers': ['warn'],
+    'no-console': 'warn',
+    'react-hooks/exhaustive-deps': 'off',
   },
 }
