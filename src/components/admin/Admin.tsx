@@ -5,6 +5,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useUnit } from 'effector-react'
 import { userModel } from '../../entities/user/model'
+import { colors } from '../../styles/colors'
+import { text_h3_light } from '../../styles/fonts'
+import { FieldBig } from '../FieldBig'
+import { DropdownMenu } from '../DropdownMenu'
+import { ToggleButtonSmall } from '../../components/shared/ToggleButtonSmall'
+import { Star } from '../../icons/Star'
+import { FieldSmall } from '../FieldSmall'
+import { Clock } from '../../icons/Clock'
 
 export const Admin = () => {
   const navigate = useNavigate()
@@ -17,8 +25,12 @@ export const Admin = () => {
   const [categories, setCategories] = useState<
     { _id: string; name: string; recipes: Dish[] }[]
   >([])
+  const [menu, setMenu] = useState<Dish[]>([])
 
   const [logout] = useUnit([userModel.events.logout])
+  const [filters, setFilters] = useState<string[]>([])
+  const timesUnit = ['h', 'min']
+  const menuChapters = ['Fire', 'Air', 'Eath', '5 Element', 'HLS', 'Ethanol']
 
   useEffect(() => {
     fetch(`${url}/recipes/`)
@@ -27,8 +39,18 @@ export const Admin = () => {
 
     fetch(`${url}/categories/`)
       .then((res) => res.json())
-      .then((data) => setCategories(data))
+      .then((data) => {
+        setCategories(data)
+        console.log('categories', categories)
+      })
   }, [])
+
+  useEffect(() => {
+    fetch(`${url}/recipes/`)
+      .then((res) => res.json())
+      .then((data) => setMenu(data))
+  }, [])
+
   return (
     <div>
       <Button
@@ -39,7 +61,7 @@ export const Admin = () => {
       >
         Logout
       </Button>
-      add category
+      {/* <Header title="adding a recipe" /> */}
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -53,15 +75,79 @@ export const Admin = () => {
           })
           setName('')
         }}
-      >
-        name:
-        <input
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+      ></form>
+      {/* <Navbar hidden={!show}>
+        <Logo />
+        <GoBackButton to={'/'} />
+        <Title>{title}</Title>
+        <Filters
+          filters={filters}
+          setFilters={setFilters}
+          filterList={[
+            ...new Set(
+              menu
+                .map((dish) => dish.categories.map((category) => category.name))
+                .flat()
+            ),
+          ]}
         />
-      </form>
-      <hr />
+      </Navbar> */}
+      <Layout>
+        <SettingLayout columnStart={1} columnEnd={3}>
+          <Name>Name</Name>
+          <FieldBig name="" placeholder="" type=""></FieldBig>
+        </SettingLayout>
+        <SettingLayout columnStart={1} columnEnd={2}>
+          <Name>Category</Name>
+          <DropdownMenu optionsArray={menuChapters}></DropdownMenu>
+        </SettingLayout>
+        <SettingLayout columnStart={1} columnEnd={3}>
+          <Name>Tags</Name>
+          <TagsWrapper>
+            {categories.map((category) => {
+              return (
+                <ToggleButtonSmall<string>
+                  key={category._id}
+                  label={category.name}
+                  labels={filters}
+                  setLabels={(labels) => {
+                    setFilters(labels)
+                  }}
+                />
+              )
+            })}
+          </TagsWrapper>
+        </SettingLayout>
+        <SettingLayout columnStart={1} columnEnd={2}>
+          <Name>Rate</Name>
+          <RateWrapper>
+            <FieldSmall
+              placeholder=""
+              type="search"
+              name=""
+              iconVisible={false}
+              iconHeight="24"
+              iconWidth="24"
+            ></FieldSmall>
+            <Star height="24" width="24" />
+          </RateWrapper>
+        </SettingLayout>
+        <SettingLayout columnStart={1} columnEnd={2}>
+          <Name>Time</Name>
+          <TimeWrapper>
+            <FieldSmall
+              placeholder=""
+              type="search"
+              name=""
+              iconVisible={false}
+              iconHeight="24"
+              iconWidth="24"
+            ></FieldSmall>
+            <DropdownMenu optionsArray={timesUnit}></DropdownMenu>
+            <Clock height="24" width="24" />
+          </TimeWrapper>
+        </SettingLayout>
+      </Layout>
       dishes
       <form
         onSubmit={(e) => {
@@ -91,23 +177,6 @@ export const Admin = () => {
           setRecipe('')
         }}
       >
-        <div>
-          name:
-          <input
-            name="name"
-            value={recipe}
-            onChange={(e) => setRecipe(e.target.value)}
-          />
-        </div>
-        <div>
-          categories:
-          {categories.map((category) => (
-            <div>
-              <label>{category.name}</label>
-              <input key={category._id} type="checkbox" name={category._id} />
-            </div>
-          ))}
-        </div>
         <button type="submit">add</button>
       </form>
       {dishes.map((dish) => (
@@ -212,9 +281,74 @@ export const Admin = () => {
     </div>
   )
 }
+const TimeWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px;
+  gap: 4px;
 
+  width: 100%;
+
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+`
+const RateWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px;
+  gap: 4px;
+
+  width: 100%;
+
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+`
+const TagsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  padding: 0px;
+  gap: 4px;
+
+  width: 100%;
+
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+`
+const Layout = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 10px;
+  row-gap: 32px;
+
+  min-height: 0; /* NEW */
+  min-width: 0;
+`
 const Button = styled.button`
   position: absolute;
   top: 16px;
   right: 32px;
+`
+const SettingLayout = styled.div<{ columnStart: number; columnEnd: number }>`
+  position: relative;
+  display: flex;
+  flex: 1 1 0px;
+  flex-direction: column;
+  align-items: start;
+  grid-column: ${({ columnStart }) => columnStart} /
+    ${({ columnEnd }) => columnEnd};
+  gap: 8px;
+
+  overflow: hidden; /* NEW */
+  min-width: 0;
+`
+const Name = styled.div`
+  color: ${colors.white} ${text_h3_light};
 `
