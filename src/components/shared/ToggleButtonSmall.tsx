@@ -1,13 +1,15 @@
 import styled from 'styled-components'
+import { text_h4 } from '../../styles/fonts'
+import { colors } from '../../styles/colors'
 
-export const ToggleButton = ({
+export const ToggleButtonSmall = <T extends { _id: string; name: string }>({
   label,
   labels,
   setLabels,
 }: {
-  label: string
-  labels: string[]
-  setLabels: (labels: string[]) => void
+  label: T
+  labels: T[]
+  setLabels: (labels: T[]) => void
 }) => {
   const value = !!labels.includes(label)
   return (
@@ -17,13 +19,13 @@ export const ToggleButton = ({
         checked={value}
         onChange={() => {
           if (value) {
-            setLabels(labels.filter((l) => l !== label))
+            setLabels(labels.filter((l) => l._id !== label._id))
           } else {
             setLabels([...labels, label])
           }
         }}
       />
-      <Title>{`${label}`}</Title>
+      <Title>{`${label.name}`}</Title>
     </Label>
   )
 }
@@ -40,18 +42,13 @@ const Title = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #ffffff;
   cursor: pointer;
-  padding: 6px 20px 5px 20px;
+  padding: 8px 16px;
   box-sizing: border-box;
   border: 1px solid #ffffff;
   border-radius: 3px;
-  font-family: 'Alumni Sans';
-  font-style: normal;
-  font-weight: 300;
-  font-size: 24px;
-  line-height: 29px;
-  color: #ffffff;
+  ${text_h4}
+  color: ${colors.white};
   /* vertical-align: text-top; */
   user-select: none;
 `

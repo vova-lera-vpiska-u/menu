@@ -1,4 +1,4 @@
-import { DishList } from '../../components/DishList'
+import { RecipeList } from '../../components/RecipeList'
 import { Recipe } from '../../components/Recipe'
 import { Main } from '../../pages/Main'
 
@@ -9,27 +9,27 @@ export const generalRoutes = [
   },
   {
     path: '/air',
-    element: <DishList title="AIR" />,
+    element: <RecipeList title="AIR" />,
   },
   {
     path: '/fire',
-    element: <DishList title="FIRE" />,
+    element: <RecipeList title="FIRE" />,
   },
   {
     path: '/water',
-    element: <DishList title="WATER" />,
+    element: <RecipeList title="WATER" />,
   },
   {
     path: '/earth',
-    element: <DishList title="EARTH" />,
+    element: <RecipeList title="EARTH" />,
   },
   {
     path: '/desserts',
-    element: <DishList title="DESSERTS" />,
+    element: <RecipeList title="DESSERTS" />,
   },
   {
     path: '/all',
-    element: <DishList title="ALL" />,
+    element: <RecipeList title="ALL" />,
   },
   {
     path: '/recipes/:id',

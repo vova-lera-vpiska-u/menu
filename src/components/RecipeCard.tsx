@@ -1,24 +1,17 @@
 import styled from 'styled-components'
-import { Dish } from '../api/types'
 import { Star } from '../icons/Star'
 import { Clock } from '../icons/Clock'
-import { useNavigate } from 'react-router-dom'
+import { Recipe } from '../api/types'
 
-export const DishCard = ({ dish }: { dish: Dish }) => {
-  const navigate = useNavigate()
+export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
   return (
-    <Layout
-      imgurl={dish.image}
-      onClick={() => {
-        navigate(`/recipes/${dish._id}`)
-      }}
-    >
-      {dish.ingredients && (
+    <Layout imgurl={recipe.image || ''}>
+      {recipe.ingredients && (
         <Ingredients>
           ingredients
           <Divider />
-          <IngredientsGrid amount={dish.ingredients.length}>
-            {dish.ingredients.map((ingredient) => (
+          <IngredientsGrid amount={recipe.ingredients.length}>
+            {recipe.ingredients.map((ingredient) => (
               <div key={ingredient.ingredient.name}>
                 {ingredient.ingredient.name}
               </div>
@@ -27,19 +20,19 @@ export const DishCard = ({ dish }: { dish: Dish }) => {
         </Ingredients>
       )}
       <Flex direction="column">
-        <Title>{dish.name}</Title>
+        <Title>{recipe.name}</Title>
         <Time>
-          {dish.timeToCook && (
+          {recipe.timeToCook && (
             <>
-              <Clock />
-              {dish.timeToCook}
+              <Clock height="20" width="20" />
+              {recipe.timeToCook}
             </>
           )}
         </Time>
       </Flex>
       <Rating>
-        <Star />
-        {dish.rating}
+        <Star height="14" width="14" />
+        {recipe.rating}
       </Rating>
     </Layout>
   )

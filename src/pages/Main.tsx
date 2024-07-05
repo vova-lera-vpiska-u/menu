@@ -13,6 +13,7 @@ import Dessert from '../../public/img/5 element.png'
 import Fire from '../../public/img/Fire.png'
 import { text_h1 } from '../styles/fonts'
 import { colors } from '../styles/colors'
+import { BigButton } from '../components/Buttons/BigButton'
 
 export const Main = () => {
   const [user] = useUnit([userModel.stores.user])
@@ -24,6 +25,12 @@ export const Main = () => {
       ) : (
         <Login to={LOGIN_PATH}>LOGIN</Login>
       )}
+      {user ? (
+        <BigButton>
+          <Login to={LOGIN_PATH}>Add Rrcipe</Login>
+        </BigButton>
+      ) : null}
+
       <Layout>
         <Element imageURL={Fire} to={'/fire'}>
           FIRE

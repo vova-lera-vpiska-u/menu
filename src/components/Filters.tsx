@@ -14,7 +14,7 @@ export const Filters = ({
     <Layout>
       {filterList.map((filter) => {
         return (
-          <ToggleButton<string>
+          <ToggleButton
             key={filter}
             label={filter}
             labels={filters}

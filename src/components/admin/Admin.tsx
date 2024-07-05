@@ -1,34 +1,51 @@
 import { useEffect, useState } from 'react'
-import { url } from '../../api/consts'
-import { Dish } from '../../api/types'
+import { Category } from '../../api/types'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useUnit } from 'effector-react'
 import { userModel } from '../../entities/user/model'
+import { colors } from '../../styles/colors'
+import { text_h3_light } from '../../styles/fonts'
+import { FieldBig } from '../FieldBig'
+import { DropdownMenu } from '../DropdownMenu'
+import { ToggleButtonSmall } from '../../components/shared/ToggleButtonSmall'
+import { Star } from '../../icons/Star'
+import { FieldSmall } from '../FieldSmall'
+import { Clock } from '../../icons/Clock'
+import { $categories, $recipes } from '../../shared/model'
+import {
+  createCategoryFx,
+  createRecipeFx,
+  adminPageMounted,
+  createIngredientFx,
+  createSectionFx,
+  deleteRecipeFx,
+  adminPageUnMounted,
+} from './model'
 
 export const Admin = () => {
   const navigate = useNavigate()
+  const [pageMounted, pageUnMounted] = useUnit([
+    adminPageMounted,
+    adminPageUnMounted,
+  ])
   const [name, setName] = useState('')
   const [section, setSection] = useState('')
   const [ingredient, setIngredient] = useState('')
   const [price, setPrice] = useState('')
   const [recipe, setRecipe] = useState('')
-  const [dishes, setDishes] = useState<Dish[]>([])
-  const [categories, setCategories] = useState<
-    { _id: string; name: string; recipes: Dish[] }[]
-  >([])
+  const [recipes, categoryList] = useUnit([$recipes, $categories])
+  const [chosenCategories, setChosenCategories] = useState<Category[]>([])
 
   const [logout] = useUnit([userModel.events.logout])
+  const timesUnit = ['h', 'min']
+  const menuChapters = ['Fire', 'Air', 'Eath', '5 Element', 'HLS', 'Ethanol']
 
   useEffect(() => {
-    fetch(`${url}/recipes/`)
-      .then((res) => res.json())
-      .then((data) => setDishes(data))
-
-    fetch(`${url}/categories/`)
-      .then((res) => res.json())
-      .then((data) => setCategories(data))
+    pageMounted()
+    return () => pageUnMounted()
   }, [])
+
   return (
     <div>
       <Button
@@ -39,30 +56,87 @@ export const Admin = () => {
       >
         Logout
       </Button>
-      add category
+      {/* <Header title="adding a recipe" /> */}
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          fetch(`${url}/categories/`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({ name }),
-          })
+          createCategoryFx(name)
           setName('')
         }}
-      >
-        name:
-        <input
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+      ></form>
+      {/* <Navbar hidden={!show}>
+        <Logo />
+        <GoBackButton to={'/'} />
+        <Title>{title}</Title>
+        <Filters
+          filters={filters}
+          setFilters={setFilters}
+          filterList={[
+            ...new Set(
+              menu
+                .map((recipe) => recipe.categories.map((category) => category.name))
+                .flat()
+            ),
+          ]}
         />
-      </form>
-      <hr />
-      dishes
+      </Navbar> */}
+      <Layout>
+        <SettingLayout columnStart={1} columnEnd={3}>
+          <Name>Name</Name>
+          <FieldBig name="" placeholder="" type=""></FieldBig>
+        </SettingLayout>
+        <SettingLayout columnStart={1} columnEnd={2}>
+          <Name>Category</Name>
+          <DropdownMenu optionsArray={menuChapters}></DropdownMenu>
+        </SettingLayout>
+        <SettingLayout columnStart={1} columnEnd={3}>
+          <Name>Tags</Name>
+          <TagsWrapper>
+            {categoryList?.map((category) => {
+              return (
+                <ToggleButtonSmall<Category>
+                  key={category._id}
+                  label={category}
+                  labels={chosenCategories}
+                  setLabels={(labels) => {
+                    setChosenCategories(labels)
+                  }}
+                />
+              )
+            })}
+          </TagsWrapper>
+        </SettingLayout>
+        <SettingLayout columnStart={1} columnEnd={2}>
+          <Name>Rate</Name>
+          <RateWrapper>
+            <FieldSmall
+              placeholder=""
+              type="search"
+              name=""
+              iconVisible={false}
+              iconHeight="24"
+              iconWidth="24"
+            ></FieldSmall>
+            <Star height="24" width="24" />
+          </RateWrapper>
+        </SettingLayout>
+        <SettingLayout columnStart={1} columnEnd={2}>
+          <Name>Time</Name>
+          <TimeWrapper>
+            <FieldSmall
+              placeholder=""
+              type="search"
+              name=""
+              iconVisible={false}
+              iconHeight="24"
+              iconWidth="24"
+            ></FieldSmall>
+            <DropdownMenu optionsArray={timesUnit}></DropdownMenu>
+            <Clock height="24" width="24" />
+          </TimeWrapper>
+        </SettingLayout>
+      </Layout>
+      recipees
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -74,80 +148,33 @@ export const Admin = () => {
               categories.push((checkbox as HTMLInputElement).name)
             }
           })
-          fetch(`${url}/recipes/`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-              name: recipe,
-              categories,
-              rating: 0,
-              image: '',
-            }),
-          })
+          createRecipeFx({ name: recipe, categories })
           e.currentTarget.reset()
           setRecipe('')
         }}
       >
-        <div>
-          name:
-          <input
-            name="name"
-            value={recipe}
-            onChange={(e) => setRecipe(e.target.value)}
-          />
-        </div>
-        <div>
-          categories:
-          {categories.map((category) => (
-            <div>
-              <label>{category.name}</label>
-              <input key={category._id} type="checkbox" name={category._id} />
-            </div>
-          ))}
-        </div>
         <button type="submit">add</button>
       </form>
-      {dishes.map((dish) => (
-        <div key={dish._id} style={{ display: 'flex', gap: '10px' }}>
-          <Link to={`/admin/${dish._id}`}>{dish.name}</Link>
-          <button
-            onClick={() =>
-              fetch(`${url}/recipes/${dish._id}`, {
-                credentials: 'include',
-                method: 'DELETE',
-              })
-            }
-          >
-            x
-          </button>
+      {recipes?.map((recipe) => (
+        <div key={recipe._id} style={{ display: 'flex', gap: '10px' }}>
+          <Link to={`/admin/${recipe._id}`}>{recipe.name}</Link>
+          <button onClick={() => deleteRecipeFx(recipe._id)}>x</button>
         </div>
       ))}
       <hr />
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          // get data from dish checkboxes
-          const dishCheckboxes = document.querySelectorAll('input[data-dish]')
-          const dishes: string[] = []
-          dishCheckboxes.forEach((checkbox) => {
+          // get data from recipe checkboxes
+          const recipeCheckboxes =
+            document.querySelectorAll('input[data-recipe]')
+          const recipes: string[] = []
+          recipeCheckboxes.forEach((checkbox) => {
             if ((checkbox as HTMLInputElement).checked) {
-              dishes.push((checkbox as HTMLInputElement).name)
+              recipes.push((checkbox as HTMLInputElement).name)
             }
           })
-          fetch(`${url}/sections/`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: section,
-              recipes: dishes,
-            }),
-            credentials: 'include',
-          })
+          createSectionFx({ name: section, recipes })
           setSection('')
           e.currentTarget.reset()
         }}
@@ -162,11 +189,16 @@ export const Admin = () => {
           />
         </div>
         <div>
-          dishes:
-          {dishes.map((dish) => (
+          recipes:
+          {recipes?.map((recipe) => (
             <div>
-              <label>{dish.name}</label>
-              <input data-dish key={dish._id} type="checkbox" name={dish._id} />
+              <label>{recipe.name}</label>
+              <input
+                data-recipe
+                key={recipe._id}
+                type="checkbox"
+                name={recipe._id}
+              />
             </div>
           ))}
         </div>
@@ -176,15 +208,7 @@ export const Admin = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          fetch(`${url}/ingredients/`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-
-            credentials: 'include',
-            body: JSON.stringify({ name: ingredient, price }),
-          })
+          createIngredientFx({ name: ingredient, price })
           setIngredient('')
           setPrice('')
         }}
@@ -212,9 +236,74 @@ export const Admin = () => {
     </div>
   )
 }
+const TimeWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px;
+  gap: 4px;
 
+  width: 100%;
+
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+`
+const RateWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px;
+  gap: 4px;
+
+  width: 100%;
+
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+`
+const TagsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  padding: 0px;
+  gap: 4px;
+
+  width: 100%;
+
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+`
+const Layout = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 10px;
+  row-gap: 32px;
+
+  min-height: 0; /* NEW */
+  min-width: 0;
+`
 const Button = styled.button`
   position: absolute;
   top: 16px;
   right: 32px;
+`
+const SettingLayout = styled.div<{ columnStart: number; columnEnd: number }>`
+  position: relative;
+  display: flex;
+  flex: 1 1 0px;
+  flex-direction: column;
+  align-items: start;
+  grid-column: ${({ columnStart }) => columnStart} /
+    ${({ columnEnd }) => columnEnd};
+  gap: 8px;
+
+  overflow: hidden; /* NEW */
+  min-width: 0;
+`
+const Name = styled.div`
+  color: ${colors.white} ${text_h3_light};
 `
