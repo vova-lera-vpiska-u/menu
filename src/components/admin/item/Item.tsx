@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Recipe } from '../../api/types'
-import { url } from '../../api/consts'
+import { Recipe } from '../../../api/types'
 import { Link, useParams } from 'react-router-dom'
 import { useUnit } from 'effector-react'
-import { $categories } from '../../shared/recipes/model'
+import { $categories } from '../../../shared/model'
+import { recipePageMounted, recipePageUnMounted, updateRecipeFx } from './model'
 
 export const Item = () => {
   const { id } = useParams()
@@ -19,31 +19,18 @@ export const Item = () => {
   }
 
   useEffect(() => {
-    fetch(`${url}/recipes/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setRecipe(data)
-      })
+    if (id) recipePageMounted(id)
+    return () => recipePageUnMounted()
   }, [id])
 
-  if (!recipe) return null
+  if (!recipe || !id) return null
   return (
     <div>
       <Link to={'/admin'}>go back</Link>
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          fetch(`${url}/recipes/${id}`, {
-            method: 'PUT',
-
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(recipe),
-          })
-            .then((res) => res.json())
-            .then((data) => setRecipe(data))
+          updateRecipeFx({ recipe, id })
         }}
       >
         <img src={recipe.image} width="200" height="200" alt="" />

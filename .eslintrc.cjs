@@ -20,5 +20,6 @@ module.exports = {
     ],
     'effector/strict-effect-handlers': ['warn'],
     'no-console': 'warn',
+    'react-hooks/exhaustive-deps': 'off',
   },
 }

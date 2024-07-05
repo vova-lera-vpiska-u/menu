@@ -5,8 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Logo } from './Logo'
 import { Center } from './shared/ui/Center'
 import { RecipeCard } from './RecipeCard'
-import { getRecipesFx } from '../shared/recipes/api'
-import { $recipes } from '../shared/recipes/model'
+import { $recipes, getRecipesFx } from '../shared/model'
 import { useUnit } from 'effector-react'
 
 export const RecipeList = ({ title }: { title: string }) => {

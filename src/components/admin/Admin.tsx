@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { url } from '../../api/consts'
 import { Category } from '../../api/types'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -13,11 +12,23 @@ import { ToggleButtonSmall } from '../../components/shared/ToggleButtonSmall'
 import { Star } from '../../icons/Star'
 import { FieldSmall } from '../FieldSmall'
 import { Clock } from '../../icons/Clock'
-import { getCategoriesFx, getRecipesFx } from '../../shared/recipes/api'
-import { $categories, $recipes } from '../../shared/recipes/model'
+import { $categories, $recipes } from '../../shared/model'
+import {
+  createCategoryFx,
+  createRecipeFx,
+  adminPageMounted,
+  createIngredientFx,
+  createSectionFx,
+  deleteRecipeFx,
+  adminPageUnMounted,
+} from './model'
 
 export const Admin = () => {
   const navigate = useNavigate()
+  const [pageMounted, pageUnMounted] = useUnit([
+    adminPageMounted,
+    adminPageUnMounted,
+  ])
   const [name, setName] = useState('')
   const [section, setSection] = useState('')
   const [ingredient, setIngredient] = useState('')
@@ -31,8 +42,8 @@ export const Admin = () => {
   const menuChapters = ['Fire', 'Air', 'Eath', '5 Element', 'HLS', 'Ethanol']
 
   useEffect(() => {
-    getRecipesFx()
-    getCategoriesFx()
+    pageMounted()
+    return () => pageUnMounted()
   }, [])
 
   return (
@@ -49,14 +60,7 @@ export const Admin = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          fetch(`${url}/categories/`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({ name }),
-          })
+          createCategoryFx(name)
           setName('')
         }}
       ></form>
@@ -144,19 +148,7 @@ export const Admin = () => {
               categories.push((checkbox as HTMLInputElement).name)
             }
           })
-          fetch(`${url}/recipes/`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-              name: recipe,
-              categories,
-              rating: 0,
-              image: '',
-            }),
-          })
+          createRecipeFx({ name: recipe, categories })
           e.currentTarget.reset()
           setRecipe('')
         }}
@@ -166,16 +158,7 @@ export const Admin = () => {
       {recipes?.map((recipe) => (
         <div key={recipe._id} style={{ display: 'flex', gap: '10px' }}>
           <Link to={`/admin/${recipe._id}`}>{recipe.name}</Link>
-          <button
-            onClick={() =>
-              fetch(`${url}/recipes/${recipe._id}`, {
-                credentials: 'include',
-                method: 'DELETE',
-              })
-            }
-          >
-            x
-          </button>
+          <button onClick={() => deleteRecipeFx(recipe._id)}>x</button>
         </div>
       ))}
       <hr />
@@ -185,23 +168,13 @@ export const Admin = () => {
           // get data from recipe checkboxes
           const recipeCheckboxes =
             document.querySelectorAll('input[data-recipe]')
-          const recipees: string[] = []
+          const recipes: string[] = []
           recipeCheckboxes.forEach((checkbox) => {
             if ((checkbox as HTMLInputElement).checked) {
-              recipees.push((checkbox as HTMLInputElement).name)
+              recipes.push((checkbox as HTMLInputElement).name)
             }
           })
-          fetch(`${url}/sections/`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: section,
-              recipes: recipees,
-            }),
-            credentials: 'include',
-          })
+          createSectionFx({ name: section, recipes })
           setSection('')
           e.currentTarget.reset()
         }}
@@ -235,15 +208,7 @@ export const Admin = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          fetch(`${url}/ingredients/`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-
-            credentials: 'include',
-            body: JSON.stringify({ name: ingredient, price }),
-          })
+          createIngredientFx({ name: ingredient, price })
           setIngredient('')
           setPrice('')
         }}
