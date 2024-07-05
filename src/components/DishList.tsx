@@ -25,6 +25,7 @@ export const DishList = ({ title }: { title: string }) => {
     setLastScrollY(window.scrollY)
   }
 
+  // TODO: make it cleaner
   useEffect(() => {
     window.addEventListener('scroll', controlNavbar)
 
