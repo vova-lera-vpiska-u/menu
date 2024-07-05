@@ -24,14 +24,14 @@ export const DishCard = ({ dish }: { dish: Dish }) => {
         <Time>
           {dish.timeToCook && (
             <>
-              <Clock />
+              <Clock height="20" width="20" />
               {dish.timeToCook}
             </>
           )}
         </Time>
       </Flex>
       <Rating>
-        <Star />
+        <Star height="14" width="14" />
         {dish.rating}
       </Rating>
     </Layout>

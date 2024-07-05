@@ -1,37 +1,17 @@
-import { css } from 'styled-components'
-
 export const colors = {
-  wineBlue: css`
-    color: #5594ce;
-  `,
-  white: css`
-    color: #ffffff;
-  `,
-  black: css`
-    color: #000000;
-  `,
-  lightGray: css`
-    color: #d8d8d8;
-  `,
-  darkGray: css`
-    color: #1b1818;
-  `,
-  backgroundColor: css`
-    color: #242424;
-  `,
-  oliveGreen: css`
-    color: #8fa847;
-  `,
-  wineRed: css`
-    color: #b44444;
-  `,
-  wineWhite: css`
-    color: #ecd581;
-  `,
-  winePink: css`
-    color: #db739f;
-  `,
-  wineOrange: css`
-    color: #e77f1f;
-  `,
+  white: '#ffffff',
+  black: '#000000',
+  lightGray: '#d8d8d8',
+  darkGray: '#1b1818',
+  backgroundColor: '#242424',
+  oliveGreen: '#8fa847',
+  oliveGreenHover: '#beda6d',
+  oliveGreenActive: '#758d2e',
+  oliveGreenDisable: '#5f644e',
+  wineRed: '#b44444',
+  wineWhite: '#ecd581',
+  winePink: '#db739f',
+  wineOrange: '#e77f1f',
+  wineBlue: '#5594ce',
+  danger: '#E44747',
 }
