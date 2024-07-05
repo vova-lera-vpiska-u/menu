@@ -2,14 +2,15 @@ import styled from 'styled-components'
 import { GoBackButton } from './GoBackButton'
 import { Filters } from './Filters'
 import { useEffect, useMemo, useState } from 'react'
-import { Recipe } from '../api/types'
 import { Logo } from './Logo'
-import { url } from '../api/consts'
 import { Center } from './shared/ui/Center'
 import { RecipeCard } from './RecipeCard'
+import { getRecipesFx } from '../shared/recipes/api'
+import { $recipes } from '../shared/recipes/model'
+import { useUnit } from 'effector-react'
 
 export const RecipeList = ({ title }: { title: string }) => {
-  const [menu, setMenu] = useState<Recipe[]>([])
+  const menu = useUnit($recipes)
   const [show, setShow] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const controlNavbar = () => {
@@ -38,17 +39,14 @@ export const RecipeList = ({ title }: { title: string }) => {
 
   useEffect(() => {
     if (title === 'ALL') {
-      fetch(`${url}/recipes/`)
-        .then((res) => res.json())
-        .then((data) => setMenu(data))
+      getRecipesFx()
     } else {
-      fetch(`${url}/sections/${title.toLowerCase()}`)
-        .then((res) => res.json())
-        .then((data) => setMenu(data))
+      getRecipesFx(title.toLowerCase())
     }
   }, [title])
 
   const filteredMenu = useMemo(() => {
+    if (!menu) return []
     if (filters.length > 0) {
       return menu.filter((recipe) =>
         recipe.categories.some((category) => filters.includes(category.name))
@@ -74,7 +72,7 @@ export const RecipeList = ({ title }: { title: string }) => {
               setFilters={setFilters}
               filterList={[
                 ...new Set(
-                  menu
+                  (menu || [])
                     .map((recipe) =>
                       recipe.categories.map((category) => category.name)
                     )

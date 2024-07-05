@@ -19,5 +19,6 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'effector/strict-effect-handlers': ['warn'],
+    'no-console': 'warn',
   },
 }

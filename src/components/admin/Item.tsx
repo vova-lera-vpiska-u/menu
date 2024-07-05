@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Category, Recipe } from '../../api/types'
+import { Recipe } from '../../api/types'
 import { url } from '../../api/consts'
 import { Link, useParams } from 'react-router-dom'
+import { useUnit } from 'effector-react'
+import { $categories } from '../../shared/recipes/model'
 
 export const Item = () => {
   const { id } = useParams()
   const [recipe, setRecipe] = useState<Recipe | null>(null)
-  const [categories, setCategories] = useState<Category[]>([])
+  const categories = useUnit($categories)
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.name, event.target.value)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     setRecipe({
@@ -23,12 +24,6 @@ export const Item = () => {
       .then((data) => {
         setRecipe(data)
       })
-
-    fetch(`${url}/categories`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCategories(data)
-      })
   }, [id])
 
   if (!recipe) return null
@@ -38,7 +33,6 @@ export const Item = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          console.log(recipe)
           fetch(`${url}/recipes/${id}`, {
             method: 'PUT',
 
@@ -100,7 +94,7 @@ export const Item = () => {
         </div>
         <div>ingredients</div>
         <div>
-          {categories.map((category) => {
+          {categories?.map((category) => {
             return (
               <div key={category._id}>
                 {category.name}:{' '}

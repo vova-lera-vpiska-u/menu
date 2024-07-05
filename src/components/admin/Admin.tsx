@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { url } from '../../api/consts'
-import { Category, Recipe } from '../../api/types'
+import { Category } from '../../api/types'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useUnit } from 'effector-react'
@@ -13,6 +13,8 @@ import { ToggleButtonSmall } from '../../components/shared/ToggleButtonSmall'
 import { Star } from '../../icons/Star'
 import { FieldSmall } from '../FieldSmall'
 import { Clock } from '../../icons/Clock'
+import { getCategoriesFx, getRecipesFx } from '../../shared/recipes/api'
+import { $categories, $recipes } from '../../shared/recipes/model'
 
 export const Admin = () => {
   const navigate = useNavigate()
@@ -21,8 +23,7 @@ export const Admin = () => {
   const [ingredient, setIngredient] = useState('')
   const [price, setPrice] = useState('')
   const [recipe, setRecipe] = useState('')
-  const [recipees, setRecipees] = useState<Recipe[]>([])
-  const [categoryList, setCategoryList] = useState<Category[]>([])
+  const [recipes, categoryList] = useUnit([$recipes, $categories])
   const [chosenCategories, setChosenCategories] = useState<Category[]>([])
 
   const [logout] = useUnit([userModel.events.logout])
@@ -30,16 +31,8 @@ export const Admin = () => {
   const menuChapters = ['Fire', 'Air', 'Eath', '5 Element', 'HLS', 'Ethanol']
 
   useEffect(() => {
-    fetch(`${url}/recipes/`)
-      .then((res) => res.json())
-      .then((data) => setRecipees(data))
-
-    fetch(`${url}/categories/`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCategoryList(data)
-        console.log('categories', categoryList)
-      })
+    getRecipesFx()
+    getCategoriesFx()
   }, [])
 
   return (
@@ -95,7 +88,7 @@ export const Admin = () => {
         <SettingLayout columnStart={1} columnEnd={3}>
           <Name>Tags</Name>
           <TagsWrapper>
-            {categoryList.map((category) => {
+            {categoryList?.map((category) => {
               return (
                 <ToggleButtonSmall<Category>
                   key={category._id}
@@ -170,7 +163,7 @@ export const Admin = () => {
       >
         <button type="submit">add</button>
       </form>
-      {recipees.map((recipe) => (
+      {recipes?.map((recipe) => (
         <div key={recipe._id} style={{ display: 'flex', gap: '10px' }}>
           <Link to={`/admin/${recipe._id}`}>{recipe.name}</Link>
           <button
@@ -223,8 +216,8 @@ export const Admin = () => {
           />
         </div>
         <div>
-          recipees:
-          {recipees.map((recipe) => (
+          recipes:
+          {recipes?.map((recipe) => (
             <div>
               <label>{recipe.name}</label>
               <input
