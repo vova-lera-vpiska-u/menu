@@ -59,7 +59,7 @@ export const RecipeList = ({ title }: { title: string }) => {
         <>
           <Flex>
             {filteredMenu.map((recipe) => (
-              <RecipeCard key={recipe.name} recipe={recipe} />
+              <RecipeCard key={recipe.name} recipe={recipe} title={title} />
             ))}
           </Flex>
           <Navbar hidden={!show}>

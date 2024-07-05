@@ -32,7 +32,7 @@ export const generalRoutes = [
     element: <RecipeList title="ALL" />,
   },
   {
-    path: '/recipes/:id',
-    element: <Recipe title="ALL" />,
+    path: '/:title/:id',
+    element: <Recipe />,
   },
 ]
