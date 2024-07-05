@@ -2,10 +2,17 @@ import styled from 'styled-components'
 import { Dish } from '../api/types'
 import { Star } from '../icons/Star'
 import { Clock } from '../icons/Clock'
+import { useNavigate } from 'react-router-dom'
 
 export const DishCard = ({ dish }: { dish: Dish }) => {
+  const navigate = useNavigate()
   return (
-    <Layout imgurl={dish.image}>
+    <Layout
+      imgurl={dish.image}
+      onClick={() => {
+        navigate(`/recipes/${dish._id}`)
+      }}
+    >
       {dish.ingredients && (
         <Ingredients>
           ingredients

@@ -1,4 +1,5 @@
 import { DishList } from '../../components/DishList'
+import { Recipe } from '../../components/Recipe'
 import { Main } from '../../pages/Main'
 
 export const generalRoutes = [
@@ -29,5 +30,9 @@ export const generalRoutes = [
   {
     path: '/all',
     element: <DishList title="ALL" />,
+  },
+  {
+    path: '/recipes/:id',
+    element: <Recipe title="ALL" />,
   },
 ]
