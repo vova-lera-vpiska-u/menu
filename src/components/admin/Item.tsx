@@ -1,20 +1,18 @@
 import { useEffect, useState } from 'react'
-import { Dish } from '../../api/types'
+import { Category, Recipe } from '../../api/types'
 import { url } from '../../api/consts'
 import { Link, useParams } from 'react-router-dom'
 
 export const Item = () => {
   const { id } = useParams()
-  const [dish, setDish] = useState<Dish | null>(null)
-  const [categories, setCategories] = useState<{ _id: string; name: string }[]>(
-    []
-  )
+  const [recipe, setRecipe] = useState<Recipe | null>(null)
+  const [categories, setCategories] = useState<Category[]>([])
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.name, event.target.value)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    setDish({
-      ...dish,
+    setRecipe({
+      ...recipe,
       [event.target.name]: event.target.value,
     })
   }
@@ -23,7 +21,7 @@ export const Item = () => {
     fetch(`${url}/recipes/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        setDish(data)
+        setRecipe(data)
       })
 
     fetch(`${url}/categories`)
@@ -33,14 +31,14 @@ export const Item = () => {
       })
   }, [id])
 
-  if (!dish) return null
+  if (!recipe) return null
   return (
     <div>
       <Link to={'/admin'}>go back</Link>
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          console.log(dish)
+          console.log(recipe)
           fetch(`${url}/recipes/${id}`, {
             method: 'PUT',
 
@@ -48,19 +46,19 @@ export const Item = () => {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(dish),
+            body: JSON.stringify(recipe),
           })
             .then((res) => res.json())
-            .then((data) => setDish(data))
+            .then((data) => setRecipe(data))
         }}
       >
-        <img src={dish.image} width="200" height="200" alt="" />
+        <img src={recipe.image} width="200" height="200" alt="" />
         <div>
           name:{' '}
           <input
             name="name"
             type="text"
-            value={dish.name}
+            value={recipe.name}
             onChange={handleChange}
           />
         </div>
@@ -69,7 +67,7 @@ export const Item = () => {
           <input
             name="recipe"
             type="text"
-            value={dish.recipe}
+            value={recipe.recipe}
             onChange={handleChange}
           />
         </div>
@@ -78,7 +76,7 @@ export const Item = () => {
           <input
             name="description"
             type="text"
-            value={dish.description}
+            value={recipe.description}
             onChange={handleChange}
           />
         </div>
@@ -87,7 +85,7 @@ export const Item = () => {
           <input
             name="image"
             type="text"
-            value={dish.image}
+            value={recipe.image}
             onChange={handleChange}
           />
         </div>
@@ -96,7 +94,7 @@ export const Item = () => {
           <input
             name="timeToCook"
             type="text"
-            value={dish.timeToCook}
+            value={recipe.timeToCook}
             onChange={handleChange}
           />
         </div>
@@ -108,15 +106,15 @@ export const Item = () => {
                 {category.name}:{' '}
                 <input
                   type="checkbox"
-                  checked={dish.categories.some(
+                  checked={recipe.categories.some(
                     (category) => category._id === category._id
                   )}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      setDish({
-                        ...dish,
+                      setRecipe({
+                        ...recipe,
                         categories: [
-                          ...dish.categories,
+                          ...recipe.categories,
                           {
                             _id: category._id,
                             name: category.name,
@@ -124,9 +122,9 @@ export const Item = () => {
                         ],
                       })
                     } else {
-                      setDish({
-                        ...dish,
-                        categories: dish.categories.filter(
+                      setRecipe({
+                        ...recipe,
+                        categories: recipe.categories.filter(
                           (category) => category._id !== category._id
                         ),
                       })
@@ -142,7 +140,7 @@ export const Item = () => {
           <input
             name="rating"
             type="text"
-            value={dish.rating}
+            value={recipe.rating}
             onChange={handleChange}
           />
         </div>

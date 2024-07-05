@@ -1,15 +1,15 @@
 import styled from 'styled-components'
 import { GoBackButton } from './GoBackButton'
-import { DishCard } from './DishCard'
 import { Filters } from './Filters'
 import { useEffect, useMemo, useState } from 'react'
-import { Dish } from '../api/types'
+import { Recipe } from '../api/types'
 import { Logo } from './Logo'
 import { url } from '../api/consts'
 import { Center } from './shared/ui/Center'
+import { RecipeCard } from './RecipeCard'
 
-export const DishList = ({ title }: { title: string }) => {
-  const [menu, setMenu] = useState<Dish[]>([])
+export const RecipeList = ({ title }: { title: string }) => {
+  const [menu, setMenu] = useState<Recipe[]>([])
   const [show, setShow] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const controlNavbar = () => {
@@ -50,8 +50,8 @@ export const DishList = ({ title }: { title: string }) => {
 
   const filteredMenu = useMemo(() => {
     if (filters.length > 0) {
-      return menu.filter((dish) =>
-        dish.categories.some((category) => filters.includes(category.name))
+      return menu.filter((recipe) =>
+        recipe.categories.some((category) => filters.includes(category.name))
       )
     }
     return menu
@@ -61,8 +61,8 @@ export const DishList = ({ title }: { title: string }) => {
       {filteredMenu.length > 0 ? (
         <>
           <Flex>
-            {filteredMenu.map((dish) => (
-              <DishCard key={dish.name} dish={dish} />
+            {filteredMenu.map((recipe) => (
+              <RecipeCard key={recipe.name} recipe={recipe} />
             ))}
           </Flex>
           <Navbar hidden={!show}>
@@ -75,8 +75,8 @@ export const DishList = ({ title }: { title: string }) => {
               filterList={[
                 ...new Set(
                   menu
-                    .map((dish) =>
-                      dish.categories.map((category) => category.name)
+                    .map((recipe) =>
+                      recipe.categories.map((category) => category.name)
                     )
                     .flat()
                 ),

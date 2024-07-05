@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { url } from '../../api/consts'
-import { Dish } from '../../api/types'
+import { Category, Recipe } from '../../api/types'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useUnit } from 'effector-react'
@@ -21,34 +21,25 @@ export const Admin = () => {
   const [ingredient, setIngredient] = useState('')
   const [price, setPrice] = useState('')
   const [recipe, setRecipe] = useState('')
-  const [dishes, setDishes] = useState<Dish[]>([])
-  const [categories, setCategories] = useState<
-    { _id: string; name: string; recipes: Dish[] }[]
-  >([])
-  const [menu, setMenu] = useState<Dish[]>([])
+  const [recipees, setRecipees] = useState<Recipe[]>([])
+  const [categoryList, setCategoryList] = useState<Category[]>([])
+  const [chosenCategories, setChosenCategories] = useState<Category[]>([])
 
   const [logout] = useUnit([userModel.events.logout])
-  const [filters, setFilters] = useState<string[]>([])
   const timesUnit = ['h', 'min']
   const menuChapters = ['Fire', 'Air', 'Eath', '5 Element', 'HLS', 'Ethanol']
 
   useEffect(() => {
     fetch(`${url}/recipes/`)
       .then((res) => res.json())
-      .then((data) => setDishes(data))
+      .then((data) => setRecipees(data))
 
     fetch(`${url}/categories/`)
       .then((res) => res.json())
       .then((data) => {
-        setCategories(data)
-        console.log('categories', categories)
+        setCategoryList(data)
+        console.log('categories', categoryList)
       })
-  }, [])
-
-  useEffect(() => {
-    fetch(`${url}/recipes/`)
-      .then((res) => res.json())
-      .then((data) => setMenu(data))
   }, [])
 
   return (
@@ -86,7 +77,7 @@ export const Admin = () => {
           filterList={[
             ...new Set(
               menu
-                .map((dish) => dish.categories.map((category) => category.name))
+                .map((recipe) => recipe.categories.map((category) => category.name))
                 .flat()
             ),
           ]}
@@ -104,14 +95,14 @@ export const Admin = () => {
         <SettingLayout columnStart={1} columnEnd={3}>
           <Name>Tags</Name>
           <TagsWrapper>
-            {categories.map((category) => {
+            {categoryList.map((category) => {
               return (
-                <ToggleButtonSmall<string>
+                <ToggleButtonSmall<Category>
                   key={category._id}
-                  label={category.name}
-                  labels={filters}
+                  label={category}
+                  labels={chosenCategories}
                   setLabels={(labels) => {
-                    setFilters(labels)
+                    setChosenCategories(labels)
                   }}
                 />
               )
@@ -148,7 +139,7 @@ export const Admin = () => {
           </TimeWrapper>
         </SettingLayout>
       </Layout>
-      dishes
+      recipees
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -179,12 +170,12 @@ export const Admin = () => {
       >
         <button type="submit">add</button>
       </form>
-      {dishes.map((dish) => (
-        <div key={dish._id} style={{ display: 'flex', gap: '10px' }}>
-          <Link to={`/admin/${dish._id}`}>{dish.name}</Link>
+      {recipees.map((recipe) => (
+        <div key={recipe._id} style={{ display: 'flex', gap: '10px' }}>
+          <Link to={`/admin/${recipe._id}`}>{recipe.name}</Link>
           <button
             onClick={() =>
-              fetch(`${url}/recipes/${dish._id}`, {
+              fetch(`${url}/recipes/${recipe._id}`, {
                 credentials: 'include',
                 method: 'DELETE',
               })
@@ -198,12 +189,13 @@ export const Admin = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          // get data from dish checkboxes
-          const dishCheckboxes = document.querySelectorAll('input[data-dish]')
-          const dishes: string[] = []
-          dishCheckboxes.forEach((checkbox) => {
+          // get data from recipe checkboxes
+          const recipeCheckboxes =
+            document.querySelectorAll('input[data-recipe]')
+          const recipees: string[] = []
+          recipeCheckboxes.forEach((checkbox) => {
             if ((checkbox as HTMLInputElement).checked) {
-              dishes.push((checkbox as HTMLInputElement).name)
+              recipees.push((checkbox as HTMLInputElement).name)
             }
           })
           fetch(`${url}/sections/`, {
@@ -213,7 +205,7 @@ export const Admin = () => {
             },
             body: JSON.stringify({
               name: section,
-              recipes: dishes,
+              recipes: recipees,
             }),
             credentials: 'include',
           })
@@ -231,11 +223,16 @@ export const Admin = () => {
           />
         </div>
         <div>
-          dishes:
-          {dishes.map((dish) => (
+          recipees:
+          {recipees.map((recipe) => (
             <div>
-              <label>{dish.name}</label>
-              <input data-dish key={dish._id} type="checkbox" name={dish._id} />
+              <label>{recipe.name}</label>
+              <input
+                data-recipe
+                key={recipe._id}
+                type="checkbox"
+                name={recipe._id}
+              />
             </div>
           ))}
         </div>

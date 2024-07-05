@@ -1,13 +1,13 @@
 import styled from 'styled-components'
 
-export const ToggleButton = <T extends string>({
+export const ToggleButton = ({
   label,
   labels,
   setLabels,
 }: {
-  label: T
-  labels: T[]
-  setLabels: (labels: T[]) => void
+  label: string
+  labels: string[]
+  setLabels: (labels: string[]) => void
 }) => {
   const value = !!labels.includes(label)
   return (

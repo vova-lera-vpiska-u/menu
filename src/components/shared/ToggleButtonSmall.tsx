@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { text_h4 } from '../../styles/fonts'
 import { colors } from '../../styles/colors'
 
-export const ToggleButtonSmall = <T extends string>({
+export const ToggleButtonSmall = <T extends { _id: string; name: string }>({
   label,
   labels,
   setLabels,
@@ -19,13 +19,13 @@ export const ToggleButtonSmall = <T extends string>({
         checked={value}
         onChange={() => {
           if (value) {
-            setLabels(labels.filter((l) => l !== label))
+            setLabels(labels.filter((l) => l._id !== label._id))
           } else {
             setLabels([...labels, label])
           }
         }}
       />
-      <Title>{`${label}`}</Title>
+      <Title>{`${label.name}`}</Title>
     </Label>
   )
 }
