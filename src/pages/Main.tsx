@@ -11,8 +11,8 @@ import Ethanol from '../../public/img/Ethanol.png'
 import HSL from '../../public/img/HLS.png'
 import Dessert from '../../public/img/5 element.png'
 import Fire from '../../public/img/Fire.png'
-import { text_h1 } from '../styles/fonts'
-import { colors } from '../styles/colors'
+import { TEXT_SIZE_1 } from '../styles/fonts'
+import { COLORS } from '../styles/colors'
 import { BigButton } from '../components/Buttons/BigButton'
 
 export const Main = () => {
@@ -27,7 +27,7 @@ export const Main = () => {
       )}
       {user ? (
         <BigButton>
-          <Login to={LOGIN_PATH}>Add Rrcipe</Login>
+          <Login to={ADMIN_PATH}>Add Recipe</Login>
         </BigButton>
       ) : null}
 
@@ -76,8 +76,8 @@ const Layout = styled.div`
 `
 
 const Element = styled(Link)<{ imageURL: string }>`
-  ${text_h1}
-  ${colors.lightGray}
+  ${TEXT_SIZE_1}
+  ${COLORS.lightGray}
 
   display: grid;
   place-content: center;
@@ -90,7 +90,7 @@ const Element = styled(Link)<{ imageURL: string }>`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      ${colors.white}
+      ${COLORS.white}
       background-color: rgba(0, 0, 0, 0.4);
       background-blend-mode: darken;
     }
@@ -98,8 +98,8 @@ const Element = styled(Link)<{ imageURL: string }>`
 `
 
 const Carousel = styled(Link)<{ imageURL: string }>`
-  ${text_h1}
-  ${colors.lightGray}  
+  ${TEXT_SIZE_1}
+  ${COLORS.lightGray}  
 
   grid-column: span 2;
   aspect-ratio: 2 / 1;

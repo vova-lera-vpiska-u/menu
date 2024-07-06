@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { colors } from '../../styles/colors'
+import { COLORS } from '../../styles/colors'
 
 export const IconButton = ({ children }: { children: JSX.Element }) => {
   return <Button>{children}</Button>
@@ -16,5 +16,5 @@ const Button = styled.button`
   background-color: transparent;
   padding: 0;
 
-  color: ${colors.lightGray};
+  color: ${COLORS.lightGray};
 `
