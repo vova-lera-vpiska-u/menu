@@ -1,8 +1,8 @@
 import styled from 'styled-components'
-import { colors } from '../styles/colors'
-import { IconButton } from './Buttons/IconButton'
-import { text_h3_light } from '../styles/fonts'
-import { Cross } from '../icons/Cross'
+import { COLORS } from '../../styles/colors'
+import { IconButton } from '../Buttons/IconButton'
+import { TEXT_SIZE_3_LIGHT } from '../../styles/fonts'
+import { Cross } from '../../icons/Cross'
 
 export const FieldBig = ({
   type,
@@ -35,28 +35,28 @@ const Layout = styled.div`
   box-sizing: border-box;
   gap: 10px;
 
-  border: 1px solid ${colors.lightGray};
+  border: 1px solid ${COLORS.lightGray};
   border-radius: 3px;
 
   &:focus-visible,
   &:focus,
   &:active {
-    border: 1px solid ${colors.oliveGreen};
+    border: 1px solid ${COLORS.oliveGreen};
   }
 `
 
 const InputInField = styled.input`
   background-color: transparent;
   border: 0;
-  ${text_h3_light};
+  ${TEXT_SIZE_3_LIGHT};
   width: fit-content;
-  color: ${colors.oliveGreen};
+  color: ${COLORS.oliveGreen};
 
   &:focus-visible {
     outline: none;
   }
 
   &::-webkit-input-placeholder {
-    color: ${colors.oliveGreenDisable};
+    color: ${COLORS.oliveGreenDisable};
   }
 `

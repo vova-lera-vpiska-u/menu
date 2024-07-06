@@ -1,27 +1,25 @@
 import { useEffect, useState } from 'react'
 import { Category } from '../../api/types'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { useUnit } from 'effector-react'
 import { userModel } from '../../entities/user/model'
-import { colors } from '../../styles/colors'
-import { text_h3_light } from '../../styles/fonts'
-import { FieldBig } from '../FieldBig'
-import { DropdownMenu } from '../DropdownMenu'
+import { COLORS } from '../../styles/colors'
+import { TEXT_SIZE_3_LIGHT, TEXT_SIZE_5 } from '../../styles/fonts'
+import { FieldBig } from '../shared/FieldBig'
+import { DropdownMenu } from '../shared/DropdownMenu'
 import { ToggleButtonSmall } from '../../components/shared/ToggleButtonSmall'
 import { Star } from '../../icons/Star'
-import { FieldSmall } from '../FieldSmall'
+import { FieldSmall } from '../shared/FieldSmall'
 import { Clock } from '../../icons/Clock'
-import { $categories, $recipes } from '../../shared/model'
-import {
-  createCategoryFx,
-  createRecipeFx,
-  adminPageMounted,
-  createIngredientFx,
-  createSectionFx,
-  deleteRecipeFx,
-  adminPageUnMounted,
-} from './model'
+import { $categories } from '../../shared/model'
+import { createCategoryFx, adminPageMounted, adminPageUnMounted } from './model'
+import { IngredientAddingRow } from '../IngredientAddingRow'
+import { GoBackButton } from '../GoBackButton'
+import { NutritionFactsTable } from '../shared/NutritionFactsTable'
+import { FilesInput } from '../FilesInput'
+import { BigButton } from '../Buttons/BigButton'
+import { TextButton } from '../Buttons/TextButton'
 
 export const Admin = () => {
   const navigate = useNavigate()
@@ -30,16 +28,13 @@ export const Admin = () => {
     adminPageUnMounted,
   ])
   const [name, setName] = useState('')
-  const [section, setSection] = useState('')
-  const [ingredient, setIngredient] = useState('')
-  const [price, setPrice] = useState('')
-  const [recipe, setRecipe] = useState('')
-  const [recipes, categoryList] = useUnit([$recipes, $categories])
+  const [categoryList] = useUnit([$categories])
   const [chosenCategories, setChosenCategories] = useState<Category[]>([])
 
   const [logout] = useUnit([userModel.events.logout])
   const timesUnit = ['h', 'min']
   const menuChapters = ['Fire', 'Air', 'Eath', '5 Element', 'HLS', 'Ethanol']
+  const { title } = useParams<{ title: string }>()
 
   useEffect(() => {
     pageMounted()
@@ -56,7 +51,6 @@ export const Admin = () => {
       >
         Logout
       </Button>
-      {/* <Header title="adding a recipe" /> */}
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -64,31 +58,21 @@ export const Admin = () => {
           setName('')
         }}
       ></form>
-      {/* <Navbar hidden={!show}>
-        <Logo />
-        <GoBackButton to={'/'} />
+      <Nav>
+        <GoBackButton to={`/${title}`} />
         <Title>{title}</Title>
-        <Filters
-          filters={filters}
-          setFilters={setFilters}
-          filterList={[
-            ...new Set(
-              menu
-                .map((recipe) => recipe.categories.map((category) => category.name))
-                .flat()
-            ),
-          ]}
-        />
-      </Navbar> */}
+      </Nav>
       <Layout>
         <SettingLayout columnStart={1} columnEnd={3}>
           <Name>Name</Name>
           <FieldBig name="" placeholder="" type=""></FieldBig>
         </SettingLayout>
+
         <SettingLayout columnStart={1} columnEnd={2}>
           <Name>Category</Name>
           <DropdownMenu optionsArray={menuChapters}></DropdownMenu>
         </SettingLayout>
+
         <SettingLayout columnStart={1} columnEnd={3}>
           <Name>Tags</Name>
           <TagsWrapper>
@@ -106,20 +90,20 @@ export const Admin = () => {
             })}
           </TagsWrapper>
         </SettingLayout>
+
         <SettingLayout columnStart={1} columnEnd={2}>
           <Name>Rate</Name>
           <RateWrapper>
             <FieldSmall
               placeholder=""
-              type="search"
+              type="text"
               name=""
               iconVisible={false}
-              iconHeight="24"
-              iconWidth="24"
             ></FieldSmall>
             <Star height="24" width="24" />
           </RateWrapper>
         </SettingLayout>
+
         <SettingLayout columnStart={1} columnEnd={2}>
           <Name>Time</Name>
           <TimeWrapper>
@@ -128,126 +112,98 @@ export const Admin = () => {
               type="search"
               name=""
               iconVisible={false}
-              iconHeight="24"
-              iconWidth="24"
             ></FieldSmall>
             <DropdownMenu optionsArray={timesUnit}></DropdownMenu>
             <Clock height="24" width="24" />
           </TimeWrapper>
         </SettingLayout>
+
+        <SettingLayout columnStart={1} columnEnd={3}>
+          <Name>Ingredients</Name>
+          <IngredientAddingRow
+            labelColor={COLORS.oliveGreen}
+          ></IngredientAddingRow>
+        </SettingLayout>
+
+        <SettingLayout columnStart={1} columnEnd={3}>
+          <Name>Recipe</Name>
+          <RecipeStepWrapper>
+            1 <FieldSmall iconVisible={false} name="" type="text"></FieldSmall>
+          </RecipeStepWrapper>
+        </SettingLayout>
+
+        <SettingLayout columnStart={1} columnEnd={3}>
+          <Name>
+            Nutrition Facts <NutritionMark>(per 100g)</NutritionMark>
+          </Name>
+          <NutritionFactsTable></NutritionFactsTable>
+        </SettingLayout>
+
+        <SettingLayout columnStart={1} columnEnd={3}>
+          <Name>Upload image</Name>
+          <FilesInput />
+        </SettingLayout>
+        <SettingLayout columnStart={1} columnEnd={2}>
+          <TextButton>Delete recipe</TextButton>
+        </SettingLayout>
+        <SettingLayout columnStart={2} columnEnd={3}>
+          <BigButton>Save</BigButton>
+        </SettingLayout>
       </Layout>
-      recipees
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          // get data from checkboxes
-          const categories: string[] = []
-          const checkboxes = document.querySelectorAll('input[type="checkbox"]')
-          checkboxes.forEach((checkbox) => {
-            if ((checkbox as HTMLInputElement).checked) {
-              categories.push((checkbox as HTMLInputElement).name)
-            }
-          })
-          createRecipeFx({ name: recipe, categories })
-          e.currentTarget.reset()
-          setRecipe('')
-        }}
-      >
-        <button type="submit">add</button>
-      </form>
-      {recipes?.map((recipe) => (
-        <div key={recipe._id} style={{ display: 'flex', gap: '10px' }}>
-          <Link to={`/admin/${recipe._id}`}>{recipe.name}</Link>
-          <button onClick={() => deleteRecipeFx(recipe._id)}>x</button>
-        </div>
-      ))}
-      <hr />
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          // get data from recipe checkboxes
-          const recipeCheckboxes =
-            document.querySelectorAll('input[data-recipe]')
-          const recipes: string[] = []
-          recipeCheckboxes.forEach((checkbox) => {
-            if ((checkbox as HTMLInputElement).checked) {
-              recipes.push((checkbox as HTMLInputElement).name)
-            }
-          })
-          createSectionFx({ name: section, recipes })
-          setSection('')
-          e.currentTarget.reset()
-        }}
-      >
-        <div>
-          name:{' '}
-          <input
-            name="name"
-            type="text"
-            value={section}
-            onChange={(e) => setSection(e.target.value)}
-          />
-        </div>
-        <div>
-          recipes:
-          {recipes?.map((recipe) => (
-            <div>
-              <label>{recipe.name}</label>
-              <input
-                data-recipe
-                key={recipe._id}
-                type="checkbox"
-                name={recipe._id}
-              />
-            </div>
-          ))}
-        </div>
-        <button type="submit">add</button>
-      </form>
-      <hr />
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          createIngredientFx({ name: ingredient, price })
-          setIngredient('')
-          setPrice('')
-        }}
-      >
-        <div>
-          name:
-          <input
-            name="name"
-            type="text"
-            value={ingredient}
-            onChange={(e) => setIngredient(e.target.value)}
-          />
-        </div>
-        <div>
-          price:
-          <input
-            name="price"
-            type="text"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-        </div>
-        <button type="submit">add</button>
-      </form>
     </div>
   )
 }
-const TimeWrapper = styled.div`
+
+const Nav = styled.div`
+  height: calc(26px + 4rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const Title = styled.h2`
+  font-family: 'Enthalpy 298';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 20px;
+  color: #ffffff;
+`
+
+const NutritionMark = styled.span`
+  position: relative;
+  ${TEXT_SIZE_5}
+  color: ${COLORS.lightGray}
+`
+
+const RecipeStepWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 0px;
-  gap: 4px;
+  gap: 6px;
+  width: 100%;
+
+  ${TEXT_SIZE_3_LIGHT}
+  color: ${COLORS.white}
+`
+const TimeWrapper = styled.div`
+  display: grid;
+
+  grid-template-columns: 42% 36% 13%;
+  column-gap: 10px;
+  row-gap: 32px;
+
+  align-items: center;
+  padding: 0px;
+  gap: 8px;
 
   width: 100%;
 
-  flex: none;
-  order: 1;
   flex-grow: 0;
+  min-height: 0; /* NEW */
+  min-width: 0;
 `
 const RateWrapper = styled.div`
   display: flex;
@@ -281,6 +237,7 @@ const Layout = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   column-gap: 10px;
+  justify-content: flex-start;
   row-gap: 32px;
 
   min-height: 0; /* NEW */
@@ -294,9 +251,9 @@ const Button = styled.button`
 const SettingLayout = styled.div<{ columnStart: number; columnEnd: number }>`
   position: relative;
   display: flex;
-  flex: 1 1 0px;
   flex-direction: column;
   align-items: start;
+  justify-content: flex-start;
   grid-column: ${({ columnStart }) => columnStart} /
     ${({ columnEnd }) => columnEnd};
   gap: 8px;
@@ -305,5 +262,5 @@ const SettingLayout = styled.div<{ columnStart: number; columnEnd: number }>`
   min-width: 0;
 `
 const Name = styled.div`
-  color: ${colors.white} ${text_h3_light};
+  color: ${COLORS.white} ${TEXT_SIZE_3_LIGHT};
 `
