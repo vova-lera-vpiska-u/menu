@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { text_h4 } from '../../styles/fonts'
-import { colors } from '../../styles/colors'
+import { TEXT_SIZE_4 } from '../../styles/fonts'
+import { COLORS } from '../../styles/colors'
 
 export const ToggleButtonSmall = <T extends { _id: string; name: string }>({
   label,
@@ -47,8 +47,8 @@ const Title = styled.div`
   box-sizing: border-box;
   border: 1px solid #ffffff;
   border-radius: 3px;
-  ${text_h4}
-  color: ${colors.white};
+  ${TEXT_SIZE_4}
+  color: ${COLORS.white};
   /* vertical-align: text-top; */
   user-select: none;
 `

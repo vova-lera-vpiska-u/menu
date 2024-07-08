@@ -1,59 +1,33 @@
 import styled from 'styled-components'
-import { colors } from '../../styles/colors'
-import Check from '../../../public/img/Check.png'
-import { text_h5 } from '../../styles/fonts'
+import { TEXT_SIZE_5 } from '../../styles/fonts'
+import '../shared/ui/checkboxInput.css'
 
-export const Checkbox = ({ children }: { children: React.ReactNode }) => {
+export const Checkbox = ({
+  children,
+  gap,
+  labelColor,
+}: {
+  children: React.ReactNode
+  gap: string
+  labelColor: string
+}) => {
   return (
-    <Label>
-      <Input type="checkbox" id="check" imageURL={Check}></Input>
+    <Label gap={gap} labelColor={labelColor}>
+      <input type="checkbox" className="checkboxInput"></input>
       {children}
     </Label>
   )
 }
 
-const Input = styled.input<{ imageURL: string }>`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-height: 16px;
-  max-width: 16px;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: transparent;
-  accent-color: ${colors.oliveGreen};
+// const Input = styled.input<{ imageURL: string }>``
 
-  & + label {
-    display: inline-flex;
-    align-items: center;
-    user-select: none;
-  }
-  & + label::before {
-    content: '';
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    flex-shrink: 0;
-    flex-grow: 0;
-    border: 1px solid ${colors.oliveGreen};
-    border-radius: 0.25em;
-    margin-right: 0.5em;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background: none;
-  }
-  &:checked + label::before {
-    background-image: url(${({ imageURL }) => imageURL});
-  }
-`
-
-const Label = styled.label`
+const Label = styled.label<{ gap: string; labelColor: string }>`
   position: relative;
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: ${({ gap }) => gap};
 
-  ${text_h5};
+  ${TEXT_SIZE_5};
+  color: ${({ labelColor }) => labelColor};
   text-align: left;
 `

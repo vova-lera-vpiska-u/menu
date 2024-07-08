@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { colors } from '../styles/colors'
+import { COLORS } from '../styles/colors'
 
 export const LogoAdminMode = () => {
   return (
@@ -24,7 +24,7 @@ const Subname = styled.div`
   line-height: 29px;
   color: #ffffff;
   text-transform: uppercase;
-  color: ${colors.danger};
+  color: ${COLORS.danger};
 `
 
 const SubnameContainer = styled.div`

@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { useUnit } from 'effector-react'
 import { userModel } from '../entities/user/model'
 import { routingModel } from '../entities/routing/model'
-import { FieldBig } from './FieldBig'
-import { text_h1 } from '../styles/fonts'
-import { colors } from '../styles/colors'
+import { FieldBig } from './shared/FieldBig'
+import { TEXT_SIZE_1 } from '../styles/fonts'
+import { COLORS } from '../styles/colors'
 import { BigButton } from './Buttons/BigButton'
 import { Checkbox } from './Buttons/Ckeckbox'
 import { LogoAdminMode } from './LogoAdminMode'
@@ -40,7 +40,7 @@ export const Login = () => {
             name="password"
             placeholder="Password"
           ></FieldBig>
-          <Checkbox>
+          <Checkbox gap="8px" labelColor={COLORS.lightGray}>
             By clicking on the button, I confirm that I have no intention of
             poisoning anyone, and I undertake to provide the information in full
           </Checkbox>
@@ -57,8 +57,8 @@ const Layout = styled.div`
 `
 
 const Title = styled.h1`
-  ${text_h1};
-  color: ${colors.white};
+  ${TEXT_SIZE_1};
+  color: ${COLORS.white};
 `
 
 const Form = styled.form`

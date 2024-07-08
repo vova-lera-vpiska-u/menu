@@ -1,4 +1,10 @@
-export const Cross = ({ height, width }: { height: string; width: string }) => {
+export const Cross = ({
+  height,
+  width,
+}: {
+  height?: string
+  width?: string
+}) => {
   return (
     <svg
       width={width}

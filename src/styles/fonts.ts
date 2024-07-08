@@ -1,6 +1,6 @@
 import { css } from 'styled-components'
 
-export const text_h1 = css`
+export const TEXT_SIZE_1 = css`
   font-family: 'Enthalpy 298';
   font-style: normal;
   font-weight: 400;
@@ -8,7 +8,7 @@ export const text_h1 = css`
   line-height: 41px;
 `
 
-export const text_h2 = css`
+export const TEXT_SIZE_2 = css`
   font-family: 'Enthalpy 298';
   font-style: normal;
   font-weight: 400;
@@ -16,7 +16,7 @@ export const text_h2 = css`
   line-height: 32px;
 `
 
-export const text_h3_light = css`
+export const TEXT_SIZE_3_LIGHT = css`
   font-family: 'Alumni Sans';
   font-style: normal;
   font-weight: 300;
@@ -24,7 +24,7 @@ export const text_h3_light = css`
   line-height: 29px;
 `
 
-export const text_h3_regular = css`
+export const TEXT_SIZE_3_REGULAR = css`
   font-family: 'Alumni Sans';
   font-style: normal;
   font-weight: 400;
@@ -32,15 +32,16 @@ export const text_h3_regular = css`
   line-height: 29px;
 `
 
-export const text_h4 = css`
+export const TEXT_SIZE_4 = css`
   font-family: 'Alumni Sans';
   font-style: normal;
   font-weight: 400;
   font-size: 20px;
   line-height: 24px;
+  margin: 0 auto;
 `
 
-export const text_h5 = css`
+export const TEXT_SIZE_5 = css`
   font-family: 'Alumni Sans';
   font-style: normal;
   font-weight: 400;

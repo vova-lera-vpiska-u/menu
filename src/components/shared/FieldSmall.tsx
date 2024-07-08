@@ -1,8 +1,8 @@
 import styled from 'styled-components'
-import { colors } from '../styles/colors'
-import { IconButton } from './Buttons/IconButton'
-import { text_h3_light } from '../styles/fonts'
-import { Cross } from '../icons/Cross'
+import { COLORS } from '../../styles/colors'
+import { IconButton } from '../Buttons/IconButton'
+import { TEXT_SIZE_4 } from '../../styles/fonts'
+import { Cross } from '../../icons/Cross'
 
 export const FieldSmall = ({
   type,
@@ -14,10 +14,10 @@ export const FieldSmall = ({
 }: {
   type: string
   name: string
-  placeholder: string
+  placeholder?: string
   iconVisible: boolean
-  iconHeight: string
-  iconWidth: string
+  iconHeight?: string
+  iconWidth?: string
 }) => {
   return (
     <Layout>
@@ -43,28 +43,27 @@ const Layout = styled.div`
   box-sizing: border-box;
   gap: 10px;
 
-  border: 1px solid ${colors.lightGray};
-  border-radius: 3px;
+  border: 1px solid ${COLORS.lightGray};
 
   &:focus-visible,
   &:focus,
   &:active {
-    border: 1px solid ${colors.oliveGreen};
+    border: 1px solid ${COLORS.oliveGreen};
   }
 `
 
 const InputInField = styled.input`
   background-color: transparent;
   border: 0;
-  ${text_h3_light};
+  ${TEXT_SIZE_4};
   width: 100%;
-  color: ${colors.oliveGreen};
+  color: ${COLORS.oliveGreen};
 
   &:focus-visible {
     outline: none;
   }
 
   &::-webkit-input-placeholder {
-    color: ${colors.oliveGreenDisable};
+    color: ${COLORS.oliveGreenDisable};
   }
 `
