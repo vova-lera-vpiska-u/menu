@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { Section } from "../models/section.js";
 import { Recipe } from "../models/recipe.js";
+import { expressjwt } from "express-jwt";
+import { jwt } from "../jwt.js";
 
 export const sectionsRouter = new Router();
 sectionsRouter.get("/", async (req, res) => {
@@ -13,7 +15,7 @@ sectionsRouter.get("/:name", async (req, res) => {
   const recipes = await Recipe.find({ _id: { $in: sections.recipes } }).populate("categories ingredients");
   res.send(recipes).status(200);
 });
-sectionsRouter.post("/", async (req, res) => {
+sectionsRouter.post("/", expressjwt(jwt), async (req, res) => {
   const section = new Section(req.body);
   await section.save();
   res.send(section).status(200);
