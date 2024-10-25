@@ -173,7 +173,7 @@ const Title = styled.h2`
 const NutritionMark = styled.span`
   position: relative;
   ${TEXT_SIZE_5}
-  color: ${COLORS.lightGray}
+  color: ${COLORS.lightGray};
 `
 
 const RecipeStepWrapper = styled.div`
@@ -186,7 +186,7 @@ const RecipeStepWrapper = styled.div`
   width: 100%;
 
   ${TEXT_SIZE_3_LIGHT}
-  color: ${COLORS.white}
+  color: ${COLORS.white};
 `
 const TimeWrapper = styled.div`
   display: grid;
@@ -258,7 +258,6 @@ const SettingLayout = styled.div<{ columnStart: number; columnEnd: number }>`
     ${({ columnEnd }) => columnEnd};
   gap: 8px;
 
-  overflow: hidden; /* NEW */
   min-width: 0;
 `
 const Name = styled.div`

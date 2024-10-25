@@ -1,10 +1,19 @@
 import styled from 'styled-components'
+import { AdminIcon } from '../icons/AdminIcon'
+import { userModel } from '../entities/user/model'
+import { useUnit } from 'effector-react'
 
 export const Logo = () => {
+  const [user] = useUnit([userModel.stores.user])
   return (
     <Layout>
       <Heart>❤️</Heart>
       <Name>Menu</Name>
+      {user && (
+        <AdminIconStyled>
+          <AdminIcon />
+        </AdminIconStyled>
+      )}
     </Layout>
   )
 }
@@ -25,7 +34,7 @@ const Name = styled.h1`
 const Heart = styled.div`
   position: absolute;
   scale: 0.7;
-  left: calc(50% - 50px);
+  left: calc(50% - 52px);
   top: calc(50% - 3px);
   transform: rotate(-25deg);
 `
@@ -33,10 +42,14 @@ const Heart = styled.div`
 const Layout = styled.div`
   user-select: none;
   position: relative;
-  padding-top: 20px;
-  padding-bottom: 10px;
   height: 47px;
   display: flex;
   align-items: center;
   justify-content: center;
+`
+
+const AdminIconStyled = styled.div`
+  position: absolute;
+  left: calc(50% + 30px);
+  top: calc(50% - 3px);
 `

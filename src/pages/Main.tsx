@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Logo } from '../components/Logo'
-import { LOGIN_PATH } from '../routes/public/paths'
 import { useUnit } from 'effector-react'
 import { userModel } from '../entities/user/model'
 import { ADMIN_PATH } from '../routes/private/paths'
@@ -11,26 +10,15 @@ import Ethanol from '../../public/img/Ethanol.png'
 import HSL from '../../public/img/HLS.png'
 import Dessert from '../../public/img/5 element.png'
 import Fire from '../../public/img/Fire.png'
-import { TEXT_SIZE_1 } from '../styles/fonts'
+import { TEXT_SIZE_1, TEXT_SIZE_3_REGULAR } from '../styles/fonts'
 import { COLORS } from '../styles/colors'
-import { BigButton } from '../components/Buttons/BigButton'
 
 export const Main = () => {
   const [user] = useUnit([userModel.stores.user])
   return (
     <>
       <Logo />
-      {user ? (
-        <Login to={ADMIN_PATH}>AD</Login>
-      ) : (
-        <Login to={LOGIN_PATH}>LOGIN</Login>
-      )}
-      {user ? (
-        <BigButton>
-          <Login to={ADMIN_PATH}>Add Recipe</Login>
-        </BigButton>
-      ) : null}
-
+      {user && <AdminPageLink to={ADMIN_PATH}>Add Recipe</AdminPageLink>}
       <Layout>
         <Element imageURL={Fire} to={'/fire'}>
           FIRE
@@ -60,14 +48,27 @@ export const Main = () => {
     </>
   )
 }
-const Login = styled(Link)`
-  position: absolute;
-  top: 16px;
-  right: 32px;
+const AdminPageLink = styled(Link)`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  max-height: 41px;
+  min-width: 29px;
+  width: 100%;
+  padding: 6px 0;
+  box-sizing: border-box;
+  background-color: ${COLORS.oliveGreen};
+  border-radius: 3px;
+
+  ${TEXT_SIZE_3_REGULAR}
+  color: ${COLORS.white};
 `
 
 const Layout = styled.div`
-  padding-top: 34px;
+  padding-top: 1rem;
   display: grid;
   width: 100%;
   gap: 10px;
