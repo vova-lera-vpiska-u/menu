@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { COLORS } from '../../styles/colors'
-import DropdownArrow from '../../../public/img/DropdownArrow.svg'
+import DropdownArrow from '@assets/img/DropdownArrow.svg'
 import { TEXT_SIZE_4 } from '../../styles/fonts'
 
 export const DropdownMenu = ({
