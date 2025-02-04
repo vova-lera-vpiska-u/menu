@@ -1,6 +1,6 @@
 import { createEffect, createEvent, createStore, sample } from 'effector'
-import { Category, Ingredient, Recipe } from '../api/types'
-import { url } from '../api/consts'
+import { Category, Ingredient, Recipe } from './api/types'
+import { url } from './api/consts'
 
 export const appStarted = createEvent()
 

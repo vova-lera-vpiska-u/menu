@@ -9,8 +9,12 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       '@': '/src',
-      '@components': '/src/components',
-      '@assets': '/src/assets',
+      '@app': '/src/app',
+      '@pages': '/src/pages',
+      '@widgets': '/src/widgets',
+      '@features': '/src/features',
+      '@entities': '/src/entities',
+      '@shared': '/src/shared',
     },
   },
   plugins: [
