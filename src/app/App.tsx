@@ -1,12 +1,10 @@
 import { RouterProvider } from 'react-router-dom'
 
-import styled, { createGlobalStyle } from 'styled-components'
+import styled from 'styled-components'
 
 import { router } from '../shared/routes/router'
 import './App.css'
-import AlumniSansRegularTtf from '/fonts/AlumniSans-Regular.ttf'
-import RozoviiChulokTtf from '/fonts/Rozovii Chulok.ttf'
-import Enthlapy298Otf from '/fonts/enthalpy298regular.otf'
+import { FontStyles } from './fonts'
 
 export function App() {
     return (
@@ -17,24 +15,6 @@ export function App() {
         </>
     )
 }
-
-const FontStyles = createGlobalStyle`
-@font-face {
-    font-family: 'Rozovii Chulok';
-    src: url(${RozoviiChulokTtf}) format('truetype');
-  }
-
-  
-@font-face {
-    font-family: 'Enthalpy 298';
-    src: url(${Enthlapy298Otf}) format('opentype');
-  }
-
-@font-face {
-    font-family: 'Alumni Sans';
-    src: url(${AlumniSansRegularTtf}) format('truetype');
-  }
-`
 
 const Version = styled.div`
     position: absolute;
