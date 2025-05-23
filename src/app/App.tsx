@@ -2,10 +2,9 @@ import { RouterProvider } from 'react-router-dom'
 
 import styled from 'styled-components'
 
-import { router } from '@app/router'
-
 import './app.css'
 import { FontStyles } from './fonts'
+import { router } from './router'
 
 export function App() {
     return (

@@ -1,17 +1,19 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
-import { useUnit } from 'effector-react'
+import { useGate, useUnit } from 'effector-react'
+
+import { recipesModel } from '@entities/recipe'
 
 import { Recipe } from '@shared/api/types'
 import { $categories } from '@shared/model'
 import { ADMIN_PATH } from '@shared/routes/private-paths'
 import { Image } from '@shared/ui/image'
 
-import { recipePageMounted, recipePageUnMounted, updateRecipeFx } from './model'
-
 export const Item = () => {
     const { id } = useParams()
+    useGate(recipesModel.RecipePageGate, id)
+    const [recipeUpdated] = useUnit([recipesModel.recipeUpdated])
     const [recipe, setRecipe] = useState<Recipe | null>(null)
     const categories = useUnit($categories)
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,11 +25,6 @@ export const Item = () => {
         })
     }
 
-    useEffect(() => {
-        if (id) recipePageMounted(id)
-        return () => recipePageUnMounted()
-    }, [id])
-
     if (!recipe || !id) return null
     return (
         <div>
@@ -35,7 +32,7 @@ export const Item = () => {
             <form
                 onSubmit={(e) => {
                     e.preventDefault()
-                    updateRecipeFx({ recipe, id })
+                    recipeUpdated({ recipe, id })
                 }}
             >
                 <Image src={recipe.image} width="200" height="200" alt="" />

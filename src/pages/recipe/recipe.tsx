@@ -1,23 +1,19 @@
-import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useUnit } from 'effector-react'
+import { useGate, useUnit } from 'effector-react'
 import styled from 'styled-components'
 
-import { $recipe, recipePageMounted, recipePageUnMounted } from '@pages/item/model'
-
 import { GoBackButton } from '@widgets/GoBackButton'
+
+import { recipesModel } from '@entities/recipe'
 
 import { Image } from '@shared/ui/image'
 
 export const Recipe = () => {
-    const recipe = useUnit($recipe)
     const { id, title } = useParams<{ id: string; title: string }>()
+    useGate(recipesModel.RecipePageGate, id)
 
-    useEffect(() => {
-        if (id) recipePageMounted(id)
-        return () => recipePageUnMounted()
-    }, [id])
+    const recipe = useUnit(recipesModel.$recipe)
 
     if (!recipe || !id) return null
 
