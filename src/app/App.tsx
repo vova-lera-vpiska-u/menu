@@ -1,19 +1,21 @@
 import { RouterProvider } from 'react-router-dom'
-import './App.css'
+
 import styled, { createGlobalStyle } from 'styled-components'
+
+import { router } from '../shared/routes/router'
+import './App.css'
+import AlumniSansRegularTtf from '/fonts/AlumniSans-Regular.ttf'
 import RozoviiChulokTtf from '/fonts/Rozovii Chulok.ttf'
 import Enthlapy298Otf from '/fonts/enthalpy298regular.otf'
-import AlumniSansRegularTtf from '/fonts/AlumniSans-Regular.ttf'
-import { router } from '../shared/routes/router'
 
 export function App() {
-  return (
-    <>
-      <FontStyles />
-      <RouterProvider router={router} />
-      <Version>v{import.meta.env.VITE_APP_VERSION}</Version>
-    </>
-  )
+    return (
+        <>
+            <FontStyles />
+            <RouterProvider router={router} />
+            <Version>v{import.meta.env.VITE_APP_VERSION}</Version>
+        </>
+    )
 }
 
 const FontStyles = createGlobalStyle`
@@ -35,8 +37,8 @@ const FontStyles = createGlobalStyle`
 `
 
 const Version = styled.div`
-  position: absolute;
-  bottom: 0%;
-  right: 0%;
-  padding: 10px;
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+    padding: 10px;
 `

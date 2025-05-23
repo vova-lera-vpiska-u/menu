@@ -1,23 +1,24 @@
 import { createHashRouter } from 'react-router-dom'
-import { publicRoutes } from './public/routes'
-import { privateRoutes } from './private/private'
-import { ProtectedRoutes } from './private/ProtectedRoutes'
-import { PublicRoutes } from './public/PublicRoutes'
+
 import { generalRoutes } from './general/routes'
+import { ProtectedRoutes } from './private/ProtectedRoutes'
+import { privateRoutes } from './private/private'
+import { PublicRoutes } from './public/PublicRoutes'
+import { publicRoutes } from './public/routes'
 
 export const router = createHashRouter(
-  [
-    ...generalRoutes,
+    [
+        ...generalRoutes,
+        {
+            element: <PublicRoutes />,
+            children: publicRoutes,
+        },
+        {
+            element: <ProtectedRoutes />,
+            children: privateRoutes,
+        },
+    ],
     {
-      element: <PublicRoutes />,
-      children: publicRoutes,
+        basename: '/',
     },
-    {
-      element: <ProtectedRoutes />,
-      children: privateRoutes,
-    },
-  ],
-  {
-    basename: '/',
-  }
 )

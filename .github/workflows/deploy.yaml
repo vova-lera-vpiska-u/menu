@@ -1,35 +1,35 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 
 permissions:
-  contents: write
+    contents: write
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v3
+        steps:
+            - name: Checkout the repository
+              uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '18'
 
-      - name: Install dependencies
-        run: npm install
+            - name: Install dependencies
+              run: npm install
 
-      - name: Build the React app
-        run: npm run build
+            - name: Build the React app
+              run: npm run build
 
-      - name: Deploy
-        run: |
-          git config --global user.email "awqsome@bk.ru"
-          git config --global user.name "awqsomee"
-          git remote set-url origin https://awqsomee:${{ secrets.GITHUB_TOKEN }}@github.com/vova-lera-vpiska-u/menu.git
-          npm run deploy
+            - name: Deploy
+              run: |
+                  git config --global user.email "awqsome@bk.ru"
+                  git config --global user.name "awqsomee"
+                  git remote set-url origin https://awqsomee:${{ secrets.GITHUB_TOKEN }}@github.com/vova-lera-vpiska-u/menu.git
+                  npm run deploy
