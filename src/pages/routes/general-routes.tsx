@@ -1,39 +1,49 @@
 import { Main } from '@pages/Main'
+import { Recipe } from '@pages/Recipe'
+import { RecipeList } from '@pages/RecipeList'
 
-import { Recipe } from '@widgets/Recipe'
-import { RecipeList } from '@widgets/RecipeList'
+import {
+    AIR_PATH,
+    ALL_RECIPES_PATH,
+    DESSERTS_PATH,
+    EARTH_PATH,
+    FIRE_PATH,
+    HOMEPAGE_PATH,
+    RECIPE_PATH,
+    WATER_PATH,
+} from '@shared/routes/shared-paths'
 
 export const generalRoutes = [
     {
-        path: '/',
+        path: HOMEPAGE_PATH,
         element: <Main />,
     },
     {
-        path: '/air',
+        path: AIR_PATH,
         element: <RecipeList title="AIR" />,
     },
     {
-        path: '/fire',
+        path: FIRE_PATH,
         element: <RecipeList title="FIRE" />,
     },
     {
-        path: '/water',
+        path: WATER_PATH,
         element: <RecipeList title="WATER" />,
     },
     {
-        path: '/earth',
+        path: EARTH_PATH,
         element: <RecipeList title="EARTH" />,
     },
     {
-        path: '/desserts',
+        path: DESSERTS_PATH,
         element: <RecipeList title="DESSERTS" />,
     },
     {
-        path: '/all',
+        path: ALL_RECIPES_PATH,
         element: <RecipeList title="ALL" />,
     },
     {
-        path: '/:title/:id',
+        path: RECIPE_PATH,
         element: <Recipe />,
     },
 ]

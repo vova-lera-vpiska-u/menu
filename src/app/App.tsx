@@ -2,9 +2,9 @@ import { RouterProvider } from 'react-router-dom'
 
 import styled from 'styled-components'
 
-import { router } from '@shared/routes/router'
+import { router } from '@app/router'
 
-import './App.css'
+import './app.css'
 import { FontStyles } from './fonts'
 
 export function App() {

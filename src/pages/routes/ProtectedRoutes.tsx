@@ -5,7 +5,7 @@ import { useUnit } from 'effector-react'
 import { routingModel } from '@entities/routing/model'
 import { userModel } from '@entities/user/model'
 
-import { LOGIN_PATH } from '../public/paths'
+import { LOGIN_PATH } from '@shared/routes/public-paths'
 
 export const ProtectedRoutes = () => {
     const [user, redirected] = useUnit([userModel.stores.user, routingModel.events.redirected])

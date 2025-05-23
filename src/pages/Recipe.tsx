@@ -4,10 +4,11 @@ import { useParams } from 'react-router-dom'
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
-import { Image } from '@shared/ui/image'
+import { $recipe, recipePageMounted, recipePageUnMounted } from '@pages/item/model'
 
-import { GoBackButton } from './GoBackButton'
-import { $recipe, recipePageMounted, recipePageUnMounted } from './admin/item/model'
+import { GoBackButton } from '@widgets/GoBackButton'
+
+import { Image } from '@shared/ui/image'
 
 export const Recipe = () => {
     const recipe = useUnit($recipe)

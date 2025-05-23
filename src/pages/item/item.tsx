@@ -5,6 +5,7 @@ import { useUnit } from 'effector-react'
 
 import { Recipe } from '@shared/api/types'
 import { $categories } from '@shared/model'
+import { ADMIN_PATH } from '@shared/routes/private-paths'
 import { Image } from '@shared/ui/image'
 
 import { recipePageMounted, recipePageUnMounted, updateRecipeFx } from './model'
@@ -30,7 +31,7 @@ export const Item = () => {
     if (!recipe || !id) return null
     return (
         <div>
-            <Link to={'/admin'}>go back</Link>
+            <Link to={ADMIN_PATH}>go back</Link>
             <form
                 onSubmit={(e) => {
                     e.preventDefault()

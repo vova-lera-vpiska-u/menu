@@ -16,6 +16,7 @@ import { Category } from '@shared/api/types'
 import { Clock } from '@shared/icons/Clock'
 import { Star } from '@shared/icons/Star'
 import { $categories } from '@shared/model'
+import { HOMEPAGE_PATH } from '@shared/routes/shared-paths'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_3_LIGHT, TEXT_SIZE_5 } from '@shared/styles/fonts'
 import { DropdownMenu } from '@shared/ui/DropdownMenu'
@@ -48,7 +49,7 @@ export const Admin = () => {
             <Button
                 onClick={() => {
                     logout()
-                    navigate('/', { replace: true })
+                    navigate(HOMEPAGE_PATH, { replace: true })
                 }}
             >
                 Logout

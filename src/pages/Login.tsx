@@ -3,16 +3,17 @@ import { useNavigate } from 'react-router-dom'
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
+import { BigButton } from '@widgets/Buttons/BigButton'
+import { Checkbox } from '@widgets/Buttons/Ckeckbox'
+import { LogoAdminMode } from '@widgets/LogoAdminMode'
+
 import { routingModel } from '@entities/routing/model'
 import { userModel } from '@entities/user/model'
 
+import { ADMIN_PATH } from '@shared/routes/private-paths'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_1 } from '@shared/styles/fonts'
 import { FieldBig } from '@shared/ui/FieldBig'
-
-import { BigButton } from './Buttons/BigButton'
-import { Checkbox } from './Buttons/Ckeckbox'
-import { LogoAdminMode } from './LogoAdminMode'
 
 export const Login = () => {
     const navigate = useNavigate()
@@ -26,7 +27,7 @@ export const Login = () => {
         <>
             <LogoAdminMode />
             <Layout>
-                <Title>AUTORIZATION</Title>
+                <Title>AUTHORIZATION</Title>
                 <Form
                     onSubmit={(e) => {
                         e.preventDefault()
@@ -34,7 +35,7 @@ export const Login = () => {
                             username: e.currentTarget.username.value,
                             password: e.currentTarget.password.value,
                         })
-                        navigate(redirectedFrom || '/admin', { replace: true })
+                        navigate(redirectedFrom || ADMIN_PATH, { replace: true })
                         clearRedirect()
                     }}
                 >

@@ -3,13 +3,14 @@ import { useEffect, useMemo, useState } from 'react'
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
-import { $recipes, getRecipesFx } from '@shared/model'
-import { Center } from '@shared/ui/ui/Center'
+import { Filters } from '@widgets/Filters'
+import { GoBackButton } from '@widgets/GoBackButton'
+import { Logo } from '@widgets/Logo'
+import { RecipeCard } from '@widgets/RecipeCard'
 
-import { Filters } from './Filters'
-import { GoBackButton } from './GoBackButton'
-import { Logo } from './Logo'
-import { RecipeCard } from './RecipeCard'
+import { $recipes, getRecipesFx } from '@shared/model'
+import { HOMEPAGE_PATH } from '@shared/routes/shared-paths'
+import { Center } from '@shared/ui/ui/Center'
 
 export const RecipeList = ({ title }: { title: string }) => {
     const menu = useUnit($recipes)
@@ -65,7 +66,7 @@ export const RecipeList = ({ title }: { title: string }) => {
                     </Flex>
                     <Navbar hidden={!show}>
                         <Logo />
-                        <GoBackButton to={'/'} />
+                        <GoBackButton to={HOMEPAGE_PATH} />
                         <Title>{title}</Title>
                         <Filters
                             filters={filters}

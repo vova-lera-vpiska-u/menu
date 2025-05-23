@@ -1,7 +1,7 @@
-import { Admin } from '@widgets/admin/Admin'
-import { Item } from '@widgets/admin/item/Item'
+import { Admin } from '@pages/admin/admin'
+import { Item } from '@pages/item/item'
 
-import { ADMIN_ITEM_PATH, ADMIN_PATH } from './paths'
+import { ADMIN_ITEM_PATH, ADMIN_PATH } from '@shared/routes/private-paths'
 
 export const privateRoutes = [
     {

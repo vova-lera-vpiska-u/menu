@@ -13,7 +13,15 @@ import Earth from '@shared/assets/img/Earth.png'
 import Ethanol from '@shared/assets/img/Ethanol.png'
 import Fire from '@shared/assets/img/Fire.png'
 import HSL from '@shared/assets/img/HLS.png'
-import { ADMIN_PATH } from '@shared/routes/private/paths'
+import { ADMIN_PATH } from '@shared/routes/private-paths'
+import {
+    AIR_PATH,
+    ALL_RECIPES_PATH,
+    DESSERTS_PATH,
+    EARTH_PATH,
+    FIRE_PATH,
+    WATER_PATH,
+} from '@shared/routes/shared-paths'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_1, TEXT_SIZE_3_REGULAR } from '@shared/styles/fonts'
 
@@ -24,27 +32,27 @@ export const Main = () => {
             <LogoAdminMode />
             {user && <AdminPageLink to={ADMIN_PATH}>Add Recipe</AdminPageLink>}
             <Layout>
-                <Element imageURL={Fire} to={'/fire'}>
+                <Element imageURL={Fire} to={FIRE_PATH}>
                     FIRE
                 </Element>
-                <Element imageURL={Air} to={'/air'}>
+                <Element imageURL={Air} to={AIR_PATH}>
                     AIR
                 </Element>
-                <Element imageURL={Earth} to={'/earth'}>
+                <Element imageURL={Earth} to={EARTH_PATH}>
                     EARTH
                 </Element>
-                <Element imageURL={Dessert} to={'/desserts'}>
+                <Element imageURL={Dessert} to={DESSERTS_PATH}>
                     DESSERTS
                 </Element>
-                <Element imageURL={Ethanol} to={'/water'}>
+                <Element imageURL={Ethanol} to={WATER_PATH}>
                     ETHANOL
                 </Element>
-                <Element imageURL={HSL} to={'/water'}>
+                <Element imageURL={HSL} to={WATER_PATH}>
                     HSL
                 </Element>
                 <Carousel
                     imageURL="https://avatars.dzeninfra.ru/get-zen_doc/3401641/pub_5f6c490fd2daf865cca18014_5f6c4933d2daf865cca1bbda/scale_1200"
-                    to={'/all'}
+                    to={ALL_RECIPES_PATH}
                 >
                     ALL
                 </Carousel>

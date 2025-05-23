@@ -1,6 +1,6 @@
-import { Login } from '@widgets/Login'
+import { Login } from '@pages/Login'
 
-import { LOGIN_PATH } from './paths'
+import { LOGIN_PATH } from '@shared/routes/public-paths'
 
 export const publicRoutes = [
     {

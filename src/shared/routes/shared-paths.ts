@@ -1,0 +1,8 @@
+export const HOMEPAGE_PATH = '/'
+export const AIR_PATH = '/air'
+export const FIRE_PATH = '/fire'
+export const WATER_PATH = '/water'
+export const EARTH_PATH = '/earth'
+export const DESSERTS_PATH = '/desserts'
+export const ALL_RECIPES_PATH = '/all'
+export const RECIPE_PATH = '/:title/:id'
