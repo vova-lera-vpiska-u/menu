@@ -1,9 +1,10 @@
 import styled from 'styled-components'
 
-import { IconButton } from '../../widgets/Buttons/IconButton'
-import { Cross } from '../icons/Cross'
-import { COLORS } from '../styles/colors'
-import { TEXT_SIZE_3_LIGHT } from '../styles/fonts'
+import { IconButton } from '@widgets/Buttons/IconButton'
+
+import { Cross } from '@shared/icons/Cross'
+import { COLORS } from '@shared/styles/colors'
+import { TEXT_SIZE_3_LIGHT } from '@shared/styles/fonts'
 
 export const FieldBig = ({ type, name, placeholder }: { type: string; name: string; placeholder: string }) => {
     return (

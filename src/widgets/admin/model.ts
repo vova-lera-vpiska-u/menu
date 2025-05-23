@@ -1,8 +1,8 @@
 import { createEffect, createEvent, createStore, sample } from 'effector'
 
-import { url } from '../../shared/api/consts'
-import { Ingredient } from '../../shared/api/types'
-import { getCategoriesFx, getIngredientsFx, getRecipesFx } from '../../shared/model'
+import { url } from '@shared/api/consts'
+import { Ingredient } from '@shared/api/types'
+import { getCategoriesFx, getIngredientsFx, getRecipesFx } from '@shared/model'
 
 export const $ingredients = createStore<Ingredient[] | null>(null)
 export const adminPageMounted = createEvent()

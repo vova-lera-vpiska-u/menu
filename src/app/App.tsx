@@ -2,7 +2,8 @@ import { RouterProvider } from 'react-router-dom'
 
 import styled from 'styled-components'
 
-import { router } from '../shared/routes/router'
+import { router } from '@shared/routes/router'
+
 import './App.css'
 import { FontStyles } from './fonts'
 

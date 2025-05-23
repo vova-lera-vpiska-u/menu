@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
-import { COLORS } from '../../shared/styles/colors'
-import { TEXT_SIZE_3_REGULAR } from '../../shared/styles/fonts'
+import { COLORS } from '@shared/styles/colors'
+import { TEXT_SIZE_3_REGULAR } from '@shared/styles/fonts'
 
 export const BigButton = ({ children }: { children: React.ReactNode }) => {
     return <Button type="submit">{children}</Button>

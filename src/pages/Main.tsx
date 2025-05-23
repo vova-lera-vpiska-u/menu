@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom'
 
-import { Logo } from '@/widgets/Logo'
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
+
+import { LogoAdminMode } from '@widgets/LogoAdminMode'
+
+import { userModel } from '@entities/user/model'
 
 import Dessert from '@shared/assets/img/5 element.png'
 import Air from '@shared/assets/img/Air.png'
@@ -10,17 +13,15 @@ import Earth from '@shared/assets/img/Earth.png'
 import Ethanol from '@shared/assets/img/Ethanol.png'
 import Fire from '@shared/assets/img/Fire.png'
 import HSL from '@shared/assets/img/HLS.png'
-
-import { userModel } from '../entities/user/model'
-import { ADMIN_PATH } from '../shared/routes/private/paths'
-import { COLORS } from '../shared/styles/colors'
-import { TEXT_SIZE_1, TEXT_SIZE_3_REGULAR } from '../shared/styles/fonts'
+import { ADMIN_PATH } from '@shared/routes/private/paths'
+import { COLORS } from '@shared/styles/colors'
+import { TEXT_SIZE_1, TEXT_SIZE_3_REGULAR } from '@shared/styles/fonts'
 
 export const Main = () => {
     const [user] = useUnit([userModel.stores.user])
     return (
         <>
-            <Logo />
+            <LogoAdminMode />
             {user && <AdminPageLink to={ADMIN_PATH}>Add Recipe</AdminPageLink>}
             <Layout>
                 <Element imageURL={Fire} to={'/fire'}>

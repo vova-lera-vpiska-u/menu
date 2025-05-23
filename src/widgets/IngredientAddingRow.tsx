@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 
-import { DropdownMenu } from '../shared/ui/DropdownMenu'
-import { FieldSmall } from '../shared/ui/FieldSmall'
+import { DropdownMenu } from '@shared/ui/DropdownMenu'
+import { FieldSmall } from '@shared/ui/FieldSmall'
+
 import { Checkbox } from './Buttons/Ckeckbox'
 
 export const IngredientAddingRow = ({ labelColor }: { labelColor: string }) => {

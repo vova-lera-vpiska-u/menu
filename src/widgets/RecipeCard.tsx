@@ -2,9 +2,9 @@ import { useNavigate } from 'react-router-dom'
 
 import styled from 'styled-components'
 
-import { Recipe } from '../shared/api/types'
-import { Clock } from '../shared/icons/Clock'
-import { Star } from '../shared/icons/Star'
+import { Recipe } from '@shared/api/types'
+import { Clock } from '@shared/icons/Clock'
+import { Star } from '@shared/icons/Star'
 
 export const RecipeCard = ({ recipe, title }: { recipe: Recipe; title: string }) => {
     const navigate = useNavigate()

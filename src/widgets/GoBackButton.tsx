@@ -2,7 +2,7 @@ import { Link, LinkProps } from 'react-router-dom'
 
 import styled from 'styled-components'
 
-import { GoBack } from '../shared/icons/GoBack'
+import { GoBack } from '@shared/icons/GoBack'
 
 export const GoBackButton = (props: LinkProps) => {
     return (

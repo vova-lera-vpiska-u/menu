@@ -1,7 +1,7 @@
 import { createEffect, createEvent, createStore, sample } from 'effector'
 
-import { url } from '../../../shared/api/consts'
-import { Recipe } from '../../../shared/api/types'
+import { url } from '@shared/api/consts'
+import { Recipe } from '@shared/api/types'
 
 export const $recipe = createStore<Recipe | null>(null)
 

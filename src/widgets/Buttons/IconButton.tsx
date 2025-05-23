@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { COLORS } from '../../shared/styles/colors'
+import { COLORS } from '@shared/styles/colors'
 
 export const IconButton = ({ children }: { children: JSX.Element }) => {
     return <Button>{children}</Button>

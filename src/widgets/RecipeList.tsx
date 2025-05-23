@@ -3,8 +3,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
-import { $recipes, getRecipesFx } from '../shared/model'
-import { Center } from '../shared/ui/ui/Center'
+import { $recipes, getRecipesFx } from '@shared/model'
+import { Center } from '@shared/ui/ui/Center'
+
 import { Filters } from './Filters'
 import { GoBackButton } from './GoBackButton'
 import { Logo } from './Logo'
@@ -88,6 +89,7 @@ export const RecipeList = ({ title }: { title: string }) => {
 
 const Layout = styled.div`
     min-height: 100vh;
+    max-width: 475px;
 `
 
 const Title = styled.h2`
@@ -116,6 +118,8 @@ const Flex = styled.div`
 const Navbar = styled.div<{ hidden: boolean }>`
     max-width: 100%;
     max-width: 1280px;
+    max-width: 475px;
+
     padding: 1rem 1rem;
     padding-top: 0;
     text-align: center;
@@ -123,6 +127,5 @@ const Navbar = styled.div<{ hidden: boolean }>`
     display: block;
     position: fixed;
     top: ${(props) => (props.hidden ? '-100%' : '0')};
-    left: 0;
     transition: top 0.3s;
 `

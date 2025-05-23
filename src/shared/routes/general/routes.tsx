@@ -1,6 +1,7 @@
-import { Main } from '../../../pages/Main'
-import { Recipe } from '../../../widgets/Recipe'
-import { RecipeList } from '../../../widgets/RecipeList'
+import { Main } from '@pages/Main'
+
+import { Recipe } from '@widgets/Recipe'
+import { RecipeList } from '@widgets/RecipeList'
 
 export const generalRoutes = [
     {

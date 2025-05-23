@@ -2,8 +2,9 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import { useUnit } from 'effector-react'
 
-import { routingModel } from '../../../entities/routing/model'
-import { userModel } from '../../../entities/user/model'
+import { routingModel } from '@entities/routing/model'
+import { userModel } from '@entities/user/model'
+
 import { LOGIN_PATH } from '../public/paths'
 
 export const ProtectedRoutes = () => {

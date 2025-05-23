@@ -3,8 +3,10 @@ import { Link, useParams } from 'react-router-dom'
 
 import { useUnit } from 'effector-react'
 
-import { Recipe } from '../../../shared/api/types'
-import { $categories } from '../../../shared/model'
+import { Recipe } from '@shared/api/types'
+import { $categories } from '@shared/model'
+import { Image } from '@shared/ui/image'
+
 import { recipePageMounted, recipePageUnMounted, updateRecipeFx } from './model'
 
 export const Item = () => {
@@ -35,7 +37,7 @@ export const Item = () => {
                     updateRecipeFx({ recipe, id })
                 }}
             >
-                <img src={recipe.image} width="200" height="200" alt="" />
+                <Image src={recipe.image} width="200" height="200" alt="" />
                 <div>
                     name: <input name="name" type="text" value={recipe.name} onChange={handleChange} />
                 </div>

@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom'
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
+import { Image } from '@shared/ui/image'
+
 import { GoBackButton } from './GoBackButton'
 import { $recipe, recipePageMounted, recipePageUnMounted } from './admin/item/model'
 
@@ -25,7 +27,7 @@ export const Recipe = () => {
                 <Title>{title}</Title>
             </Nav>
             <div>
-                <img src={recipe?.image} />
+                <Image src={recipe?.image} />
                 <div>
                     <h2>{recipe.name}</h2>
                     <h3>{recipe.description}</h3>

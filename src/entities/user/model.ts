@@ -1,6 +1,6 @@
 import { createEffect, createEvent, createStore, sample } from 'effector'
 
-import { url } from '../../shared/api/consts'
+import { url } from '@shared/api/consts'
 
 type Login = {
     username: string

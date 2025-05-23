@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { ToggleButton } from '../shared/ui/ToggleButton'
+import { ToggleButton } from '@shared/ui/ToggleButton'
 
 export const Filters = ({
     filters,

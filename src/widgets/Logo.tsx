@@ -1,8 +1,9 @@
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
-import { userModel } from '../entities/user/model'
-import { AdminIcon } from '../shared/icons/AdminIcon'
+import { userModel } from '@entities/user/model'
+
+import { AdminIcon } from '@shared/icons/AdminIcon'
 
 export const Logo = () => {
     const [user] = useUnit([userModel.stores.user])

@@ -1,23 +1,13 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import babel from 'vite-plugin-babel'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 import { version } from './package.json'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
     base: '/menu/',
-    resolve: {
-        alias: {
-            '@': '/src',
-            '@app': '/src/app',
-            '@pages': '/src/pages',
-            '@widgets': '/src/widgets',
-            '@features': '/src/features',
-            '@entities': '/src/entities',
-            '@shared': '/src/shared',
-        },
-    },
     plugins: [
         babel(),
         react({
@@ -32,6 +22,7 @@ export default defineConfig(({ mode }) => ({
                 ],
             },
         }),
+        tsconfigPaths(),
     ],
     define: {
         'import.meta.env.VITE_APP_VERSION': JSON.stringify(version),

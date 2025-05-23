@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 
-import { COLORS } from '../styles/colors'
-import { TEXT_SIZE_5 } from '../styles/fonts'
+import { COLORS } from '@shared/styles/colors'
+import { TEXT_SIZE_5 } from '@shared/styles/fonts'
+
 import { FieldSmall } from './FieldSmall'
 
 export const NutritionFactsTable = () => {

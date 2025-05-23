@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
-import { COLORS } from '../styles/colors'
-import { TEXT_SIZE_4 } from '../styles/fonts'
+import { COLORS } from '@shared/styles/colors'
+import { TEXT_SIZE_4 } from '@shared/styles/fonts'
 
 export const ToggleButtonSmall = <T extends { _id: string; name: string }>({
     label,

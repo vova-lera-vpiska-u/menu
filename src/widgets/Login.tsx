@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
-import { routingModel } from '../entities/routing/model'
-import { userModel } from '../entities/user/model'
-import { COLORS } from '../shared/styles/colors'
-import { TEXT_SIZE_1 } from '../shared/styles/fonts'
-import { FieldBig } from '../shared/ui/FieldBig'
+import { routingModel } from '@entities/routing/model'
+import { userModel } from '@entities/user/model'
+
+import { COLORS } from '@shared/styles/colors'
+import { TEXT_SIZE_1 } from '@shared/styles/fonts'
+import { FieldBig } from '@shared/ui/FieldBig'
+
 import { BigButton } from './Buttons/BigButton'
 import { Checkbox } from './Buttons/Ckeckbox'
 import { LogoAdminMode } from './LogoAdminMode'
