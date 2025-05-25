@@ -14,7 +14,7 @@ recipesRouter.get("/", async (req, res) => {
   res.send(recipes).status(200);
 });
 recipesRouter.get("/:id", async (req, res) => {
-  const recipes = await Recipe.findById(req.params.id);
+  const recipes = await Recipe.findById(req.params.id).populate("categories ingredients");
   res.send(recipes).status(200);
 });
 recipesRouter.put("/:id", expressjwt(jwt), async (req, res) => {

@@ -6,6 +6,7 @@ export const Recipe = model(
   new Schema({
     name: { type: String, required: true, unique: true },
     description: { type: String },
+    section: { type: ObjectId, ref: "Section", required: true },
     categories: [{ type: ObjectId, ref: "Category", required: true }],
     ingredients: [
       {
