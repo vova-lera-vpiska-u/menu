@@ -3,8 +3,13 @@ import { createEffect } from 'effector'
 import { url } from './consts'
 import { Category, Ingredient, Recipe } from './types'
 
-export const getRecipesFx = createEffect(async (section?: string): Promise<Recipe[]> => {
-    const response = await fetch(`${url}/${section ? `sections/${section}` : `recipes`}`)
+export const getRecipesFx = createEffect(async (name?: string): Promise<Recipe[]> => {
+    const response = await fetch(`${url}/recipes?name=${name}`)
+    return await response.json()
+})
+
+export const getSectionRecipesFx = createEffect(async (section: string): Promise<Recipe[]> => {
+    const response = await fetch(`${url}/sections/${section}`)
     return await response.json()
 })
 

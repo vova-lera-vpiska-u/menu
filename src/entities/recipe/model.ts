@@ -15,6 +15,7 @@ export const $categories = createStore<Category[] | null>(null)
 const getRecipeFx = attach({ effect: recipesApi.getRecipeFx })
 const updateRecipeFx = attach({ effect: recipesApi.updateRecipeFx })
 export const getRecipesFx = attach({ effect: recipesApi.getRecipesFx })
+export const getSectionRecipesFx = attach({ effect: recipesApi.getSectionRecipesFx })
 export const getCategoriesFx = attach({ effect: recipesApi.getCategoriesFx })
 
 sample({
@@ -33,7 +34,7 @@ sample({
 })
 
 sample({
-    clock: getRecipesFx.doneData,
+    clock: [getRecipesFx.doneData, getSectionRecipesFx.doneData],
     target: $recipes,
 })
 

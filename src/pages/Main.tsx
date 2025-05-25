@@ -4,6 +4,9 @@ import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
 import { Logo } from '@widgets/Logo'
+import { RecipeCard } from '@widgets/RecipeCard'
+
+import { searchModel } from '@features/search'
 
 import { userModel } from '@entities/user/model'
 
@@ -27,39 +30,57 @@ import { TEXT_SIZE_1, TEXT_SIZE_3_REGULAR } from '@shared/styles/fonts'
 
 export const Main = () => {
     const [user] = useUnit([userModel.stores.user])
+    const [recipes] = useUnit([searchModel.$recipes])
     return (
         <>
             <Logo />
-            {user && <AdminPageLink to={ADMIN_PATH}>Add Recipe</AdminPageLink>}
-            <Layout>
-                <Element imageURL={Fire} to={FIRE_PATH}>
-                    FIRE
-                </Element>
-                <Element imageURL={Air} to={AIR_PATH}>
-                    AIR
-                </Element>
-                <Element imageURL={Earth} to={EARTH_PATH}>
-                    EARTH
-                </Element>
-                <Element imageURL={Dessert} to={DESSERTS_PATH}>
-                    DESSERTS
-                </Element>
-                <Element imageURL={Ethanol} to={WATER_PATH}>
-                    ETHANOL
-                </Element>
-                <Element imageURL={HSL} to={WATER_PATH}>
-                    HSL
-                </Element>
-                <Carousel
-                    imageURL="https://avatars.dzeninfra.ru/get-zen_doc/3401641/pub_5f6c490fd2daf865cca18014_5f6c4933d2daf865cca1bbda/scale_1200"
-                    to={ALL_RECIPES_PATH}
-                >
-                    ALL
-                </Carousel>
-            </Layout>
+            {recipes ? (
+                <Stack>
+                    {recipes.map((recipe) => (
+                        <RecipeCard key={recipe.name} recipe={recipe} title="FOUND RECIPES" />
+                    ))}
+                </Stack>
+            ) : (
+                <>
+                    {user && <AdminPageLink to={ADMIN_PATH}>Add Recipe</AdminPageLink>}
+                    <Layout>
+                        <Element imageURL={Fire} to={FIRE_PATH}>
+                            FIRE
+                        </Element>
+                        <Element imageURL={Air} to={AIR_PATH}>
+                            AIR
+                        </Element>
+                        <Element imageURL={Earth} to={EARTH_PATH}>
+                            EARTH
+                        </Element>
+                        <Element imageURL={Dessert} to={DESSERTS_PATH}>
+                            DESSERTS
+                        </Element>
+                        <Element imageURL={Ethanol} to={WATER_PATH}>
+                            ETHANOL
+                        </Element>
+                        <Element imageURL={HSL} to={WATER_PATH}>
+                            HSL
+                        </Element>
+                        <Carousel
+                            imageURL="https://avatars.dzeninfra.ru/get-zen_doc/3401641/pub_5f6c490fd2daf865cca18014_5f6c4933d2daf865cca1bbda/scale_1200"
+                            to={ALL_RECIPES_PATH}
+                        >
+                            ALL
+                        </Carousel>
+                    </Layout>
+                </>
+            )}
         </>
     )
 }
+
+const Stack = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+`
+
 const AdminPageLink = styled(Link)`
     position: relative;
     display: flex;
