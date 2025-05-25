@@ -2,28 +2,27 @@ import styled from 'styled-components'
 
 export const ToggleButton = ({
     label,
-    labels,
-    setLabels,
+    checked,
+    setLabel,
 }: {
     label: string
-    labels: string[]
-    setLabels: (labels: string[]) => void
+    checked: boolean
+    setLabel: (labels: string | null) => void
 }) => {
-    const value = !!labels.includes(label)
     return (
         <Label>
             <InvisibleInput
                 type="checkbox"
-                checked={value}
+                checked={checked}
                 onChange={() => {
-                    if (value) {
-                        setLabels(labels.filter((l) => l !== label))
+                    if (checked) {
+                        setLabel(null)
                     } else {
-                        setLabels([...labels, label])
+                        setLabel(label)
                     }
                 }}
             />
-            <Title>{`${label}`}</Title>
+            <Title>{label}</Title>
         </Label>
     )
 }

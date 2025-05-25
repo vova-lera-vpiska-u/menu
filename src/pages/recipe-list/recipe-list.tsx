@@ -42,15 +42,15 @@ export const RecipeList = ({ title }: { title: string }) => {
             window.removeEventListener('scroll', controlNavbar)
         }
     }, [lastScrollY])
-    const [filters, setFilters] = useState<string[]>([])
+    const [filter, setFilter] = useState<string | null>(null)
 
     const filteredMenu = useMemo(() => {
         if (!menu) return []
-        if (filters.length > 0) {
-            return menu.filter((recipe) => recipe.categories.some((category) => filters.includes(category.name)))
+        if (filter) {
+            return menu.filter((recipe) => recipe.categories.some((category) => category.name === filter))
         }
         return menu
-    }, [filters, menu])
+    }, [filter, menu])
 
     return (
         <Layout>
@@ -66,8 +66,8 @@ export const RecipeList = ({ title }: { title: string }) => {
                         <GoBackButton to={HOMEPAGE_PATH} />
                         <Title>{title}</Title>
                         <Filters
-                            filters={filters}
-                            setFilters={setFilters}
+                            selected={filter}
+                            setSelected={setFilter}
                             filterList={[
                                 ...new Set(
                                     (menu || [])

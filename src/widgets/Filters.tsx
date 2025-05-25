@@ -3,27 +3,18 @@ import styled from 'styled-components'
 import { ToggleButton } from '@shared/ui/ToggleButton'
 
 export const Filters = ({
-    filters,
-    setFilters,
+    selected,
+    setSelected,
     filterList,
 }: {
-    filters: string[]
-    setFilters: (labels: string[]) => void
+    selected: string | null
+    setSelected: (label: string | null) => void
     filterList: string[]
 }) => {
     return (
         <Layout>
             {filterList.map((filter) => {
-                return (
-                    <ToggleButton
-                        key={filter}
-                        label={filter}
-                        labels={filters}
-                        setLabels={(labels) => {
-                            setFilters(labels)
-                        }}
-                    />
-                )
+                return <ToggleButton key={filter} label={filter} checked={selected === filter} setLabel={setSelected} />
             })}
         </Layout>
     )
