@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { useUnit } from 'effector-react'
+import { useGate, useUnit } from 'effector-react'
 import styled from 'styled-components'
 
 import { Filters } from '@widgets/Filters'
@@ -8,12 +8,16 @@ import { GoBackButton } from '@widgets/GoBackButton'
 import { Logo } from '@widgets/Logo'
 import { RecipeCard } from '@widgets/RecipeCard'
 
-import { $recipes, getRecipesFx } from '@shared/model'
+import { recipesModel } from '@entities/recipe'
+
 import { HOMEPAGE_PATH } from '@shared/routes/shared-paths'
 import { Center } from '@shared/ui/ui/Center'
 
+import * as model from './model'
+
 export const RecipeList = ({ title }: { title: string }) => {
-    const menu = useUnit($recipes)
+    useGate(model.RecipesListGate, title)
+    const menu = useUnit(recipesModel.$recipes)
     const [show, setShow] = useState(true)
     const [lastScrollY, setLastScrollY] = useState(0)
     const controlNavbar = () => {
@@ -40,14 +44,6 @@ export const RecipeList = ({ title }: { title: string }) => {
     }, [lastScrollY])
     const [filters, setFilters] = useState<string[]>([])
 
-    useEffect(() => {
-        if (title === 'ALL') {
-            getRecipesFx()
-        } else {
-            getRecipesFx(title.toLowerCase())
-        }
-    }, [title])
-
     const filteredMenu = useMemo(() => {
         if (!menu) return []
         if (filters.length > 0) {
@@ -55,6 +51,7 @@ export const RecipeList = ({ title }: { title: string }) => {
         }
         return menu
     }, [filters, menu])
+
     return (
         <Layout>
             {filteredMenu.length > 0 ? (
@@ -90,7 +87,7 @@ export const RecipeList = ({ title }: { title: string }) => {
 
 const Layout = styled.div`
     min-height: 100vh;
-    max-width: 475px;
+    max-width: 500px;
 `
 
 const Title = styled.h2`
@@ -119,7 +116,7 @@ const Flex = styled.div`
 const Navbar = styled.div<{ hidden: boolean }>`
     max-width: 100%;
     max-width: 1280px;
-    max-width: 475px;
+    max-width: 500px;
 
     padding: 1rem 1rem;
     padding-top: 0;

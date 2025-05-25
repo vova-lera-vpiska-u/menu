@@ -14,6 +14,6 @@ export const GoBackButton = (props: LinkProps) => {
 
 const Layout = styled(Link)`
     position: absolute;
-    top: 2rem;
-    left: 1rem;
+    height: 1.625rem;
+    left: 0;
 `

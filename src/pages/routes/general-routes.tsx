@@ -1,6 +1,6 @@
 import { Main } from '@pages/Main'
-import { RecipeList } from '@pages/RecipeList'
 import { Recipe } from '@pages/recipe'
+import { RecipeList } from '@pages/recipe-list/recipe-list'
 
 import {
     AIR_PATH,

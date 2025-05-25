@@ -1,11 +1,13 @@
+import { HTMLProps } from 'react'
+
 import styled from 'styled-components'
 
 import { COLORS } from '@shared/styles/colors'
 
-export const FilesInput = () => {
+export const FilesInput = (props: HTMLProps<HTMLInputElement>) => {
     return (
         <Layout>
-            <input type="file" name="dishImage" accept="image/*"></input>
+            <input type="file" name="dishImage" accept="image/*" {...props}></input>
         </Layout>
     )
 }

@@ -1,12 +1,18 @@
+import { HTMLProps } from 'react'
+
 import styled from 'styled-components'
 
 import DropdownArrow from '@shared/assets/img/DropdownArrow.svg'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_4 } from '@shared/styles/fonts'
 
-export const DropdownMenu = ({ optionsArray, placeholder }: { optionsArray: string[]; placeholder?: string }) => {
+export const DropdownMenu = ({
+    optionsArray,
+    placeholder,
+    ...props
+}: { optionsArray: string[]; placeholder?: string } & HTMLProps<HTMLSelectElement>) => {
     return (
-        <Select imageURL={DropdownArrow}>
+        <Select imageURL={DropdownArrow} {...props}>
             <div aria-hidden="true">Choose category</div>
 
             {placeholder ? (
@@ -15,7 +21,11 @@ export const DropdownMenu = ({ optionsArray, placeholder }: { optionsArray: stri
                 </OptionSelected>
             ) : null}
             {optionsArray.map((option) => {
-                return <Option key={option}>{option}</Option>
+                return (
+                    <Option key={option} value={option}>
+                        {option}
+                    </Option>
+                )
             })}
         </Select>
     )

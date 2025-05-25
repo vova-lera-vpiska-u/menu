@@ -1,3 +1,5 @@
+import { HTMLProps } from 'react'
+
 import styled from 'styled-components'
 
 import { IconButton } from '@widgets/Buttons/IconButton'
@@ -13,6 +15,7 @@ export const FieldSmall = ({
     iconVisible,
     iconHeight,
     iconWidth,
+    ...props
 }: {
     type: string
     name: string
@@ -20,10 +23,10 @@ export const FieldSmall = ({
     iconVisible: boolean
     iconHeight?: string
     iconWidth?: string
-}) => {
+} & HTMLProps<HTMLInputElement>) => {
     return (
         <Layout>
-            <InputInField type={type} name={name} placeholder={placeholder} />
+            <InputInField type={type} name={name} placeholder={placeholder} {...props} />
             {iconVisible && (
                 <IconButton>
                     <Cross height={iconHeight} width={iconWidth} />

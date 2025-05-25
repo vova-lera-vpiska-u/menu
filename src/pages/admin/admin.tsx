@@ -4,76 +4,94 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
+import { NutritionFactsTable } from '@pages/admin/NutritionFactsTable'
+
 import { BigButton } from '@widgets/Buttons/BigButton'
 import { TextButton } from '@widgets/Buttons/TextButton'
 import { FilesInput } from '@widgets/FilesInput'
 import { GoBackButton } from '@widgets/GoBackButton'
 import { IngredientAddingRow } from '@widgets/IngredientAddingRow'
 
+import { recipesModel } from '@entities/recipe'
 import { userModel } from '@entities/user/model'
 
 import { Category } from '@shared/api/types'
 import { Clock } from '@shared/icons/Clock'
 import { Star } from '@shared/icons/Star'
-import { $categories } from '@shared/model'
 import { HOMEPAGE_PATH } from '@shared/routes/shared-paths'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_3_LIGHT, TEXT_SIZE_5 } from '@shared/styles/fonts'
 import { DropdownMenu } from '@shared/ui/DropdownMenu'
 import { FieldBig } from '@shared/ui/FieldBig'
 import { FieldSmall } from '@shared/ui/FieldSmall'
-import { NutritionFactsTable } from '@shared/ui/NutritionFactsTable'
 import { ToggleButtonSmall } from '@shared/ui/ToggleButtonSmall'
 
-import { adminPageMounted, adminPageUnMounted, createCategoryFx } from './model'
+import * as model from './model'
+import { adminPageMounted, adminPageUnMounted } from './model'
+
+const timesUnit = ['h', 'min']
 
 export const Admin = () => {
-    const navigate = useNavigate()
-    const [pageMounted, pageUnMounted] = useUnit([adminPageMounted, adminPageUnMounted])
-    const [name, setName] = useState('')
-    const [categoryList] = useUnit([$categories])
-    const [chosenCategories, setChosenCategories] = useState<Category[]>([])
+    const [pageMounted, pageUnMounted, sections, sectionOptions] = useUnit([
+        adminPageMounted,
+        adminPageUnMounted,
+        model.$sections,
+        model.$sectionOptions,
+    ])
+    const [categoryList, nutrition] = useUnit([recipesModel.$categories, model.$nutrition])
 
-    const [logout] = useUnit([userModel.events.logout])
-    const timesUnit = ['h', 'min']
-    const menuChapters = ['Fire', 'Air', 'Eath', '5 Element', 'HLS', 'Ethanol']
-    const { title } = useParams<{ title: string }>()
+    const [name, setName] = useState('')
+    const [section, setSection] = useState('fire')
+    const [chosenCategories, setChosenCategories] = useState<Category[]>([])
+    const [rating, setRating] = useState(0)
+    const [timeAmount, setTimeAmount] = useState('')
+    const [timeType, setTimeType] = useState('h')
+    const [image, setImage] = useState<File | null>(null)
 
     useEffect(() => {
         pageMounted()
         return () => pageUnMounted()
     }, [])
 
+    const [createRecipeClicked] = useUnit([model.createRecipeClicked])
+
     return (
         <div>
-            <Button
-                onClick={() => {
-                    logout()
-                    navigate(HOMEPAGE_PATH, { replace: true })
-                }}
-            >
-                Logout
-            </Button>
-            <form
+            <Header />
+            <Layout
                 onSubmit={(e) => {
                     e.preventDefault()
-                    createCategoryFx(name)
-                    setName('')
+                    const selectedSection = sections?.find((s) => s.name === section)?._id
+                    if (!image || !selectedSection) return
+                    createRecipeClicked({
+                        name,
+                        categories: chosenCategories.map((category) => category._id),
+                        section: selectedSection,
+                        rating,
+                        timeToCook: `${timeAmount}${timeType}`,
+                        image,
+                        nutrition,
+                    })
                 }}
-            ></form>
-            <Nav>
-                <GoBackButton to={`/${title}`} />
-                <Title>{title}</Title>
-            </Nav>
-            <Layout>
+            >
                 <SettingLayout columnStart={1} columnEnd={3}>
                     <Name>Name</Name>
-                    <FieldBig name="" placeholder="" type=""></FieldBig>
+                    <FieldBig
+                        name="Name"
+                        placeholder="Name"
+                        type=""
+                        value={name}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                    ></FieldBig>
                 </SettingLayout>
 
                 <SettingLayout columnStart={1} columnEnd={2}>
                     <Name>Category</Name>
-                    <DropdownMenu optionsArray={menuChapters}></DropdownMenu>
+                    <DropdownMenu
+                        optionsArray={sectionOptions}
+                        value={section}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSection(e.target.value)}
+                    ></DropdownMenu>
                 </SettingLayout>
 
                 <SettingLayout columnStart={1} columnEnd={3}>
@@ -97,7 +115,14 @@ export const Admin = () => {
                 <SettingLayout columnStart={1} columnEnd={2}>
                     <Name>Rate</Name>
                     <RateWrapper>
-                        <FieldSmall placeholder="" type="text" name="" iconVisible={false}></FieldSmall>
+                        <FieldSmall
+                            placeholder=""
+                            type="text"
+                            name=""
+                            iconVisible={false}
+                            value={rating}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRating(Number(e.target.value))}
+                        ></FieldSmall>
                         <Star height="24" width="24" />
                     </RateWrapper>
                 </SettingLayout>
@@ -105,13 +130,24 @@ export const Admin = () => {
                 <SettingLayout columnStart={1} columnEnd={2}>
                     <Name>Time</Name>
                     <TimeWrapper>
-                        <FieldSmall placeholder="" type="search" name="" iconVisible={false}></FieldSmall>
-                        <DropdownMenu optionsArray={timesUnit}></DropdownMenu>
+                        <FieldSmall
+                            placeholder=""
+                            type="search"
+                            name=""
+                            iconVisible={false}
+                            value={timeAmount}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTimeAmount(e.target.value)}
+                        ></FieldSmall>
+                        <DropdownMenu
+                            optionsArray={timesUnit}
+                            value={timeType}
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimeType(e.target.value)}
+                        ></DropdownMenu>
                         <Clock height="24" width="24" />
                     </TimeWrapper>
                 </SettingLayout>
 
-                <SettingLayout columnStart={1} columnEnd={3}>
+                {/* <SettingLayout columnStart={1} columnEnd={3}>
                     <Name>Ingredients</Name>
                     <IngredientAddingRow labelColor={COLORS.oliveGreen}></IngredientAddingRow>
                 </SettingLayout>
@@ -121,7 +157,7 @@ export const Admin = () => {
                     <RecipeStepWrapper>
                         1 <FieldSmall iconVisible={false} name="" type="text"></FieldSmall>
                     </RecipeStepWrapper>
-                </SettingLayout>
+                </SettingLayout> */}
 
                 <SettingLayout columnStart={1} columnEnd={3}>
                     <Name>
@@ -132,7 +168,11 @@ export const Admin = () => {
 
                 <SettingLayout columnStart={1} columnEnd={3}>
                     <Name>Upload image</Name>
-                    <FilesInput />
+                    <FilesInput
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setImage(e.target.files ? e.target.files[0] : null)
+                        }
+                    />
                 </SettingLayout>
                 <SettingLayout columnStart={1} columnEnd={2}>
                     <TextButton>Delete recipe</TextButton>
@@ -142,6 +182,29 @@ export const Admin = () => {
                 </SettingLayout>
             </Layout>
         </div>
+    )
+}
+
+const Header = () => {
+    const navigate = useNavigate()
+    const { title } = useParams<{ title: string }>()
+    const [logout] = useUnit([userModel.events.logout])
+
+    return (
+        <>
+            <Button
+                onClick={() => {
+                    logout()
+                    navigate(HOMEPAGE_PATH, { replace: true })
+                }}
+            >
+                Logout
+            </Button>
+            <Nav>
+                <GoBackButton to={`/${title}`} />
+                <Title>{title}</Title>
+            </Nav>
+        </>
     )
 }
 
@@ -224,7 +287,7 @@ const TagsWrapper = styled.div`
     order: 1;
     flex-grow: 0;
 `
-const Layout = styled.div`
+const Layout = styled.form`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     column-gap: 10px;

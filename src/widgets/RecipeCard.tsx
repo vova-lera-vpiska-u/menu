@@ -4,10 +4,11 @@ import styled from 'styled-components'
 
 import { Recipe } from '@shared/api/types'
 import { Clock } from '@shared/icons/Clock'
-import { Star } from '@shared/icons/Star'
+import { Rating } from '@shared/ui/rating'
 
 export const RecipeCard = ({ recipe, title }: { recipe: Recipe; title: string }) => {
     const navigate = useNavigate()
+
     return (
         <Layout
             imgurl={recipe.image || ''}
@@ -37,10 +38,7 @@ export const RecipeCard = ({ recipe, title }: { recipe: Recipe; title: string })
                     )}
                 </Time>
             </Flex>
-            <Rating>
-                <Star height="14" width="14" />
-                {recipe.rating}
-            </Rating>
+            <Rating rating={recipe.rating} />
         </Layout>
     )
 }
@@ -80,21 +78,6 @@ const Time = styled.div`
     gap: 6px;
 `
 
-const Rating = styled.div`
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Alumni Sans', sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 14px;
-    color: #d8d8d8;
-`
 const Ingredients = styled.div`
     display: flex;
     flex-direction: column;

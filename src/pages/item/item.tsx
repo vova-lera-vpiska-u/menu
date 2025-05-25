@@ -6,7 +6,6 @@ import { useGate, useUnit } from 'effector-react'
 import { recipesModel } from '@entities/recipe'
 
 import { Recipe } from '@shared/api/types'
-import { $categories } from '@shared/model'
 import { ADMIN_PATH } from '@shared/routes/private-paths'
 import { Image } from '@shared/ui/image'
 
@@ -15,7 +14,7 @@ export const Item = () => {
     useGate(recipesModel.RecipePageGate, id)
     const [recipeUpdated] = useUnit([recipesModel.recipeUpdated])
     const [recipe, setRecipe] = useState<Recipe | null>(null)
-    const categories = useUnit($categories)
+    const categories = useUnit(recipesModel.$categories)
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -26,6 +25,7 @@ export const Item = () => {
     }
 
     if (!recipe || !id) return null
+
     return (
         <div>
             <Link to={ADMIN_PATH}>go back</Link>
@@ -60,25 +60,20 @@ export const Item = () => {
                                 {category.name}:{' '}
                                 <input
                                     type="checkbox"
-                                    checked={recipe.categories.some((category) => category._id === category._id)}
+                                    checked={recipe.categories.some((c) => c._id === category._id)}
                                     onChange={(e) => {
                                         if (e.target.checked) {
                                             setRecipe({
                                                 ...recipe,
                                                 categories: [
                                                     ...recipe.categories,
-                                                    {
-                                                        _id: category._id,
-                                                        name: category.name,
-                                                    },
+                                                    { _id: category._id, name: category.name },
                                                 ],
                                             })
                                         } else {
                                             setRecipe({
                                                 ...recipe,
-                                                categories: recipe.categories.filter(
-                                                    (category) => category._id !== category._id,
-                                                ),
+                                                categories: recipe.categories.filter((c) => c._id !== category._id),
                                             })
                                         }
                                     }}

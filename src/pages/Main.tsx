@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
+import { Logo } from '@widgets/Logo'
 import { LogoAdminMode } from '@widgets/LogoAdminMode'
 
 import { userModel } from '@entities/user/model'
@@ -29,7 +30,7 @@ export const Main = () => {
     const [user] = useUnit([userModel.stores.user])
     return (
         <>
-            <LogoAdminMode />
+            {user ? <LogoAdminMode /> : <Logo />}
             {user && <AdminPageLink to={ADMIN_PATH}>Add Recipe</AdminPageLink>}
             <Layout>
                 <Element imageURL={Fire} to={FIRE_PATH}>
