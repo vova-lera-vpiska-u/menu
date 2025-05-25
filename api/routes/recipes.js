@@ -2,13 +2,44 @@ import { Router } from "express";
 import { Recipe } from "../models/recipe.js";
 import { expressjwt } from "express-jwt";
 import { jwt } from "../jwt.js";
+import { put } from "@vercel/blob";
+import path from "path";
+import { v4 as uuidv4 } from "uuid";
+
+import multer from "multer";
+import { Section } from "../models/section.js";
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 export const recipesRouter = new Router();
-recipesRouter.post("/", expressjwt(jwt), async (req, res) => {
-  const recipe = new Recipe(req.body);
+
+recipesRouter.post("/", upload.single("image"), async (req, res) => {
+  const file = req.file;
+  const { name, section, categories, rating, timeToCook, nutrition } = req.body;
+  const nutritionParsed = JSON.parse(nutrition);
+  const categoriesParsed = JSON.parse(categories);
+
+  const blobFilename = `recipes/${uuidv4()}${path.extname(file.originalname)}`;
+
+  const { url: blobUrl } = await put(blobFilename, file.buffer, {
+    access: "public",
+    contentType: file.mimetype,
+  });
+
+  const recipe = new Recipe({
+    name,
+    section,
+    categories: categoriesParsed,
+    image: blobUrl,
+    rating,
+    timeToCook,
+    nutrition: nutritionParsed,
+  });
   await recipe.save();
+  await Section.findOneAndUpdate({ _id: section }, { $push: { recipes: recipe._id } });
   res.send(recipe).status(200);
 });
+
 recipesRouter.get("/", async (req, res) => {
   const recipes = await Recipe.find().populate("categories ingredients");
   res.send(recipes).status(200);

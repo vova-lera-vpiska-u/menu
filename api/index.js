@@ -1,6 +1,6 @@
 import express from "express";
 import { recipesRouter } from "./routes/recipes.js";
-import { catagoriesRouter } from "./routes/categories.js";
+import { categoriesRouter } from "./routes/categories.js";
 import cors from "cors";
 import { connectMongo } from "./mongo.js";
 import { sectionsRouter } from "./routes/sections.js";
@@ -23,13 +23,14 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.use("/files", express.static("files"));
 
 connectMongo();
 app.get("/", async (req, res) => {
   res.send("ok").status(200);
 });
 app.use("/recipes", recipesRouter);
-app.use("/categories", catagoriesRouter);
+app.use("/categories", categoriesRouter);
 app.use("/sections", sectionsRouter);
 app.use("/ingredients", ingredientsRouter);
 

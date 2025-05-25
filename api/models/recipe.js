@@ -1,6 +1,13 @@
 import pkg from "mongoose";
 const { Schema, model, ObjectId } = pkg;
 
+const nutritionSchema = new Schema({
+  calories: { type: String, required: true },
+  protein: { type: String, required: true }, // Белки
+  fat: { type: String, required: true }, // Жиры
+  carbs: { type: String, required: true }, // Углеводы
+});
+
 export const Recipe = model(
   "Recipe",
   new Schema({
@@ -23,5 +30,6 @@ export const Recipe = model(
     recipe: { type: String },
     image: { type: String },
     timeToCook: { type: String },
+    nutrition: { type: nutritionSchema },
   })
 );
