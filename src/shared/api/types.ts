@@ -3,10 +3,16 @@ export type Category = {
     name: string
 }
 
+export type Section = {
+    _id: string
+    name: string
+}
+
 export type Recipe = {
     _id: string
     name: string
     rating: number
+    section: Section
     categories: Category[]
     description?: string
     ingredients?: {

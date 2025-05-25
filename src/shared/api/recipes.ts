@@ -4,7 +4,7 @@ import { url } from './consts'
 import { Category, Ingredient, Recipe } from './types'
 
 export const getRecipesFx = createEffect(async (name?: string): Promise<Recipe[]> => {
-    const response = await fetch(`${url}/recipes?name=${name}`)
+    const response = await fetch(`${url}/recipes${name ? `?name=${name}` : ''}`)
     return await response.json()
 })
 

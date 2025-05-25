@@ -24,5 +24,6 @@ sample({
 
 sample({
     clock: allRecipesRequested,
+    fn: () => {},
     target: recipesModel.getRecipesFx,
 })

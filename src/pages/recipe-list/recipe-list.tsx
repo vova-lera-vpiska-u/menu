@@ -58,12 +58,12 @@ export const RecipeList = ({ title }: { title: string }) => {
                 <>
                     <Flex>
                         {filteredMenu.map((recipe) => (
-                            <RecipeCard key={recipe.name} recipe={recipe} title={title} />
+                            <RecipeCard key={recipe.name} recipe={recipe} />
                         ))}
                     </Flex>
                     <Navbar hidden={!show}>
                         <Logo />
-                        <GoBackButton to={HOMEPAGE_PATH} />
+                        <GoBackButton />
                         <Title>{title}</Title>
                         <Filters
                             selected={filter}

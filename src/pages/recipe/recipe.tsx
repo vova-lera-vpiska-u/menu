@@ -15,7 +15,7 @@ import { Image } from '@shared/ui/image'
 import { Rating } from '@shared/ui/rating'
 
 export const Recipe = () => {
-    const { id, title } = useParams<{ id: string; title: string }>()
+    const { id } = useParams<{ id: string }>()
     useGate(recipesModel.RecipePageGate, id)
 
     const headerRef = useRef<HTMLDivElement>(null)
@@ -38,8 +38,8 @@ export const Recipe = () => {
     return (
         <div>
             <Nav>
-                <GoBackButton to={`/${title}`} />
-                <Title>{title}</Title>
+                <GoBackButton fallback={recipe.section.name} />
+                <Title>{recipe.section.name}</Title>
             </Nav>
             <Image src={recipe.image} />
             <DataPlate ref={plateRef}>

@@ -187,7 +187,6 @@ export const Admin = () => {
 
 const Header = () => {
     const navigate = useNavigate()
-    const { title } = useParams<{ title: string }>()
     const [logout] = useUnit([userModel.events.logout])
 
     return (
@@ -201,8 +200,8 @@ const Header = () => {
                 Logout
             </Button>
             <Nav>
-                <GoBackButton to={`/${title}`} />
-                <Title>{title}</Title>
+                <GoBackButton />
+                <Title>ADMIN</Title>
             </Nav>
         </>
     )

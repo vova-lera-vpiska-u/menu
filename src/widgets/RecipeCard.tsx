@@ -6,14 +6,14 @@ import { Recipe } from '@shared/api/types'
 import { Clock } from '@shared/icons/Clock'
 import { Rating } from '@shared/ui/rating'
 
-export const RecipeCard = ({ recipe, title }: { recipe: Recipe; title: string }) => {
+export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
     const navigate = useNavigate()
 
     return (
         <Layout
             imgurl={recipe.image || ''}
             onClick={() => {
-                navigate(`/${title}/${recipe._id}`)
+                navigate(`/recipes/${recipe._id}`)
             }}
         >
             {recipe.ingredients && (

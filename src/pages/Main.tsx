@@ -37,7 +37,7 @@ export const Main = () => {
             {recipes ? (
                 <Stack>
                     {recipes.map((recipe) => (
-                        <RecipeCard key={recipe.name} recipe={recipe} title="FOUND RECIPES" />
+                        <RecipeCard key={recipe.name} recipe={recipe} />
                     ))}
                 </Stack>
             ) : (

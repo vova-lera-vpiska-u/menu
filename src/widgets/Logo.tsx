@@ -18,7 +18,7 @@ export const Logo = () => {
 
     const [user] = useUnit([userModel.stores.user])
     const [searchQuery, searchQueryChanged] = useUnit([searchModel.$searchQuery, searchModel.searchQueryChanged])
-    const [isSearchOpen, setIsSearchOpen] = useState(false)
+    const [isSearchOpen, setIsSearchOpen] = useState(!!searchQuery)
 
     return (
         <Flex>
