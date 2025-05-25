@@ -17,8 +17,6 @@ export function App() {
 }
 
 const Version = styled.div`
-    position: absolute;
-    bottom: 0%;
-    right: 0%;
     padding: 10px;
+    place-self: end;
 `

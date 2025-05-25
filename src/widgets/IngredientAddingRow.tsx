@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { DropdownMenu } from '@shared/ui/DropdownMenu'
 import { FieldSmall } from '@shared/ui/FieldSmall'
 
-import { Checkbox } from './Buttons/Ckeckbox'
+import { Checkbox } from './Buttons/Checkbox'
 
 export const IngredientAddingRow = ({ labelColor }: { labelColor: string }) => {
     const measuresUnits = ['g', 'kg', 'in', 'tsp.', 'tbs.', 'gl.']

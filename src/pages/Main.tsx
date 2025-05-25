@@ -4,7 +4,6 @@ import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
 import { Logo } from '@widgets/Logo'
-import { LogoAdminMode } from '@widgets/LogoAdminMode'
 
 import { userModel } from '@entities/user/model'
 
@@ -30,7 +29,7 @@ export const Main = () => {
     const [user] = useUnit([userModel.stores.user])
     return (
         <>
-            {user ? <LogoAdminMode /> : <Logo />}
+            <Logo />
             {user && <AdminPageLink to={ADMIN_PATH}>Add Recipe</AdminPageLink>}
             <Layout>
                 <Element imageURL={Fire} to={FIRE_PATH}>
@@ -91,9 +90,9 @@ const Layout = styled.div`
 
 const Element = styled(Link)<{ imageURL: string }>`
     ${TEXT_SIZE_1}
-    ${COLORS.lightGray}
+    color: ${COLORS.lightGray};
 
-  display: grid;
+    display: grid;
     place-content: center;
     aspect-ratio: 1;
     border: 1px solid white;
@@ -104,7 +103,7 @@ const Element = styled(Link)<{ imageURL: string }>`
 
     @media (hover: hover) and (pointer: fine) {
         &:hover {
-            ${COLORS.white}
+            color: ${COLORS.white};
             background-color: rgba(0, 0, 0, 0.4);
             background-blend-mode: darken;
         }
@@ -113,9 +112,9 @@ const Element = styled(Link)<{ imageURL: string }>`
 
 const Carousel = styled(Link)<{ imageURL: string }>`
     ${TEXT_SIZE_1}
-    ${COLORS.lightGray}  
+    color:${COLORS.lightGray};
 
-  grid-column: span 2;
+    grid-column: span 2;
     aspect-ratio: 2 / 1;
     display: grid;
     place-content: center;
@@ -124,4 +123,12 @@ const Carousel = styled(Link)<{ imageURL: string }>`
     background: url(${({ imageURL }) => imageURL});
     background-position: center;
     background-size: cover;
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: ${COLORS.white};
+            background-color: rgba(0, 0, 0, 0.4);
+            background-blend-mode: darken;
+        }
+    }
 `

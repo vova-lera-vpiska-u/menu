@@ -82,7 +82,7 @@ const Title = styled.h2`
 
 const RecipeName = styled.h2`
     ${TEXT_SIZE_2}
-    ${COLORS.white};
+    color: ${COLORS.white};
     text-align: start;
     margin: 0;
 `

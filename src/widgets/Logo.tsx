@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { userModel } from '@entities/user/model'
 
-import { AdminIcon } from '@shared/icons/AdminIcon'
+import { COLORS } from '@shared/styles/colors'
 
 export const Logo = () => {
     const [user] = useUnit([userModel.stores.user])
@@ -19,6 +19,20 @@ export const Logo = () => {
         </Layout>
     )
 }
+
+const AdminIcon = () => {
+    return <AdminLogo>ADMIN</AdminLogo>
+}
+
+const AdminLogo = styled.div`
+    font-family: 'Rozovii Chulok', sans-serif;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 29px;
+    color: #ffffff;
+    text-transform: uppercase;
+    color: ${COLORS.danger};
+`
 
 const Name = styled.h1`
     width: 74px;
@@ -36,7 +50,7 @@ const Name = styled.h1`
 const Heart = styled.div`
     position: absolute;
     scale: 0.7;
-    left: calc(50% - 52px);
+    left: calc(50% - 75px);
     top: calc(50% - 3px);
     transform: rotate(-25deg);
 `
@@ -51,7 +65,9 @@ const Layout = styled.div`
 `
 
 const AdminIconStyled = styled.div`
-    position: absolute;
-    left: calc(50% + 30px);
-    top: calc(50% - 3px);
+    position: relative;
+    top: 0;
+    right: 5px;
+    display: flex;
+    padding-top: 13px;
 `

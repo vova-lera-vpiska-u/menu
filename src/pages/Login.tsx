@@ -4,8 +4,8 @@ import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
 import { BigButton } from '@widgets/Buttons/BigButton'
-import { Checkbox } from '@widgets/Buttons/Ckeckbox'
-import { LogoAdminMode } from '@widgets/LogoAdminMode'
+import { Checkbox } from '@widgets/Buttons/Checkbox'
+import { Logo } from '@widgets/Logo'
 
 import { routingModel } from '@entities/routing/model'
 import { userModel } from '@entities/user/model'
@@ -23,9 +23,10 @@ export const Login = () => {
         routingModel.events.clear,
         routingModel.stores.from,
     ])
+
     return (
         <>
-            <LogoAdminMode />
+            <Logo />
             <Layout>
                 <Title>AUTHORIZATION</Title>
                 <Form
@@ -42,10 +43,10 @@ export const Login = () => {
                     <FieldBig type="text" name="username" placeholder="Who?"></FieldBig>
                     <FieldBig type="password" name="password" placeholder="Password"></FieldBig>
                     <Checkbox gap="8px" labelColor={COLORS.lightGray}>
-                        By clicking on the button, I confirm that I have no intention of poisoning anyone, and I
-                        undertake to provide the information in full
+                        By clicking this button, I confirm that I have no intention of poisoning anyone and I agree to
+                        provide complete information
                     </Checkbox>
-                    <BigButton>AUF</BigButton>
+                    <BigButton>Log In</BigButton>
                 </Form>
             </Layout>
         </>
