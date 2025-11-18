@@ -14,6 +14,7 @@
         "release": "release-it"
     },
     "dependencies": {
+        "@supabase/supabase-js": "^2.83.0",
         "effector": "^23.2.2",
         "effector-react": "^23.2.1",
         "eslint-plugin-effector": "^0.14.0",

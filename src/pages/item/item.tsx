@@ -5,7 +5,7 @@ import { useGate, useUnit } from 'effector-react'
 
 import { recipesModel } from '@entities/recipe'
 
-import { Recipe } from '@shared/api/types'
+import { Recipe } from '@shared/api/recipes'
 import { ADMIN_PATH } from '@shared/routes/private-paths'
 import { Image } from '@shared/ui/image'
 
@@ -35,45 +35,51 @@ export const Item = () => {
                     recipeUpdated({ recipe, id })
                 }}
             >
-                <Image src={recipe.image} width="200" height="200" alt="" />
+                {recipe.cover_url && <Image src={recipe.cover_url} width="200" height="200" alt="" />}
                 <div>
                     name: <input name="name" type="text" value={recipe.name} onChange={handleChange} />
                 </div>
-                <div>
-                    recipe: <input name="recipe" type="text" value={recipe.recipe} onChange={handleChange} />
-                </div>
-                <div>
-                    description:{' '}
-                    <input name="description" type="text" value={recipe.description} onChange={handleChange} />
-                </div>
-                <div>
-                    image: <input name="image" type="text" value={recipe.image} onChange={handleChange} />
-                </div>
-                <div>
-                    time: <input name="timeToCook" type="text" value={recipe.timeToCook} onChange={handleChange} />
-                </div>
+                {recipe.recipe && (
+                    <div>
+                        recipe: <input name="recipe" type="text" value={recipe.recipe} onChange={handleChange} />
+                    </div>
+                )}
+                {recipe.description && (
+                    <div>
+                        description:{' '}
+                        <input name="description" type="text" value={recipe.description} onChange={handleChange} />
+                    </div>
+                )}
+                {recipe.cover_url && (
+                    <div>
+                        image: <input name="image" type="text" value={recipe.cover_url} onChange={handleChange} />
+                    </div>
+                )}
+                {recipe.time_to_cook && (
+                    <div>
+                        time:{' '}
+                        <input name="timeToCook" type="text" value={recipe.time_to_cook} onChange={handleChange} />
+                    </div>
+                )}
                 <div>ingredients</div>
                 <div>
                     {categories?.map((category) => {
                         return (
-                            <div key={category._id}>
+                            <div key={category.id}>
                                 {category.name}:{' '}
                                 <input
                                     type="checkbox"
-                                    checked={recipe.categories.some((c) => c._id === category._id)}
+                                    checked={recipe.tags.some((c) => c.tag?.id === category.id)}
                                     onChange={(e) => {
                                         if (e.target.checked) {
                                             setRecipe({
                                                 ...recipe,
-                                                categories: [
-                                                    ...recipe.categories,
-                                                    { _id: category._id, name: category.name },
-                                                ],
+                                                tags: [...recipe.tags, { tag: category }],
                                             })
                                         } else {
                                             setRecipe({
                                                 ...recipe,
-                                                categories: recipe.categories.filter((c) => c._id !== category._id),
+                                                tags: recipe.tags.filter((c) => c.tag?.id !== category.id),
                                             })
                                         }
                                     }}
@@ -82,9 +88,11 @@ export const Item = () => {
                         )
                     })}
                 </div>
-                <div>
-                    rating: <input name="rating" type="text" value={recipe.rating} onChange={handleChange} />
-                </div>
+                {recipe.rating && (
+                    <div>
+                        rating: <input name="rating" type="text" value={recipe.rating} onChange={handleChange} />
+                    </div>
+                )}
 
                 <button type="submit">Submit</button>
             </form>

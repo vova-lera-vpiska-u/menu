@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
@@ -10,12 +10,11 @@ import { BigButton } from '@widgets/Buttons/BigButton'
 import { TextButton } from '@widgets/Buttons/TextButton'
 import { FilesInput } from '@widgets/FilesInput'
 import { GoBackButton } from '@widgets/GoBackButton'
-import { IngredientAddingRow } from '@widgets/IngredientAddingRow'
 
 import { recipesModel } from '@entities/recipe'
 import { userModel } from '@entities/user/model'
 
-import { Category } from '@shared/api/types'
+import { Tag } from '@shared/api/recipes'
 import { Clock } from '@shared/icons/Clock'
 import { Star } from '@shared/icons/Star'
 import { HOMEPAGE_PATH } from '@shared/routes/shared-paths'
@@ -42,7 +41,7 @@ export const Admin = () => {
 
     const [name, setName] = useState('')
     const [section, setSection] = useState('fire')
-    const [chosenCategories, setChosenCategories] = useState<Category[]>([])
+    const [chosenCategories, setChosenCategories] = useState<Tag[]>([])
     const [rating, setRating] = useState(0)
     const [timeAmount, setTimeAmount] = useState('')
     const [timeType, setTimeType] = useState('h')
@@ -65,7 +64,7 @@ export const Admin = () => {
                     if (!image || !selectedSection) return
                     createRecipeClicked({
                         name,
-                        categories: chosenCategories.map((category) => category._id),
+                        categories: chosenCategories.map((category) => category.id),
                         section: selectedSection,
                         rating,
                         timeToCook: `${timeAmount}${timeType}`,
@@ -99,8 +98,8 @@ export const Admin = () => {
                     <TagsWrapper>
                         {categoryList?.map((category) => {
                             return (
-                                <ToggleButtonSmall<Category>
-                                    key={category._id}
+                                <ToggleButtonSmall<Tag>
+                                    key={category.id}
                                     label={category}
                                     labels={chosenCategories}
                                     setLabels={(labels) => {

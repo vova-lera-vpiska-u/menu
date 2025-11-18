@@ -4,7 +4,7 @@ import { recipesModel } from '@entities/recipe'
 
 import { recipesApi } from '@shared/api'
 import { url } from '@shared/api/consts'
-import { Ingredient } from '@shared/api/types'
+import { Ingredient } from '@shared/api/recipes'
 
 export const $ingredients = createStore<Ingredient[] | null>(null)
 export const adminPageMounted = createEvent()

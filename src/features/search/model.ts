@@ -3,7 +3,7 @@ import { debounce } from 'patronum'
 
 import { recipesModel } from '@entities/recipe'
 
-import { Recipe } from '@shared/api'
+import { Recipe } from '@shared/api/recipes'
 
 const getRecipesFx = attach({ effect: recipesModel.getRecipesFx })
 

@@ -1,8 +1,8 @@
 import { attach, createEvent, createStore, sample } from 'effector'
 import { createGate } from 'effector-react'
 
-import { Category, Recipe, recipesApi } from '@shared/api'
-import { UpdateRecipeRequest } from '@shared/api/recipes'
+import { recipesApi } from '@shared/api'
+import { Recipe, Tag, UpdateRecipeRequest } from '@shared/api/recipes'
 
 export const RecipePageGate = createGate<string>()
 
@@ -10,7 +10,7 @@ export const recipeUpdated = createEvent<UpdateRecipeRequest>()
 
 export const $recipe = createStore<Recipe | null>(null)
 export const $recipes = createStore<Recipe[] | null>(null)
-export const $categories = createStore<Category[] | null>(null)
+export const $categories = createStore<Tag[] | null>(null)
 
 const getRecipeFx = attach({ effect: recipesApi.getRecipeFx })
 const updateRecipeFx = attach({ effect: recipesApi.updateRecipeFx })
