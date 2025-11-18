@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 
 import styled from 'styled-components'
 
-import { Recipe } from '@shared/api/types'
+import { Recipe } from '@shared/api/recipes'
 import { Clock } from '@shared/icons/Clock'
 import { Rating } from '@shared/ui/rating'
 
@@ -11,9 +11,9 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
 
     return (
         <Layout
-            imgurl={recipe.image || ''}
+            imgurl={recipe.cover_url || ''}
             onClick={() => {
-                navigate(`/recipes/${recipe._id}`)
+                navigate(`/recipes/${recipe.id}`)
             }}
         >
             {recipe.ingredients && (
@@ -21,8 +21,8 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
                     ingredients
                     <Divider />
                     <IngredientsGrid amount={recipe.ingredients.length}>
-                        {recipe.ingredients.map((ingredient) => (
-                            <div key={ingredient.ingredient.name}>{ingredient.ingredient.name}</div>
+                        {recipe.ingredients.map(({ ingredient }) => (
+                            <div key={ingredient?.name}>{ingredient?.name}</div>
                         ))}
                     </IngredientsGrid>
                 </Ingredients>
@@ -30,15 +30,15 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
             <Flex direction="column">
                 <Title>{recipe.name}</Title>
                 <Time>
-                    {recipe.timeToCook && (
+                    {recipe.time_to_cook && (
                         <>
                             <Clock height="20" width="20" />
-                            {recipe.timeToCook}
+                            {recipe.time_to_cook}
                         </>
                     )}
                 </Time>
             </Flex>
-            <Rating rating={recipe.rating} />
+            {recipe.rating && <Rating rating={recipe.rating} />}
         </Layout>
     )
 }

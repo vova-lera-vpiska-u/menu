@@ -10,7 +10,6 @@ import { RecipeCard } from '@widgets/RecipeCard'
 
 import { recipesModel } from '@entities/recipe'
 
-import { HOMEPAGE_PATH } from '@shared/routes/shared-paths'
 import { Center } from '@shared/ui/ui/Center'
 
 import * as model from './model'
@@ -47,7 +46,7 @@ export const RecipeList = ({ title }: { title: string }) => {
     const filteredMenu = useMemo(() => {
         if (!menu) return []
         if (filter) {
-            return menu.filter((recipe) => recipe.categories.some((category) => category.name === filter))
+            return menu.filter((recipe) => recipe.tags.some((category) => category.tag?.name === filter))
         }
         return menu
     }, [filter, menu])
@@ -70,9 +69,11 @@ export const RecipeList = ({ title }: { title: string }) => {
                             setSelected={setFilter}
                             filterList={[
                                 ...new Set(
-                                    (menu || [])
-                                        .map((recipe) => recipe.categories.map((category) => category.name))
-                                        .flat(),
+                                    (
+                                        (menu || [])
+                                            .map((recipe) => recipe.tags.map((category) => category.tag?.name))
+                                            .filter(Boolean) as string[][]
+                                    ).flat(),
                                 ),
                             ]}
                         />

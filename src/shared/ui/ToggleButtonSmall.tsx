@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_4 } from '@shared/styles/fonts'
 
-export const ToggleButtonSmall = <T extends { _id: string; name: string }>({
+export const ToggleButtonSmall = <T extends { id: string; name: string }>({
     label,
     labels,
     setLabels,
@@ -20,7 +20,7 @@ export const ToggleButtonSmall = <T extends { _id: string; name: string }>({
                 checked={value}
                 onChange={() => {
                     if (value) {
-                        setLabels(labels.filter((l) => l._id !== label._id))
+                        setLabels(labels.filter((l) => l.id !== label.id))
                     } else {
                         setLabels([...labels, label])
                     }

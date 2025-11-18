@@ -38,20 +38,20 @@ export const Recipe = () => {
     return (
         <div>
             <Nav>
-                <GoBackButton fallback={recipe.section.name} />
-                <Title>{recipe.section.name}</Title>
+                <GoBackButton fallback={recipe.category.name} />
+                <Title>{recipe.category.name}</Title>
             </Nav>
-            <Image src={recipe.image} />
+            {recipe.cover_url && <Image src={recipe.cover_url} />}
             <DataPlate ref={plateRef}>
                 <div>
                     <Group gap={10}>
                         <RecipeName ref={headerRef}>{recipe.name}</RecipeName>
-                        <Rating rating={recipe.rating} />
+                        {recipe.rating && <Rating rating={recipe.rating} />}
                     </Group>
                     <Group gap={0} mt={30}>
-                        {recipe.categories.map((category) => (
-                            <CategoryTag key={category._id}>
-                                #{categories.find((c) => c._id === category._id)?.name}
+                        {recipe.tags.map((category) => (
+                            <CategoryTag key={category.tag?.id}>
+                                #{categories.find((c) => c.id === category.tag?.id)?.name}
                             </CategoryTag>
                         ))}
                     </Group>
