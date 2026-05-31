@@ -1,4 +1,4 @@
-import { Main } from '@pages/Main'
+import { Main } from '@pages/main'
 import { Recipe } from '@pages/recipe'
 import { RecipeList } from '@pages/recipe-list/recipe-list'
 
