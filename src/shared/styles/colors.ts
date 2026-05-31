@@ -13,5 +13,12 @@ export const COLORS = {
     winePink: '#db739f',
     wineOrange: '#e77f1f',
     wineBlue: '#5594ce',
+    wineYellow: '#ffdd64',
     danger: '#E44747',
+    dangerSurface: '#3a1f1f',
+    dangerBorder: '#7a3a3a',
+    successSurface: '#3c411f',
+    successBorder: '#5f6b2e',
+    alertSurface: '#1b1818',
+    chipBorder: 'rgba(216, 216, 216, 0.4)',
 }
