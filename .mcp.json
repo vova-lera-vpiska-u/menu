@@ -1,8 +1,12 @@
 {
-    "mcpServers": {
-        "Figma": {
-            "type": "http",
-            "url": "https://mcp.figma.com/mcp"
-        }
+  "mcpServers": {
+    "Figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    },
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=imrhqiqdqtlaqczjftob"
     }
+  }
 }
