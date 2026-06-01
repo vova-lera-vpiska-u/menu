@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Removed
+
+- Dropped `release-it` and `@release-it/keep-a-changelog`. Versioning is now
+  done by hand (bump `package.json` + roll `[Unreleased]` into a dated section).
+  The plugin's `keepUnreleased: true` config silently skipped the changelog roll
+  on release, and the tooling overhead wasn't worth it at this project's scale.
+
 ## [0.2.0] - 2026-06-01
 
 ### Added

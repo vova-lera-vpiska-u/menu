@@ -10,8 +10,7 @@
         "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
         "predeploy": "npm run build",
-        "deploy": "gh-pages -d dist",
-        "release": "release-it"
+        "deploy": "gh-pages -d dist"
     },
     "dependencies": {
         "@supabase/supabase-js": "^2.83.0",
@@ -30,7 +29,6 @@
         "@babel/preset-env": "^7.26.0",
         "@babel/preset-react": "^7.25.9",
         "@eslint/js": "^9.27.0",
-        "@release-it/keep-a-changelog": "^7.1.0",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
         "@types/react": "^18.2.66",
         "@types/react-dom": "^18.2.22",
