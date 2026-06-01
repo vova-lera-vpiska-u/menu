@@ -9,4 +9,4 @@ Never use `getState` or `watch`
 Use sample nesting to narrow types
 Any useEffect must be moved to a named hook
 Split files if takes more than 500 lines
-Every commit adds notes under `## [Unreleased]` in CHANGELOG.md; cut versions with `npm run release` (release-it), not by hand-bumping per commit
+Log changes under `## [Unreleased]` in CHANGELOG.md; release with `npm run release` (never bump the version by hand)
