@@ -1,7 +1,7 @@
 {
     "name": "menu",
     "private": true,
-    "version": "0.1.4",
+    "version": "0.2.0",
     "homepage": "https://vova-lera-vpiska-u.github.io/menu/",
     "type": "module",
     "scripts": {
