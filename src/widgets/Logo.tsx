@@ -37,7 +37,6 @@ export const Logo = () => {
                     ref={searchBarRef}
                     isOpen={isSearchOpen}
                     value={searchQuery}
-                    autoFocus
                     onChange={(e) => searchQueryChanged(e.target.value)}
                     onBlur={() => {
                         if (!searchQuery) setIsSearchOpen(false)
