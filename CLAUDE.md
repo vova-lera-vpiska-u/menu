@@ -9,3 +9,4 @@ Never use `getState` or `watch`
 Use sample nesting to narrow types
 Any useEffect must be moved to a named hook
 Split files if takes more than 500 lines
+Control version with every commit, write changelogs
