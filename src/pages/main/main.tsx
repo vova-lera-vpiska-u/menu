@@ -10,12 +10,7 @@ import { searchModel } from '@features/search'
 
 import { userModel } from '@entities/user/model'
 
-import Dessert from '@shared/assets/img/5 element.png'
-import Air from '@shared/assets/img/Air.png'
-import Earth from '@shared/assets/img/Earth.png'
-import Ethanol from '@shared/assets/img/Ethanol.png'
-import Fire from '@shared/assets/img/Fire.png'
-import HSL from '@shared/assets/img/HLS.png'
+import { getAssetUrl } from '@shared/lib/asset-url'
 import { ADMIN_PATH } from '@shared/routes/private-paths'
 import { AIR_PATH, DESSERTS_PATH, EARTH_PATH, FIRE_PATH, WATER_PATH } from '@shared/routes/shared-paths'
 import { COLORS } from '@shared/styles/colors'
@@ -56,22 +51,22 @@ export const Main = () => {
             {user && <AdminPageLink to={ADMIN_PATH}>Add Recipe</AdminPageLink>}
 
             <Grid>
-                <Element imageURL={Fire} to={FIRE_PATH}>
+                <Element imageURL={getAssetUrl('fire.webp')} to={FIRE_PATH}>
                     FIRE
                 </Element>
-                <Element imageURL={Air} to={AIR_PATH}>
+                <Element imageURL={getAssetUrl('air.webp')} to={AIR_PATH}>
                     AIR
                 </Element>
-                <Element imageURL={Earth} to={EARTH_PATH}>
+                <Element imageURL={getAssetUrl('earth.webp')} to={EARTH_PATH}>
                     EARTH
                 </Element>
-                <Element imageURL={Dessert} to={DESSERTS_PATH}>
+                <Element imageURL={getAssetUrl('dessert.webp')} to={DESSERTS_PATH}>
                     5 ELEMENT
                 </Element>
-                <Element imageURL={Ethanol} to={WATER_PATH}>
+                <Element imageURL={getAssetUrl('ethanol.webp')} to={WATER_PATH}>
                     ETHANOL
                 </Element>
-                <Element imageURL={HSL} to={WATER_PATH}>
+                <Element imageURL={getAssetUrl('dessert.webp')} to={WATER_PATH}>
                     HLS
                 </Element>
             </Grid>
@@ -154,8 +149,8 @@ const Element = styled(Link)<{ imageURL: string }>`
     display: grid;
     place-content: center;
     aspect-ratio: 1;
-    border: 1px solid white;
-    border-radius: 7px;
+    border: 1px solid ${COLORS.lightGray};
+    border-radius: 8px;
     background: url(${({ imageURL }) => imageURL});
     background-position: center;
     background-size: cover;
@@ -212,7 +207,8 @@ const Slide = styled.div<{ imageURL: string }>`
     padding: 20px;
     box-sizing: border-box;
     cursor: pointer;
-    border-radius: 7px;
+    border: 1px solid ${COLORS.lightGray};
+    border-radius: 8px;
 
     background:
         linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 55%),

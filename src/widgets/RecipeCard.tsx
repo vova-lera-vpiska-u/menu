@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import { Recipe } from '@shared/api/recipes'
 import { Clock } from '@shared/icons/Clock'
+import { COLORS } from '@shared/styles/colors'
 import { Rating } from '@shared/ui/rating'
 
 export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
@@ -57,7 +58,8 @@ const Layout = styled.div<{ imgurl: string }>`
     background:
         linear-gradient(90deg, rgba(0, 0, 0, 0.89) 15.86%, rgba(19, 13, 13, 0) 100%, rgba(0, 0, 0, 0) 100.01%),
         url(${(props) => props.imgurl}) center / cover no-repeat;
-    border-radius: 7px;
+    border: 1px solid ${COLORS.lightGray};
+    border-radius: 8px;
 `
 
 const Title = styled.h3`

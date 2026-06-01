@@ -6,6 +6,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Externalised the large element artwork to **Supabase Storage** (public `assets`
+  bucket, S3-compatible). New `getAssetUrl()` helper in `@shared/lib/asset-url`
+  builds public URLs from `VITE_SUPABASE_URL` so the storage origin lives in one
+  place.
+- Workbox `runtimeCaching` rule (`CacheFirst`, `remote-assets` cache) for the
+  Supabase storage origin, so externalised images still work offline after first
+  load.
+- `docs/ASSETS.md` documenting asset formats, compression targets, where assets
+  live, and the add-an-asset workflow.
+
+### Changed
+
+- Element images are now WebP served from Supabase instead of PNGs bundled with
+  the app. Recompressed from new full-resolution sources (~1.2 MB → ~132 KB) and
+  removed from the precache, shrinking the bundle.
+- Main-page cards (element grid, carousel slides, recipe cards) now use an 8px
+  radius and a 1px `#d8d8d8` (`COLORS.lightGray`) border, since the new photos
+  have no built-in rim.
+
+### Removed
+
+- Bundled element PNGs (`Fire`, `Earth`, `Air`, `5 element`, `Ethanol`, `HLS`)
+  from `src/shared/assets/img` — now served from Supabase Storage.
+
 ## [0.1.4]
 
 ### Fixed

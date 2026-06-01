@@ -45,6 +45,18 @@ export default defineConfig(({ mode }) => ({
                 globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2,ttf,otf}'],
                 cleanupOutdatedCaches: true,
                 clientsClaim: true,
+                runtimeCaching: [
+                    {
+                        urlPattern: ({ url }) =>
+                            url.pathname.includes('/storage/v1/object/public/assets/'),
+                        handler: 'CacheFirst',
+                        options: {
+                            cacheName: 'remote-assets',
+                            expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 * 30 },
+                            cacheableResponse: { statuses: [0, 200] },
+                        },
+                    },
+                ],
             },
             devOptions: {
                 enabled: true,

@@ -27,3 +27,6 @@ dev-dist
 .env
 # Claude Code local worktrees
 .claude/
+
+# local asset staging (uploaded to Supabase Storage)
+/assets/

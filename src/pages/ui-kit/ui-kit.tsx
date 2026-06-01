@@ -3,9 +3,7 @@ import { createElement } from 'react'
 import * as FeatherIcons from 'feather-icons-react'
 import styled from 'styled-components'
 
-import AirImg from '@shared/assets/img/Air.png'
-import EarthImg from '@shared/assets/img/Earth.png'
-import FireImg from '@shared/assets/img/Fire.png'
+import { getAssetUrl } from '@shared/lib/asset-url'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_1, TEXT_SIZE_4, TEXT_SIZE_5 } from '@shared/styles/fonts'
 import {
@@ -39,6 +37,10 @@ const iconEntries = Object.entries(namedIcons)
 
 const categories = ['Fire', 'Earth', 'Air', '5-Element', 'Ethanol', 'HLS']
 const ingredients = ['Potato', 'Eggs', 'Onion', 'Salt', 'Olive oil']
+
+const fireImage = getAssetUrl('fire.webp')
+const earthImage = getAssetUrl('earth.webp')
+const airImage = getAssetUrl('air.webp')
 
 export const UiKit = () => {
     return (
@@ -202,24 +204,24 @@ export const UiKit = () => {
                     <DishCard
                         variant="short"
                         title="Cutlet with mashed potatoes"
-                        image={FireImg}
+                        image={fireImage}
                         time="4-6 min"
                         rating={4.8}
                     />
                     <DishCard
                         variant="full"
                         title="Cutlet with mashed potatoes"
-                        image={EarthImg}
+                        image={earthImage}
                         time="4-6 min"
                         rating={4.8}
                         ingredients={ingredients}
                     />
-                    <DishCard variant="wishlist" title="Cutlet with mashed potatoes" image={AirImg} />
+                    <DishCard variant="wishlist" title="Cutlet with mashed potatoes" image={airImage} />
                 </Row>
                 <SubTitle>Category cards</SubTitle>
                 <Row>
-                    <CategoryCard variant="wide" title="Desserts" image={EarthImg} />
-                    <CategoryCard variant="small" title="Fire" image={FireImg} />
+                    <CategoryCard variant="wide" title="Desserts" image={earthImage} />
+                    <CategoryCard variant="small" title="Fire" image={fireImage} />
                 </Row>
             </Section>
 
