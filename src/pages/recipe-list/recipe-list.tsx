@@ -14,33 +14,29 @@ import { Center } from '@shared/ui/ui/Center'
 
 import * as model from './model'
 
+const useHideNavbarOnScroll = () => {
+    const [show, setShow] = useState(true)
+    const [lastScrollY, setLastScrollY] = useState(0)
+
+    useEffect(() => {
+        const controlNavbar = () => {
+            // hide the navbar when scrolling down, show it when scrolling up
+            setShow(window.scrollY <= lastScrollY)
+            // remember current page location to use in the next move
+            setLastScrollY(window.scrollY)
+        }
+
+        window.addEventListener('scroll', controlNavbar)
+        return () => window.removeEventListener('scroll', controlNavbar)
+    }, [lastScrollY])
+
+    return show
+}
+
 export const RecipeList = ({ title }: { title: string }) => {
     useGate(model.RecipesListGate, title)
     const menu = useUnit(recipesModel.$recipes)
-    const [show, setShow] = useState(true)
-    const [lastScrollY, setLastScrollY] = useState(0)
-    const controlNavbar = () => {
-        if (window.scrollY > lastScrollY) {
-            // if scroll down hide the navbar
-            setShow(false)
-        } else {
-            // if scroll up show the navbar
-            setShow(true)
-        }
-
-        // remember current page location to use in the next move
-        setLastScrollY(window.scrollY)
-    }
-
-    // TODO: make it cleaner
-    useEffect(() => {
-        window.addEventListener('scroll', controlNavbar)
-
-        // cleanup function
-        return () => {
-            window.removeEventListener('scroll', controlNavbar)
-        }
-    }, [lastScrollY])
+    const show = useHideNavbarOnScroll()
     const [filter, setFilter] = useState<string | null>(null)
 
     const filteredMenu = useMemo(() => {

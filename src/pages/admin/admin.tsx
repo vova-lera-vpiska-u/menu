@@ -30,13 +30,19 @@ import { adminPageMounted, adminPageUnMounted } from './model'
 
 const timesUnit = ['h', 'min']
 
+const useAdminPageLifecycle = () => {
+    const [pageMounted, pageUnMounted] = useUnit([adminPageMounted, adminPageUnMounted])
+
+    useEffect(() => {
+        pageMounted()
+        return () => pageUnMounted()
+    }, [pageMounted, pageUnMounted])
+}
+
 export const Admin = () => {
-    const [pageMounted, pageUnMounted, sections, sectionOptions] = useUnit([
-        adminPageMounted,
-        adminPageUnMounted,
-        model.$sections,
-        model.$sectionOptions,
-    ])
+    useAdminPageLifecycle()
+
+    const [sections, sectionOptions] = useUnit([model.$sections, model.$sectionOptions])
     const [categoryList, nutrition] = useUnit([recipesModel.$categories, model.$nutrition])
 
     const [name, setName] = useState('')
@@ -46,11 +52,6 @@ export const Admin = () => {
     const [timeAmount, setTimeAmount] = useState('')
     const [timeType, setTimeType] = useState('h')
     const [image, setImage] = useState<File | null>(null)
-
-    useEffect(() => {
-        pageMounted()
-        return () => pageUnMounted()
-    }, [])
 
     const [createRecipeClicked] = useUnit([model.createRecipeClicked])
 
@@ -228,18 +229,6 @@ const NutritionMark = styled.span`
     color: ${COLORS.lightGray};
 `
 
-const RecipeStepWrapper = styled.div`
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0px;
-    gap: 6px;
-    width: 100%;
-
-    ${TEXT_SIZE_3_LIGHT}
-    color: ${COLORS.white};
-`
 const TimeWrapper = styled.div`
     display: grid;
 

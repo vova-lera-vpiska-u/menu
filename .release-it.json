@@ -1,0 +1,25 @@
+{
+    "git": {
+        "commitMessage": "chore(release): v${version}",
+        "tagName": "v${version}",
+        "tagAnnotation": "Release v${version}",
+        "requireCleanWorkingDir": true,
+        "requireUpstream": true
+    },
+    "npm": {
+        "publish": false
+    },
+    "github": {
+        "release": false
+    },
+    "hooks": {
+        "before:init": ["npm run lint", "npx tsc --noEmit"]
+    },
+    "plugins": {
+        "@release-it/keep-a-changelog": {
+            "filename": "CHANGELOG.md",
+            "addUnreleased": true,
+            "keepUnreleased": true
+        }
+    }
+}
