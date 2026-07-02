@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-03
+
+### Added
+
+- Responsive layout for tablet and desktop. New `@shared/styles/breakpoints`
+  helper (breakpoint tokens + `media` query strings + a `CONTAINER_WIDTH` token);
+  the `#root` shell now grows from the 500px phone column to `min(1200px, 92vw)`
+  from 640px up. Mobile layout is unchanged — every desktop rule sits behind a
+  `min-width` media query.
+
+### Changed
+
+- Main page: element grid goes 2 → 3 columns on desktop with larger tiles and
+  gaps; the "What about.." carousel shows multiple slides at once; search results
+  reflow into a card grid.
+- Recipe list: the single-column card stack becomes an `auto-fill` grid
+  (`minmax(320px, 1fr)`) and the fixed navbar spans the widened container.
+- Recipe detail and login are width-capped and centred for readability on wide
+  screens; the plate-overlap effect moved into a named `usePlateOverlap` hook.
+- Rewrote the home carousel's active-slide tracking (`use-carousel.ts`) to measure
+  real slide positions via `getBoundingClientRect` instead of assuming each slide
+  equals the container width — fixes the position dots for partial-width slides.
+
 ### Removed
 
 - Dropped `release-it` and `@release-it/keep-a-changelog`. Versioning is now

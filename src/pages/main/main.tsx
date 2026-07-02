@@ -13,6 +13,7 @@ import { userModel } from '@entities/user/model'
 import { getAssetUrl } from '@shared/lib/asset-url'
 import { ADMIN_PATH } from '@shared/routes/private-paths'
 import { AIR_PATH, DESSERTS_PATH, EARTH_PATH, FIRE_PATH, WATER_PATH } from '@shared/routes/shared-paths'
+import { media } from '@shared/styles/breakpoints'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_1, TEXT_SIZE_2, TEXT_SIZE_3_LIGHT, TEXT_SIZE_3_REGULAR } from '@shared/styles/fonts'
 
@@ -105,6 +106,12 @@ const Stack = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+
+    ${media.tablet} {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1rem;
+    }
 `
 
 const AdminPageLink = styled(Link)`
@@ -140,6 +147,16 @@ const Grid = styled.div`
     width: 100%;
     gap: 10px;
     grid-template-columns: 1fr 1fr;
+
+    ${media.tablet} {
+        gap: 1rem;
+        padding-top: 1.5rem;
+    }
+
+    ${media.desktop} {
+        gap: 1.25rem;
+        grid-template-columns: repeat(3, 1fr);
+    }
 `
 
 const Element = styled(Link)<{ imageURL: string }>`
@@ -158,6 +175,11 @@ const Element = styled(Link)<{ imageURL: string }>`
     transition:
         color 0.25s ease,
         transform 0.25s ease;
+
+    ${media.desktop} {
+        font-size: 3rem;
+        line-height: 1.1;
+    }
 
     @media (hover: hover) and (pointer: fine) {
         &:hover {
@@ -195,6 +217,10 @@ const Carousel = styled.div`
     &::-webkit-scrollbar {
         display: none;
     }
+
+    ${media.desktop} {
+        gap: 1rem;
+    }
 `
 
 const Slide = styled.div<{ imageURL: string }>`
@@ -213,6 +239,12 @@ const Slide = styled.div<{ imageURL: string }>`
     background:
         linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 55%),
         url(${({ imageURL }) => imageURL}) center / cover no-repeat;
+
+    ${media.desktop} {
+        flex-basis: min(48%, 460px);
+        scroll-snap-align: start;
+        aspect-ratio: 16 / 9;
+    }
 `
 
 const SlideTitle = styled.h3`

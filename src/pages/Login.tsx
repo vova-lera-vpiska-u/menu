@@ -11,6 +11,7 @@ import { routingModel } from '@entities/routing/model'
 import { userModel } from '@entities/user/model'
 
 import { ADMIN_PATH } from '@shared/routes/private-paths'
+import { media } from '@shared/styles/breakpoints'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_1 } from '@shared/styles/fonts'
 import { FieldBig } from '@shared/ui/FieldBig'
@@ -56,6 +57,11 @@ export const Login = () => {
 const Layout = styled.div`
     display: flex;
     flex-direction: column;
+
+    ${media.tablet} {
+        max-width: 420px;
+        margin-inline: auto;
+    }
 `
 
 const Title = styled.h1`

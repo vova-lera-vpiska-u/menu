@@ -10,6 +10,7 @@ import { RecipeCard } from '@widgets/RecipeCard'
 
 import { recipesModel } from '@entities/recipe'
 
+import { CONTAINER_WIDTH, media } from '@shared/styles/breakpoints'
 import { Center } from '@shared/ui/ui/Center'
 
 import * as model from './model'
@@ -84,7 +85,8 @@ export const RecipeList = ({ title }: { title: string }) => {
 
 const Layout = styled.div`
     min-height: 100vh;
-    max-width: 500px;
+    width: 100%;
+    max-width: 100%;
 `
 
 const Title = styled.h2`
@@ -108,11 +110,15 @@ const Flex = styled.div`
     display: flex;
     gap: 10px;
     flex-direction: column;
+
+    ${media.tablet} {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1rem;
+    }
 `
 
 const Navbar = styled.div<{ hidden: boolean }>`
-    max-width: 100%;
-    max-width: 1280px;
     max-width: 500px;
 
     padding: 1rem 1rem;
@@ -123,4 +129,13 @@ const Navbar = styled.div<{ hidden: boolean }>`
     position: fixed;
     top: ${(props) => (props.hidden ? '-100%' : '0')};
     transition: top 0.3s;
+    z-index: 10;
+
+    ${media.tablet} {
+        left: 50%;
+        transform: translateX(-50%);
+        width: ${CONTAINER_WIDTH};
+        max-width: ${CONTAINER_WIDTH};
+        padding-inline: clamp(1rem, 4vw, 2.5rem);
+    }
 `

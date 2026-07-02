@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react'
+import { RefObject, useLayoutEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useGate, useUnit } from 'effector-react'
@@ -8,19 +8,15 @@ import { GoBackButton } from '@widgets/GoBackButton'
 
 import { recipesModel } from '@entities/recipe'
 
+import { media } from '@shared/styles/breakpoints'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_2, TEXT_SIZE_3_REGULAR } from '@shared/styles/fonts'
 import { Group } from '@shared/ui/group'
 import { Image } from '@shared/ui/image'
 import { Rating } from '@shared/ui/rating'
 
-export const Recipe = () => {
-    const { id } = useParams<{ id: string }>()
-    useGate(recipesModel.RecipePageGate, id)
-
-    const headerRef = useRef<HTMLDivElement>(null)
-    const plateRef = useRef<HTMLDivElement>(null)
-
+// Pulls the data plate up so it overlaps the cover image by the header's height.
+const usePlateOverlap = (headerRef: RefObject<HTMLDivElement>, plateRef: RefObject<HTMLDivElement>) => {
     useLayoutEffect(() => {
         const header = headerRef.current
         const plate = plateRef.current
@@ -30,13 +26,23 @@ export const Recipe = () => {
             plate.style.marginTop = `${-headerHeight - 30}px`
         }
     })
+}
+
+export const Recipe = () => {
+    const { id } = useParams<{ id: string }>()
+    useGate(recipesModel.RecipePageGate, id)
+
+    const headerRef = useRef<HTMLDivElement>(null)
+    const plateRef = useRef<HTMLDivElement>(null)
+
+    usePlateOverlap(headerRef, plateRef)
 
     const [recipe, categories] = useUnit([recipesModel.$recipe, recipesModel.$categories])
 
     if (!recipe || !id || !categories) return null
 
     return (
-        <div>
+        <Page>
             <Nav>
                 <GoBackButton fallback={recipe.category.name} />
                 <Title>{recipe.category.name}</Title>
@@ -58,9 +64,16 @@ export const Recipe = () => {
                     <p>{recipe.recipe}</p>
                 </div>
             </DataPlate>
-        </div>
+        </Page>
     )
 }
+
+const Page = styled.div`
+    ${media.tablet} {
+        max-width: 760px;
+        margin-inline: auto;
+    }
+`
 
 const Nav = styled.div`
     position: relative;
