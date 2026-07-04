@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { useGate, useUnit } from 'effector-react'
 import styled from 'styled-components'
@@ -14,30 +14,12 @@ import { CONTAINER_WIDTH, media } from '@shared/styles/breakpoints'
 import { Center } from '@shared/ui/ui/Center'
 
 import * as model from './model'
-
-const useHideNavbarOnScroll = () => {
-    const [show, setShow] = useState(true)
-    const [lastScrollY, setLastScrollY] = useState(0)
-
-    useEffect(() => {
-        const controlNavbar = () => {
-            // hide the navbar when scrolling down, show it when scrolling up
-            setShow(window.scrollY <= lastScrollY)
-            // remember current page location to use in the next move
-            setLastScrollY(window.scrollY)
-        }
-
-        window.addEventListener('scroll', controlNavbar)
-        return () => window.removeEventListener('scroll', controlNavbar)
-    }, [lastScrollY])
-
-    return show
-}
+import { useHideNavbarOnScroll } from './use-hide-navbar-on-scroll'
 
 export const RecipeList = ({ title }: { title: string }) => {
     useGate(model.RecipesListGate, title)
     const menu = useUnit(recipesModel.$recipes)
-    const show = useHideNavbarOnScroll()
+    const visible = useHideNavbarOnScroll()
     const [filter, setFilter] = useState<string | null>(null)
 
     const filteredMenu = useMemo(() => {
@@ -57,7 +39,7 @@ export const RecipeList = ({ title }: { title: string }) => {
                             <RecipeCard key={recipe.name} recipe={recipe} />
                         ))}
                     </Flex>
-                    <Navbar hidden={!show}>
+                    <Navbar $hidden={!visible}>
                         <Logo />
                         <GoBackButton />
                         <Title>{title}</Title>
@@ -118,23 +100,29 @@ const Flex = styled.div`
     }
 `
 
-const Navbar = styled.div<{ hidden: boolean }>`
-    max-width: 500px;
-
-    padding: 1rem 1rem;
-    padding-top: 0;
-    text-align: center;
-    background-color: #242424;
-    display: block;
+const Navbar = styled.div<{ $hidden: boolean }>`
     position: fixed;
-    top: ${(props) => (props.hidden ? '-100%' : '0')};
-    transition: top 0.3s;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 10;
 
+    width: 100%;
+    max-width: 500px;
+    margin-inline: auto;
+
+    padding: 0 1rem 1rem;
+    text-align: center;
+    background-color: #242424;
+
+    transform: translateY(${(props) => (props.$hidden ? '-100%' : '0')});
+    opacity: ${(props) => (props.$hidden ? 0 : 1)};
+    transition:
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.25s ease;
+    will-change: transform, opacity;
+
     ${media.tablet} {
-        left: 50%;
-        transform: translateX(-50%);
-        width: ${CONTAINER_WIDTH};
         max-width: ${CONTAINER_WIDTH};
         padding-inline: clamp(1rem, 4vw, 2.5rem);
     }

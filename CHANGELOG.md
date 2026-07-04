@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-07-04
+
+### Changed
+
+- Rewrote the recipe-list mobile navbar show/hide-on-scroll logic. Extracted it
+  into a dedicated `useHideNavbarOnScroll` hook that throttles scroll handling
+  with `requestAnimationFrame`, keeps the last scroll position in a ref (so the
+  listener attaches once instead of re-binding on every scroll event), uses a
+  `passive` listener, ignores sub-threshold jitter, and always reveals the
+  navbar near the top of the page.
+- The navbar now animates via GPU-composited `transform: translateY` instead of
+  the `top` property, and centres itself with auto margins so `transform` is
+  reserved solely for the animation across all breakpoints.
+
 ## [0.3.0] - 2026-07-03
 
 ### Added
