@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { useUnit } from 'effector-react'
 import { Search } from 'feather-icons-react'
@@ -8,17 +9,38 @@ import { searchModel } from '@features/search'
 
 import { userModel } from '@entities/user/model'
 
+import { ADMIN_PATH } from '@shared/routes/private-paths'
+import { LOGIN_PATH } from '@shared/routes/public-paths'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_5 } from '@shared/styles/fonts'
 
 import { IconButton } from './Buttons/IconButton'
 
+const SECRET_PHRASES: Record<string, string> = {
+    login: LOGIN_PATH,
+    логин: LOGIN_PATH,
+    admin: ADMIN_PATH,
+    админ: ADMIN_PATH,
+}
+
 export const Logo = () => {
     const searchBarRef = useRef<HTMLInputElement>(null)
+    const navigate = useNavigate()
 
     const [user] = useUnit([userModel.stores.user])
     const [searchQuery, searchQueryChanged] = useUnit([searchModel.$searchQuery, searchModel.searchQueryChanged])
     const [isSearchOpen, setIsSearchOpen] = useState(!!searchQuery)
+
+    const handleSearchChange = (value: string) => {
+        const secretPath = SECRET_PHRASES[value.trim().toLowerCase()]
+        if (secretPath) {
+            searchQueryChanged('')
+            setIsSearchOpen(false)
+            navigate(secretPath)
+            return
+        }
+        searchQueryChanged(value)
+    }
 
     return (
         <Flex>
@@ -37,7 +59,7 @@ export const Logo = () => {
                     ref={searchBarRef}
                     isOpen={isSearchOpen}
                     value={searchQuery}
-                    onChange={(e) => searchQueryChanged(e.target.value)}
+                    onChange={(e) => handleSearchChange(e.target.value)}
                     onBlur={() => {
                         if (!searchQuery) setIsSearchOpen(false)
                     }}
