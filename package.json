@@ -8,12 +8,10 @@
   },
   "scripts": {
     "dev": "pnpm --parallel --filter \"./apps/*\" dev",
-    "dev:frontend": "pnpm --filter @menu/frontend dev",
-    "dev:backend": "pnpm --filter @menu/backend dev",
     "build": "pnpm --filter \"./apps/*\" build",
-    "build:frontend": "pnpm --filter @menu/frontend build",
-    "build:backend": "pnpm --filter @menu/backend build",
-    "lint": "pnpm --filter \"./apps/*\" lint"
+    "lint": "pnpm --filter \"./apps/*\" lint",
+    "front": "pnpm --filter @menu/frontend run",
+    "back": "pnpm --filter @menu/backend run"
   },
   "pnpm": {
     "onlyBuiltDependencies": ["esbuild", "sharp"]

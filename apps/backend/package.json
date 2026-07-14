@@ -9,7 +9,8 @@
     "build": "tsc",
     "start": "node --enable-source-maps dist/index.js",
     "vercel:dev": "vercel dev",
-    "vercel:deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel"
   },
   "keywords": [],
   "author": "",
