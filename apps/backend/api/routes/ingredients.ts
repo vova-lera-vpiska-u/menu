@@ -1,7 +1,7 @@
 import express from "express";
 import { requireAuth } from "../jwt.ts";
 import { db } from "../db/db.ts";
-import type { TablesInsert } from "../db/supabase.ts";
+import type { TablesInsert } from "@menu/db";
 
 export const ingredientsRouter = express.Router();
 

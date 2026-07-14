@@ -1,5 +1,5 @@
 import { RefObject, useLayoutEffect, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import { useGate, useUnit } from 'effector-react'
 import styled from 'styled-components'
@@ -7,7 +7,10 @@ import styled from 'styled-components'
 import { GoBackButton } from '@widgets/GoBackButton'
 
 import { recipesModel } from '@entities/recipe'
+import { userModel } from '@entities/user/model'
 
+import { Edit } from '@shared/icons/Edit'
+import { ADMIN_PATH } from '@shared/routes/private-paths'
 import { media } from '@shared/styles/breakpoints'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_2, TEXT_SIZE_3_REGULAR } from '@shared/styles/fonts'
@@ -37,7 +40,11 @@ export const Recipe = () => {
 
     usePlateOverlap(headerRef, plateRef)
 
-    const [recipe, categories] = useUnit([recipesModel.$recipe, recipesModel.$categories])
+    const [recipe, categories, user] = useUnit([
+        recipesModel.$recipe,
+        recipesModel.$categories,
+        userModel.stores.user,
+    ])
 
     if (!recipe || !id || !categories) return null
 
@@ -46,6 +53,11 @@ export const Recipe = () => {
             <Nav>
                 <GoBackButton fallback={recipe.category.name} />
                 <Title>{recipe.category.name}</Title>
+                {user && (
+                    <EditLink to={`${ADMIN_PATH}/${id}`} aria-label="Edit recipe">
+                        <Edit />
+                    </EditLink>
+                )}
             </Nav>
             {recipe.cover_url && <Image src={recipe.cover_url} />}
             <DataPlate ref={plateRef}>
@@ -82,6 +94,26 @@ const Nav = styled.div`
     align-items: center;
     justify-content: center;
     margin-inline: 1rem;
+`
+
+const EditLink = styled(Link)`
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.625rem;
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+
+    &:hover {
+        opacity: 0.7;
+    }
+
+    &:active {
+        transform: scale(0.92);
+    }
 `
 
 const Title = styled.h2`

@@ -2,7 +2,7 @@
   "name": "@menu/backend",
   "private": true,
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-esm --esm api/index.ts",
@@ -17,6 +17,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@menu/db": "workspace:*",
     "@supabase/supabase-js": "^2.83.0",
     "@vercel/blob": "^1.1.1",
     "cookie-parser": "^1.4.6",

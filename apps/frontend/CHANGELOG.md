@@ -6,6 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-15
+
+### Added
+
+- Recipe page header now shows an Edit (pencil) button for logged-in users,
+  matching the Figma design. It links to the recipe edit form at `/admin/:id`.
+- New reusable `RecipeForm` widget (FSD `widgets/RecipeForm`) shared by the
+  create (`/admin`) and edit (`/admin/:id`) pages. The edit page now loads a
+  working form with fields pre-filled from the recipe (name, category, tags,
+  rating, time, nutrition) and a **Delete recipe** button (with a confirmation
+  prompt); create mode has no delete button. Saving an edit navigates back to
+  the recipe; deleting returns home.
+- Shared `@menu/db` workspace package as the single source of truth for the
+  Supabase types, consumed by both the frontend and backend.
+
+### Changed
+
+- Extracted the admin create form and nutrition table into `RecipeForm`,
+  removing the duplicated form code from `pages/admin`. `TextButton` now
+  accepts `onClick`/`type`/`disabled` so it can drive the delete action
+  without submitting the form.
+- Frontend now imports Supabase types from `@menu/db` instead of a local copy,
+  so the nutrition columns are available and editing pre-fills them.
+
+### Fixed
+
+- Editing a recipe now syncs its tags (the backend rebuilds the `food_tags`
+  join rows) instead of silently dropping tag changes.
+- Deleting a recipe no longer fails on the `food_tags` / `food_ingredients`
+  foreign keys — the backend removes the join rows first.
+
 ## [0.5.0] - 2026-07-14
 
 ### Added

@@ -10,6 +10,9 @@ importers:
 
   apps/backend:
     dependencies:
+      '@menu/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@supabase/supabase-js':
         specifier: ^2.83.0
         version: 2.110.5
@@ -74,6 +77,9 @@ importers:
 
   apps/frontend:
     dependencies:
+      '@menu/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@supabase/supabase-js':
         specifier: ^2.83.0
         version: 2.110.5
@@ -181,6 +187,8 @@ importers:
       '@rollup/rollup-linux-x64-gnu':
         specifier: 4.6.1
         version: 4.6.1
+
+  packages/db: {}
 
 packages:
 

@@ -1,7 +1,7 @@
 {
     "name": "@menu/frontend",
     "private": true,
-    "version": "0.5.0",
+    "version": "0.6.0",
     "homepage": "https://vova-lera-vpiska-u.github.io/menu/",
     "type": "module",
     "scripts": {
@@ -13,6 +13,7 @@
         "deploy": "gh-pages -d dist"
     },
     "dependencies": {
+        "@menu/db": "workspace:*",
         "@supabase/supabase-js": "^2.83.0",
         "effector": "^23.2.2",
         "effector-react": "^23.2.1",

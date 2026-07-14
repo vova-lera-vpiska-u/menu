@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import multer, { type Multer } from "multer";
 
 import { db } from "../db/db.ts"; // Supabase client
-import { type TablesInsert, type TablesUpdate } from "../db/supabase.ts"; // Supabase types
+import { type TablesInsert, type TablesUpdate } from "@menu/db"; // Supabase types
 
 // Multer setup for memory storage
 const upload: Multer = multer({ storage: multer.memoryStorage() });
@@ -139,11 +139,31 @@ recipesRouter.put(
   async (req: JWTRequest, res: express.Response, next: express.NextFunction) => {
     try {
       const { id } = req.params;
-      const updates: TablesUpdate<"food"> = req.body;
+      const foodId = String(id);
 
-      const { data, error } = await db.from("food").update(updates).eq("id", String(id)).select();
+      // `tags` is not a column on food — pull it out and sync the join table
+      // separately so it isn't passed to the food update.
+      const { tags, ...foodUpdates } = req.body;
+      const updates: TablesUpdate<"food"> = foodUpdates;
+
+      const { data, error } = await db.from("food").update(updates).eq("id", foodId).select();
 
       if (error) return res.status(400).json({ error: error.message });
+
+      // Replace the whole tag set for this recipe when the client sends it.
+      if (Array.isArray(tags)) {
+        const { error: deleteError } = await db.from("food_tags").delete().eq("food_id", foodId);
+        if (deleteError) return res.status(400).json({ error: deleteError.message });
+
+        if (tags.length > 0) {
+          const tagRows: TablesInsert<"food_tags">[] = tags.map((tag_id: string) => ({
+            food_id: foodId,
+            tag_id,
+          }));
+          const { error: insertError } = await db.from("food_tags").insert(tagRows);
+          if (insertError) return res.status(400).json({ error: insertError.message });
+        }
+      }
 
       res.status(200).json(data[0]);
     } catch (err) {
@@ -159,8 +179,17 @@ recipesRouter.delete(
   async (req: JWTRequest, res: express.Response, next: express.NextFunction) => {
     try {
       const { id } = req.params;
+      const foodId = String(id);
 
-      const { data, error } = await db.from("food").delete().eq("id", String(id)).select();
+      // Remove join-table rows first — they reference food(id) via foreign keys,
+      // so deleting the food row directly would violate those constraints.
+      const { error: tagsError } = await db.from("food_tags").delete().eq("food_id", foodId);
+      if (tagsError) return res.status(400).json({ error: tagsError.message });
+
+      const { error: ingredientsError } = await db.from("food_ingredients").delete().eq("food_id", foodId);
+      if (ingredientsError) return res.status(400).json({ error: ingredientsError.message });
+
+      const { data, error } = await db.from("food").delete().eq("id", foodId).select();
 
       if (error) return res.status(400).json({ error: error.message });
 

@@ -1,14 +1,17 @@
-import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_5 } from '@shared/styles/fonts'
+import { FieldSmall } from '@shared/ui/FieldSmall'
 
-import * as model from './model'
-import { FieldSmall } from '../../shared/ui/FieldSmall'
+import { Nutrition } from './model'
 
-export const NutritionFactsTable = () => {
-    const [nutrition, setNutrition] = useUnit([model.$nutrition, model.setNutrition])
+type NutritionFactsTableProps = {
+    value: Nutrition
+    onChange: (nutrition: Nutrition) => void
+}
+
+export const NutritionFactsTable = ({ value, onChange }: NutritionFactsTableProps) => {
     return (
         <Layout>
             <ColumnWrapper>
@@ -17,9 +20,9 @@ export const NutritionFactsTable = () => {
                     iconVisible={false}
                     name=""
                     type="text"
-                    value={nutrition.calories}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setNutrition({ ...nutrition, calories: e.target.value })
+                    value={value.calories}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange({ ...value, calories: event.target.value })
                     }
                 />
             </ColumnWrapper>
@@ -29,9 +32,9 @@ export const NutritionFactsTable = () => {
                     iconVisible={false}
                     name=""
                     type="text"
-                    value={nutrition.protein}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setNutrition({ ...nutrition, protein: e.target.value })
+                    value={value.protein}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange({ ...value, protein: event.target.value })
                     }
                 />
             </ColumnWrapper>
@@ -41,9 +44,9 @@ export const NutritionFactsTable = () => {
                     iconVisible={false}
                     name=""
                     type="text"
-                    value={nutrition.fat}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setNutrition({ ...nutrition, fat: e.target.value })
+                    value={value.fat}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange({ ...value, fat: event.target.value })
                     }
                 />
             </ColumnWrapper>
@@ -53,9 +56,9 @@ export const NutritionFactsTable = () => {
                     iconVisible={false}
                     name=""
                     type="text"
-                    value={nutrition.carbs}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setNutrition({ ...nutrition, carbs: e.target.value })
+                    value={value.carbs}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange({ ...value, carbs: event.target.value })
                     }
                 />
             </ColumnWrapper>
@@ -68,7 +71,7 @@ const Layout = styled.div`
     grid-template-columns: repeat(4, 1fr);
     column-gap: 8px;
 
-    min-height: 0; /* NEW */
+    min-height: 0;
     min-width: 0;
 `
 

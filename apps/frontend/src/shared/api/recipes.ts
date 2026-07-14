@@ -2,7 +2,7 @@ import { createEffect } from 'effector'
 
 import { url } from './consts'
 import { db } from './db'
-import { Tables } from './supabase'
+import type { Tables } from '@menu/db'
 
 export type Recipe = Tables<'food'> & {
     category: Category
