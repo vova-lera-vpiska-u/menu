@@ -1,0 +1,327 @@
+openapi: 3.1.0
+info:
+  title: Menu Server API
+  version: 1.0.0
+  description: >
+    Authorized **write layer** for the menu app. All reads go directly to
+    Supabase from the frontend — this API only handles authentication and
+    create/update/delete of recipes (+ create for taxonomy tables).
+
+    Auth: `POST /login` sets an httpOnly cookie `jwt`; protected endpoints
+    require it. Send requests with credentials (cookies) included.
+servers:
+  - url: https://{host}
+    variables:
+      host:
+        default: menu-server.vercel.app
+        description: Production host on Vercel
+  - url: http://localhost:8080
+    description: Local dev
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: jwt
+      description: JWT issued by POST /login, RS256, expires in 24h.
+
+  schemas:
+    Food:
+      type: object
+      description: A recipe row from the `food` table (also the read shape in Supabase).
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        category_id:
+          type: string
+          format: uuid
+          description: FK → categories.id (the recipe's "section")
+        cover_url:
+          type: [string, "null"]
+          format: uri
+          description: Absolute Vercel Blob URL of the cover image
+        description: { type: [string, "null"] }
+        recipe: { type: [string, "null"] }
+        rating: { type: [number, "null"] }
+        time_to_cook:
+          type: [integer, "null"]
+          description: Total cook time in minutes
+        calories: { type: [number, "null"] }
+        protein: { type: [number, "null"] }
+        fat: { type: [number, "null"] }
+        carbs: { type: [number, "null"] }
+      required: [id, name, category_id]
+
+    LoginRequest:
+      type: object
+      properties:
+        username: { type: string, example: admin }
+        password: { type: string }
+      required: [username, password]
+
+    NameOnly:
+      type: object
+      properties:
+        name: { type: string }
+      required: [name]
+
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+
+paths:
+  /:
+    get:
+      summary: Health check
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema: { type: string, example: ok }
+
+  /login:
+    post:
+      operationId: login
+      summary: Admin login
+      security: []
+      description: >
+        Verifies username `admin` and password against `ADMIN_PASSWORD`.
+        On success sets an httpOnly `jwt` cookie (SameSite=None, Secure in prod).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LoginRequest" }
+      responses:
+        "200":
+          description: Logged in; `jwt` cookie set
+          headers:
+            Set-Cookie:
+              schema: { type: string }
+        "401":
+          description: Unauthorized
+          content:
+            text/plain: { schema: { type: string, example: Unauthorized } }
+
+  /logout:
+    post:
+      operationId: logout
+      summary: Logout
+      security: []
+      description: Clears the `jwt` cookie.
+      responses:
+        "200":
+          description: Cleared
+          content:
+            text/plain: { schema: { type: string, example: OK } }
+
+  /recipes:
+    post:
+      operationId: createRecipe
+      summary: Create recipe
+      security: [{ cookieAuth: [] }]
+      description: >
+        Multipart form. `image` is uploaded to Vercel Blob and its URL stored
+        in `cover_url`. `section` becomes `category_id`. `categories` is a JSON
+        array of tag ids linked via the `food_tags` join table. `timeToCook`
+        accepts "3h" / "20min" / "1h 30min" / plain minutes and is stored as
+        total minutes. `nutrition` is a JSON object split into numeric columns.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                section:
+                  type: string
+                  format: uuid
+                  description: categories.id — stored as food.category_id
+                categories:
+                  type: string
+                  description: JSON-encoded array of tag ids (tags.id[]) → food_tags
+                  example: '["a1b2...","c3d4..."]'
+                image:
+                  type: string
+                  format: binary
+                timeToCook:
+                  type: string
+                  example: "1h 30min"
+                rating:
+                  type: string
+                  example: "4.5"
+                nutrition:
+                  type: string
+                  description: JSON `{ calories, protein, fat, carbs }` (values numeric)
+                  example: '{"calories":250,"protein":12,"fat":8,"carbs":30}'
+              required: [name, section, image]
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Food" }
+        "207":
+          description: Recipe created but tag linking failed (food_tags insert error)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Food"
+                  - type: object
+                    properties:
+                      tagsError: { type: string }
+        "400":
+          description: Missing image or Supabase error
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "401":
+          description: Unauthorized
+
+  /recipes/{id}:
+    put:
+      operationId: updateRecipe
+      summary: Update recipe
+      security: [{ cookieAuth: [] }]
+      description: Partial update. Body is a subset of `food` columns (raw, snake_case).
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Food" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Food" }
+        "400":
+          description: Supabase error
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "401":
+          description: Unauthorized
+    delete:
+      operationId: deleteRecipe
+      summary: Delete recipe
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Deleted (returns the deleted row)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Food" }
+        "400":
+          description: Supabase error
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "401":
+          description: Unauthorized
+
+  /recipes/hide:
+    post:
+      operationId: hideRecipe
+      summary: Hide recipe (not implemented)
+      security: []
+      responses:
+        "500":
+          description: Not implemented
+          content:
+            text/plain: { schema: { type: string, example: Not implemented } }
+
+  /categories:
+    post:
+      operationId: createTag
+      summary: Create tag
+      security: [{ cookieAuth: [] }]
+      description: "⚠️ Naming quirk: writes to the `tags` table (not `categories`)."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NameOnly" }
+      responses:
+        "201":
+          description: Created tag
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string, format: uuid }
+                  name: { type: string }
+                  category: { type: [string, "null"] }
+        "400": { description: Supabase error }
+        "401": { description: Unauthorized }
+
+  /sections:
+    post:
+      operationId: createSection
+      summary: Create section
+      security: [{ cookieAuth: [] }]
+      description: "⚠️ Naming quirk: writes to the `categories` table (not `sections`)."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NameOnly" }
+      responses:
+        "200":
+          description: Created section (returns array)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string, format: uuid }
+                    name: { type: string }
+        "400": { description: Supabase error }
+        "401": { description: Unauthorized }
+
+  /ingredients:
+    post:
+      operationId: createIngredient
+      summary: Create ingredient
+      security: [{ cookieAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                category: { type: [string, "null"] }
+                description: { type: [string, "null"] }
+              required: [name]
+      responses:
+        "201":
+          description: Created ingredient
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string, format: uuid }
+                  name: { type: string }
+                  category: { type: [string, "null"] }
+                  description: { type: [string, "null"] }
+        "400": { description: Supabase error }
+        "401": { description: Unauthorized }

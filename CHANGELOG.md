@@ -6,6 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-14
+
+### Added
+
+- Search bar now submits via a form: pressing Enter, the mobile keyboard's
+  search/go key, or clicking the search icon triggers submission. Typing
+  `login`/`логин` or `admin`/`админ` and submitting navigates to the login or
+  admin route (restoring UI access to the auth flow, which had no entry point
+  since the home-page `LOGIN` link was removed).
+- Clicking the `Menu` logo now navigates to the home page.
+
+### Changed
+
+- Migrated section reads off the legacy REST server: `getSectionsFx` now reads
+  the `categories` table directly from Supabase (the backend no longer exposes
+  `GET /sections`). The `Section` type was replaced with the Supabase `Category`
+  type (`_id` → `id`), updated at the admin form call site.
+- Admin write effects (`createRecipeFx`, `deleteRecipeFx`, `createSectionFx`,
+  `createIngredientFx`, `createCategoryFx`) now `await` their `fetch` and throw
+  on a non-OK response, so `.doneData` fires only after the request settles and
+  failures surface instead of being silently swallowed. Dropped stray trailing
+  slashes from the write endpoints.
+- Aligned write payloads with the Menu Server OpenAPI contract:
+  `createSectionFx` now sends `{ name }` (was `{ name, recipes }`),
+  `createIngredientFx` sends `{ name, category?, description? }` (was
+  `{ name, price }` — `price` is not a column), and `updateRecipeFx` sends only
+  raw `food` columns (snake_case) instead of the full nested recipe with its
+  `category`/`tags`/`ingredients` joins.
+- Fixed the recipe-edit form inputs to bind to real `food` columns
+  (`cover_url`, `time_to_cook`) so edits land on the correct keys.
+
 ## [0.3.1] - 2026-07-04
 
 ### Changed

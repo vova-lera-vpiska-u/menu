@@ -61,7 +61,7 @@ export const Admin = () => {
             <Layout
                 onSubmit={(e) => {
                     e.preventDefault()
-                    const selectedSection = sections?.find((s) => s.name === section)?._id
+                    const selectedSection = sections?.find((s) => s.name === section)?.id
                     if (!image || !selectedSection) return
                     createRecipeClicked({
                         name,

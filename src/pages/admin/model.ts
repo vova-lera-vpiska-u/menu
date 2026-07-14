@@ -4,19 +4,15 @@ import { recipesModel } from '@entities/recipe'
 
 import { recipesApi } from '@shared/api'
 import { url } from '@shared/api/consts'
-import { Ingredient } from '@shared/api/recipes'
+import { db } from '@shared/api/db'
+import { Category, Ingredient } from '@shared/api/recipes'
 
 export const $ingredients = createStore<Ingredient[] | null>(null)
 export const adminPageMounted = createEvent()
 export const adminPageUnMounted = createEvent()
 export const createRecipeClicked = createEvent<CreateRecipeRequest>()
 
-type Section = {
-    _id: string
-    name: string
-    recipes: string[]
-}
-export const $sections = createStore<Section[] | null>(null)
+export const $sections = createStore<Category[] | null>(null)
 export const $sectionOptions = $sections.map((sections) => sections?.map((section) => section.name) ?? [])
 export const $nutrition = createStore<Nutrition>({
     calories: '',
@@ -32,8 +28,8 @@ $nutrition.on(setNutrition, (_, nutrition) => nutrition)
 const getRecipesFx = attach({ effect: recipesApi.getRecipesFx })
 const getIngredientsFx = attach({ effect: recipesApi.getIngredientsFx })
 export const getSectionsFx = createEffect(async () => {
-    const response = await fetch(`${url}/sections`)
-    return await response.json()
+    const { data } = await db.from('categories').select('*')
+    return data
 })
 
 sample({
@@ -42,7 +38,7 @@ sample({
 })
 
 export const createCategoryFx = createEffect(async (name: string) => {
-    await fetch(`${url}/categories/`, {
+    const response = await fetch(`${url}/categories`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -50,6 +46,7 @@ export const createCategoryFx = createEffect(async (name: string) => {
         credentials: 'include',
         body: JSON.stringify({ name }),
     })
+    if (!response.ok) throw new Error(response.statusText)
 })
 type Nutrition = {
     calories: string
@@ -79,45 +76,50 @@ export const createRecipeFx = createEffect(
         if (nutrition) formData.append('nutrition', JSON.stringify(nutrition))
         formData.append('image', image)
 
-        fetch(`${url}/recipes/`, {
+        const response = await fetch(`${url}/recipes`, {
             method: 'POST',
             credentials: 'include',
             body: formData,
         })
+        if (!response.ok) throw new Error(response.statusText)
     },
 )
 
 export const deleteRecipeFx = createEffect(async (id: string) => {
-    fetch(`${url}/recipes/${id}`, {
+    const response = await fetch(`${url}/recipes/${id}`, {
         credentials: 'include',
         method: 'DELETE',
     })
+    if (!response.ok) throw new Error(response.statusText)
 })
 
-export const createSectionFx = createEffect(async ({ name, recipes }: { name: string; recipes: string[] }) => {
-    fetch(`${url}/sections/`, {
+export const createSectionFx = createEffect(async (name: string) => {
+    const response = await fetch(`${url}/sections`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            name,
-            recipes: recipes,
-        }),
+        body: JSON.stringify({ name }),
         credentials: 'include',
     })
+    if (!response.ok) throw new Error(response.statusText)
 })
 
-export const createIngredientFx = createEffect(async ({ name, price }: { name: string; price: string }) => {
-    fetch(`${url}/ingredients/`, {
+type CreateIngredientRequest = {
+    name: string
+    category?: string
+    description?: string
+}
+export const createIngredientFx = createEffect(async ({ name, category, description }: CreateIngredientRequest) => {
+    const response = await fetch(`${url}/ingredients`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-
         credentials: 'include',
-        body: JSON.stringify({ name, price }),
+        body: JSON.stringify({ name, category, description }),
     })
+    if (!response.ok) throw new Error(response.statusText)
 })
 sample({
     clock: createRecipeClicked,

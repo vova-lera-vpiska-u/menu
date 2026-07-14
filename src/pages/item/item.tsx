@@ -52,13 +52,13 @@ export const Item = () => {
                 )}
                 {recipe.cover_url && (
                     <div>
-                        image: <input name="image" type="text" value={recipe.cover_url} onChange={handleChange} />
+                        image: <input name="cover_url" type="text" value={recipe.cover_url} onChange={handleChange} />
                     </div>
                 )}
                 {recipe.time_to_cook && (
                     <div>
                         time:{' '}
-                        <input name="timeToCook" type="text" value={recipe.time_to_cook} onChange={handleChange} />
+                        <input name="time_to_cook" type="text" value={recipe.time_to_cook} onChange={handleChange} />
                     </div>
                 )}
                 <div>ingredients</div>

@@ -57,14 +57,24 @@ export const getRecipeFx = createEffect(async (id: string) => {
 
 export type UpdateRecipeRequest = { recipe: Recipe; id: string }
 export const updateRecipeFx = createEffect(async ({ recipe, id }: UpdateRecipeRequest) => {
+    const foodColumns = {
+        name: recipe.name,
+        category_id: recipe.category_id,
+        cover_url: recipe.cover_url,
+        description: recipe.description,
+        recipe: recipe.recipe,
+        rating: recipe.rating,
+        time_to_cook: recipe.time_to_cook,
+    }
     const response = await fetch(`${url}/recipes/${id}`, {
         method: 'PUT',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(recipe),
+        body: JSON.stringify(foodColumns),
     })
+    if (!response.ok) throw new Error(response.statusText)
     return await response.json()
 })
 
