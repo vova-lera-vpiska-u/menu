@@ -11,6 +11,7 @@ import { userModel } from '@entities/user/model'
 
 import { ADMIN_PATH } from '@shared/routes/private-paths'
 import { LOGIN_PATH } from '@shared/routes/public-paths'
+import { HOMEPAGE_PATH } from '@shared/routes/shared-paths'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_5 } from '@shared/styles/fonts'
 
@@ -31,20 +32,26 @@ export const Logo = () => {
     const [searchQuery, searchQueryChanged] = useUnit([searchModel.$searchQuery, searchModel.searchQueryChanged])
     const [isSearchOpen, setIsSearchOpen] = useState(!!searchQuery)
 
-    const handleSearchChange = (value: string) => {
-        const secretPath = SECRET_PHRASES[value.trim().toLowerCase()]
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+
+        if (!isSearchOpen) {
+            setIsSearchOpen(true)
+            searchBarRef.current?.focus()
+            return
+        }
+
+        const secretPath = SECRET_PHRASES[searchQuery.trim().toLowerCase()]
         if (secretPath) {
             searchQueryChanged('')
             setIsSearchOpen(false)
             navigate(secretPath)
-            return
         }
-        searchQueryChanged(value)
     }
 
     return (
         <Flex>
-            <Layout isAdmin={!!user}>
+            <Layout isAdmin={!!user} onClick={() => navigate(HOMEPAGE_PATH)}>
                 <Heart>❤️</Heart>
                 <Name>Menu</Name>
                 {user && (
@@ -54,25 +61,23 @@ export const Logo = () => {
                 )}
             </Layout>
 
-            <SearchWrapper isOpen={isSearchOpen}>
-                <SearchField
-                    ref={searchBarRef}
-                    isOpen={isSearchOpen}
-                    value={searchQuery}
-                    onChange={(e) => handleSearchChange(e.target.value)}
-                    onBlur={() => {
-                        if (!searchQuery) setIsSearchOpen(false)
-                    }}
-                />
-            </SearchWrapper>
-            <SearchButton
-                onClick={() => {
-                    setIsSearchOpen(true)
-                    searchBarRef.current?.focus()
-                }}
-            >
-                <Search size={26} />
-            </SearchButton>
+            <SearchForm onSubmit={handleSubmit}>
+                <SearchWrapper isOpen={isSearchOpen}>
+                    <SearchField
+                        ref={searchBarRef}
+                        isOpen={isSearchOpen}
+                        type="search"
+                        value={searchQuery}
+                        onChange={(e) => searchQueryChanged(e.target.value)}
+                        onBlur={() => {
+                            if (!searchQuery) setIsSearchOpen(false)
+                        }}
+                    />
+                </SearchWrapper>
+                <SearchButton type="submit">
+                    <Search size={26} />
+                </SearchButton>
+            </SearchForm>
         </Flex>
     )
 }
@@ -80,6 +85,13 @@ export const Logo = () => {
 const AdminIcon = () => {
     return <AdminLogo>ADMIN</AdminLogo>
 }
+
+const SearchForm = styled.form`
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: flex-end;
+`
 
 const SearchWrapper = styled.div<{ isOpen: boolean }>`
     display: flex;
@@ -153,6 +165,7 @@ const Heart = styled.div<{ isAdmin?: boolean }>`
 
 const Layout = styled.div<{ isAdmin: boolean }>`
     user-select: none;
+    cursor: pointer;
     position: relative;
     height: 47px;
     width: ${({ isAdmin }) => (isAdmin ? '118px' : '74px')};
