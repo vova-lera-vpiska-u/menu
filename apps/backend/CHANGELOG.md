@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-07-15
+
+### Fixed
+
+- Serverless function crashed on Vercel with "native WebSocket not found":
+  `@supabase/supabase-js` (2.110+) needs a native `WebSocket`, unavailable on
+  Node 20. The Vercel function runtime is bumped to `nodejs22.x` (and the
+  esbuild target to `node22`) in `build.mjs`.
+
 ## [1.0.1] - 2026-07-15
 
 ### Added

@@ -2,15 +2,6 @@
 
 Monorepo for the **menu** project (pnpm workspaces).
 
-## Layout
-
-```
-apps/
-  frontend/   React + Effector PWA (FSD)   — @menu/frontend
-  backend/    Express + Supabase API       — @menu/backend
-packages/     shared code (types, api contract, ui, …)
-```
-
 ## Getting started
 
 ```bash

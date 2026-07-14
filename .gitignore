@@ -30,3 +30,5 @@ dev-dist
 
 # local asset staging (uploaded to Supabase Storage)
 apps/frontend/assets/
+.vercel
+.env*

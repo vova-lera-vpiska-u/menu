@@ -13,7 +13,7 @@ await build({
   bundle: true,
   platform: "node",
   format: "cjs",
-  target: "node20",
+  target: "node22",
   outfile: `${fnDir}/index.cjs`,
 });
 
@@ -23,7 +23,7 @@ writeFileSync(
   `${fnDir}/.vc-config.json`,
   JSON.stringify(
     {
-      runtime: "nodejs20.x",
+      runtime: "nodejs22.x",
       handler: "index.cjs",
       launcherType: "Nodejs",
       shouldAddHelpers: false,
