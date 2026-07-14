@@ -37,6 +37,7 @@ type RecipeFormValues = {
     setTimeType: (unit: string) => void
     setChosenCategories: (categories: Tag[]) => void
     setNutrition: (nutrition: Nutrition) => void
+    setRecipeText: (recipeText: string) => void
 }
 
 // Prefill the form fields once the edited recipe (and tag list) have loaded.
@@ -45,13 +46,15 @@ const usePrefillFromRecipe = (
     categoryList: Tag[] | null,
     setters: RecipeFormValues,
 ) => {
-    const { setName, setSection, setRating, setTimeAmount, setTimeType, setChosenCategories, setNutrition } = setters
+    const { setName, setSection, setRating, setTimeAmount, setTimeType, setChosenCategories, setNutrition, setRecipeText } =
+        setters
 
     useEffect(() => {
         if (!recipe) return
         setName(recipe.name)
         setSection(recipe.category.name)
         setRating(recipe.rating ?? 0)
+        setRecipeText(recipe.recipe ?? '')
         if (recipe.time_to_cook !== null) {
             setTimeAmount(String(recipe.time_to_cook))
             setTimeType('min')
@@ -75,6 +78,7 @@ const usePrefillFromRecipe = (
         setTimeType,
         setChosenCategories,
         setNutrition,
+        setRecipeText,
     ])
 }
 
@@ -131,6 +135,7 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
     const [timeType, setTimeType] = useState('h')
     const [image, setImage] = useState<File | null>(null)
     const [nutrition, setNutrition] = useState<Nutrition>(EMPTY_NUTRITION)
+    const [recipeText, setRecipeText] = useState('')
     const [validationError, setValidationError] = useState<string | null>(null)
 
     usePrefillFromRecipe(mode === 'edit' ? recipe : null, categoryList, {
@@ -141,6 +146,7 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
         setTimeType,
         setChosenCategories,
         setNutrition,
+        setRecipeText,
     })
     useNavigateOnSuccess(recipe?.id)
 
@@ -160,6 +166,7 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
                 name,
                 categoryId: selectedSection.id,
                 categories: chosenCategories.map((category) => category.id),
+                recipe: recipeText.trim() || null,
                 rating: rating || null,
                 timeToCook: toMinutes(timeAmount, timeType),
                 nutrition,
@@ -173,6 +180,7 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
             name,
             categories: chosenCategories.map((category) => category.id),
             section: selectedSection.id,
+            recipe: recipeText.trim() || undefined,
             rating,
             timeToCook: `${timeAmount}${timeType}`,
             image,
@@ -257,6 +265,15 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
             </SettingLayout>
 
             <SettingLayout columnStart={1} columnEnd={3}>
+                <Name>Recipe</Name>
+                <RecipeTextArea
+                    placeholder="Write something…"
+                    value={recipeText}
+                    onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => setRecipeText(event.target.value)}
+                />
+            </SettingLayout>
+
+            <SettingLayout columnStart={1} columnEnd={3}>
                 <Name>
                     Nutrition Facts <NutritionMark>(per 100g)</NutritionMark>
                 </Name>
@@ -310,6 +327,32 @@ function toMinutes(amount: string, unit: string): number | null {
 const ErrorMessage = styled.div`
     ${TEXT_SIZE_5}
     color: ${COLORS.danger};
+`
+
+const RecipeTextArea = styled.textarea`
+    width: 100%;
+    min-height: 120px;
+    box-sizing: border-box;
+    padding: 8px 16px;
+    resize: vertical;
+
+    background-color: transparent;
+    border: 1px solid ${COLORS.lightGray};
+    border-radius: 3px;
+    ${TEXT_SIZE_3_LIGHT};
+    color: ${COLORS.white};
+
+    transition: border-color 0.2s ease;
+
+    &:focus-visible,
+    &:focus {
+        outline: none;
+        border-color: ${COLORS.oliveGreen};
+    }
+
+    &::placeholder {
+        color: ${COLORS.oliveGreenDisable};
+    }
 `
 
 const NutritionMark = styled.span`

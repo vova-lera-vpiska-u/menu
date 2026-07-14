@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-07-15
+
+### Added
+
+- Recipe form now has a **Recipe** field (multi-line) in both create and edit
+  modes, pre-filled from the recipe when editing and saved to `food.recipe`.
+
 ## [0.6.0] - 2026-07-15
 
 ### Added

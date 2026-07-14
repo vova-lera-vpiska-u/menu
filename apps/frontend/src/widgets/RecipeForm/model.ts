@@ -20,6 +20,7 @@ export type CreateRecipePayload = {
     section: string
     categories: string[]
     image: File
+    recipe?: string
     timeToCook?: string
     rating?: number
     nutrition?: Nutrition
@@ -30,6 +31,7 @@ export type UpdateRecipePayload = {
     name: string
     categoryId: string
     categories: string[]
+    recipe: string | null
     rating: number | null
     timeToCook: number | null
     nutrition?: Nutrition
@@ -46,6 +48,7 @@ export const createRecipeFx = createEffect(async (payload: CreateRecipePayload) 
     formData.append('name', payload.name)
     formData.append('section', payload.section)
     formData.append('categories', JSON.stringify(payload.categories))
+    if (payload.recipe) formData.append('recipe', payload.recipe)
     if (payload.timeToCook) formData.append('timeToCook', payload.timeToCook)
     if (payload.rating) formData.append('rating', payload.rating.toString())
     if (payload.nutrition) formData.append('nutrition', JSON.stringify(payload.nutrition))
@@ -63,6 +66,7 @@ export const updateRecipeFx = createEffect(async (payload: UpdateRecipePayload) 
     const body = {
         name: payload.name,
         category_id: payload.categoryId,
+        recipe: payload.recipe,
         rating: payload.rating,
         time_to_cook: payload.timeToCook,
         calories: toNumberOrNull(payload.nutrition?.calories),
