@@ -19,6 +19,47 @@ interface MulterRequest extends JWTRequest {
   file?: Express.Multer.File;
 }
 
+// Parse a duration string like "3h", "20min", "1h 30min" into total minutes.
+// Returns null if nothing parseable is found.
+const parseTimeToCook = (raw: unknown): number | null => {
+  if (raw === undefined || raw === null || raw === "") return null;
+  const str = String(raw).trim();
+
+  // Plain number → treat as minutes.
+  if (/^\d+(\.\d+)?$/.test(str)) return Number(str);
+
+  let minutes = 0;
+  let matched = false;
+  const hours = str.match(/(\d+(?:\.\d+)?)\s*h/i);
+  if (hours) {
+    minutes += Number(hours[1]) * 60;
+    matched = true;
+  }
+  const mins = str.match(/(\d+(?:\.\d+)?)\s*m/i);
+  if (mins) {
+    minutes += Number(mins[1]);
+    matched = true;
+  }
+  return matched ? minutes : null;
+};
+
+// Safely parse a numeric nutrition value ("250" | 250 | "") into number | null.
+const toNumberOrNull = (raw: unknown): number | null => {
+  if (raw === undefined || raw === null || raw === "") return null;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+};
+
+// Safely JSON.parse, returning a fallback on any error.
+const safeJsonParse = <T,>(raw: unknown, fallback: T): T => {
+  if (typeof raw !== "string" || raw.trim() === "") return fallback;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+};
+
 // POST /recipes
 recipesRouter.post(
   "/",
@@ -30,7 +71,15 @@ recipesRouter.post(
         return res.status(400).json({ error: "Image file is required" });
       }
 
-      const { name, category_id, rating, time_to_cook, recipe: recipeText, description } = req.body;
+      // Frontend sends multipart/form-data:
+      //   name, section (= categories.id), categories (JSON tags.id[]),
+      //   image, timeToCook ("3h"/"20min"/"1h 30min"), rating, nutrition (JSON)
+      const { name, section, rating, timeToCook, recipe: recipeText, description } = req.body;
+      const tagIds = safeJsonParse<string[]>(req.body.categories, []);
+      const nutrition = safeJsonParse<{ calories?: unknown; protein?: unknown; fat?: unknown; carbs?: unknown }>(
+        req.body.nutrition,
+        {}
+      );
 
       // Upload image to Vercel Blob
       const blobFilename = `recipes/${uuidv4()}${path.extname(req.file.originalname)}`;
@@ -42,12 +91,16 @@ recipesRouter.post(
       // Build insert object
       const newRecipe: TablesInsert<"food"> = {
         name,
-        category_id,
+        category_id: section,
         cover_url,
-        rating: rating ? Number(rating) : null,
-        time_to_cook: time_to_cook ? Number(time_to_cook) : null,
+        rating: toNumberOrNull(rating),
+        time_to_cook: parseTimeToCook(timeToCook),
         recipe: recipeText || null,
         description: description || null,
+        calories: toNumberOrNull(nutrition.calories),
+        protein: toNumberOrNull(nutrition.protein),
+        fat: toNumberOrNull(nutrition.fat),
+        carbs: toNumberOrNull(nutrition.carbs),
       };
 
       // Insert into Supabase
@@ -57,7 +110,22 @@ recipesRouter.post(
         return res.status(400).json({ error: error.message });
       }
 
-      res.status(201).json(data[0]);
+      const created = data[0];
+
+      // Link tags via the food_tags join table
+      if (Array.isArray(tagIds) && tagIds.length > 0) {
+        const tagRows: TablesInsert<"food_tags">[] = tagIds.map((tag_id) => ({
+          food_id: created.id,
+          tag_id,
+        }));
+        const { error: tagsError } = await db.from("food_tags").insert(tagRows);
+        if (tagsError) {
+          // Food was created; report partial failure so the client can retry the links.
+          return res.status(207).json({ ...created, tagsError: tagsError.message });
+        }
+      }
+
+      res.status(201).json(created);
     } catch (err) {
       next(err);
     }

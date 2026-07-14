@@ -121,31 +121,43 @@ export type Database = {
             }
             food: {
                 Row: {
+                    calories: number | null
+                    carbs: number | null
                     category_id: string
                     cover_url: string | null
                     description: string | null
+                    fat: number | null
                     id: string
                     name: string
+                    protein: number | null
                     rating: number | null
                     recipe: string | null
                     time_to_cook: number | null
                 }
                 Insert: {
+                    calories?: number | null
+                    carbs?: number | null
                     category_id?: string
                     cover_url?: string | null
                     description?: string | null
+                    fat?: number | null
                     id?: string
                     name: string
+                    protein?: number | null
                     rating?: number | null
                     recipe?: string | null
                     time_to_cook?: number | null
                 }
                 Update: {
+                    calories?: number | null
+                    carbs?: number | null
                     category_id?: string
                     cover_url?: string | null
                     description?: string | null
+                    fat?: number | null
                     id?: string
                     name?: string
+                    protein?: number | null
                     rating?: number | null
                     recipe?: string | null
                     time_to_cook?: number | null
