@@ -30,3 +30,6 @@ dev-dist
 
 # local asset staging (uploaded to Supabase Storage)
 /assets/
+
+# frontend local asset staging (uploaded to Supabase Storage)
+apps/frontend/assets/
