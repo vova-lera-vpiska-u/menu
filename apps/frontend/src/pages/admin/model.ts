@@ -8,6 +8,7 @@ import { db } from '@shared/api/db'
 import { Category, Ingredient } from '@shared/api/recipes'
 
 export const $ingredients = createStore<Ingredient[] | null>(null)
+export const $createError = createStore<string | null>(null)
 export const adminPageMounted = createEvent()
 export const adminPageUnMounted = createEvent()
 export const createRecipeClicked = createEvent<CreateRecipeRequest>()
@@ -81,7 +82,7 @@ export const createRecipeFx = createEffect(
             credentials: 'include',
             body: formData,
         })
-        if (!response.ok) throw new Error(response.statusText)
+        if (!response.ok) throw new Error(String(response.status))
     },
 )
 
@@ -124,6 +125,17 @@ export const createIngredientFx = createEffect(async ({ name, category, descript
 sample({
     clock: createRecipeClicked,
     target: createRecipeFx,
+})
+
+sample({
+    clock: [createRecipeClicked, createRecipeFx.done],
+    fn: () => null,
+    target: $createError,
+})
+sample({
+    clock: createRecipeFx.failData,
+    fn: (error) => (error.message === '401' ? 'Session expired — please log in again' : 'Failed to create recipe'),
+    target: $createError,
 })
 
 sample({

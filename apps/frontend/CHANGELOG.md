@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-14
+
+### Added
+
+- Login form now surfaces auth failures: a wrong username/password shows a
+  `Wrong username or password` message (new `$loginError` store) instead of
+  navigating away, and the submit button shows a `Logging in…` pending state
+  while the request is in flight.
+- Admin recipe form now validates inputs before submit (name, category, image)
+  with inline messages, surfaces backend create failures (including a dedicated
+  `Session expired` message on 401), and disables the Save button with a
+  `Saving…` label while the create request is pending.
+- `BigButton` accepts a `disabled` prop with a subtle opacity/cursor transition.
+
+### Changed
+
+- `userModel` now exposes `loginFx` and `loginPending`/`loginError` stores; the
+  Login page awaits the effect instead of navigating optimistically.
+- `createRecipeFx` throws the HTTP status (not `statusText`) so callers can map
+  specific codes to messages.
+
 ## [0.4.0] - 2026-07-14
 
 ### Added

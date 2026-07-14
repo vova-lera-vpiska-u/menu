@@ -19,8 +19,10 @@ import { FieldBig } from '@shared/ui/FieldBig'
 export const Login = () => {
     const navigate = useNavigate()
 
-    const [login, clearRedirect, redirectedFrom] = useUnit([
-        userModel.events.login,
+    const [login, pending, loginError, clearRedirect, redirectedFrom] = useUnit([
+        userModel.effects.loginFx,
+        userModel.stores.loginPending,
+        userModel.stores.loginError,
         routingModel.events.clear,
         routingModel.stores.from,
     ])
@@ -31,14 +33,18 @@ export const Login = () => {
             <Layout>
                 <Title>AUTHORIZATION</Title>
                 <Form
-                    onSubmit={(e) => {
+                    onSubmit={async (e) => {
                         e.preventDefault()
-                        login({
-                            username: e.currentTarget.username.value,
-                            password: e.currentTarget.password.value,
-                        })
-                        navigate(redirectedFrom || ADMIN_PATH, { replace: true })
-                        clearRedirect()
+                        try {
+                            await login({
+                                username: e.currentTarget.username.value,
+                                password: e.currentTarget.password.value,
+                            })
+                            navigate(redirectedFrom || ADMIN_PATH, { replace: true })
+                            clearRedirect()
+                        } catch {
+                            // error surfaced via loginError store
+                        }
                     }}
                 >
                     <FieldBig type="text" name="username" placeholder="Who?"></FieldBig>
@@ -47,7 +53,8 @@ export const Login = () => {
                         By clicking this button, I confirm that I have no intention of poisoning anyone and I agree to
                         provide complete information
                     </Checkbox>
-                    <BigButton>Log In</BigButton>
+                    {loginError && <ErrorMessage>{loginError}</ErrorMessage>}
+                    <BigButton disabled={pending}>{pending ? 'Logging in…' : 'Log In'}</BigButton>
                 </Form>
             </Layout>
         </>
@@ -67,6 +74,10 @@ const Layout = styled.div`
 const Title = styled.h1`
     ${TEXT_SIZE_1};
     color: ${COLORS.white};
+`
+
+const ErrorMessage = styled.span`
+    color: ${COLORS.danger};
 `
 
 const Form = styled.form`

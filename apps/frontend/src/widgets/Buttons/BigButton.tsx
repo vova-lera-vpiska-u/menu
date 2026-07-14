@@ -3,8 +3,12 @@ import styled from 'styled-components'
 import { COLORS } from '@shared/styles/colors'
 import { TEXT_SIZE_3_REGULAR } from '@shared/styles/fonts'
 
-export const BigButton = ({ children }: { children: React.ReactNode }) => {
-    return <Button type="submit">{children}</Button>
+export const BigButton = ({ children, disabled }: { children: React.ReactNode; disabled?: boolean }) => {
+    return (
+        <Button type="submit" disabled={disabled}>
+            {children}
+        </Button>
+    )
 }
 
 const Button = styled.button`
@@ -22,4 +26,11 @@ const Button = styled.button`
 
     ${TEXT_SIZE_3_REGULAR}
     color: ${COLORS.white};
+
+    transition: opacity 0.2s ease;
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
 `

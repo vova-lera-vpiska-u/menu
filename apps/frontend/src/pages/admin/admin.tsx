@@ -52,8 +52,13 @@ export const Admin = () => {
     const [timeAmount, setTimeAmount] = useState('')
     const [timeType, setTimeType] = useState('h')
     const [image, setImage] = useState<File | null>(null)
+    const [validationError, setValidationError] = useState<string | null>(null)
 
-    const [createRecipeClicked] = useUnit([model.createRecipeClicked])
+    const [createRecipeClicked, createError, creating] = useUnit([
+        model.createRecipeClicked,
+        model.$createError,
+        model.createRecipeFx.pending,
+    ])
 
     return (
         <div>
@@ -62,7 +67,10 @@ export const Admin = () => {
                 onSubmit={(e) => {
                     e.preventDefault()
                     const selectedSection = sections?.find((s) => s.name === section)?.id
-                    if (!image || !selectedSection) return
+                    if (!name.trim()) return setValidationError('Enter a name')
+                    if (!selectedSection) return setValidationError('Pick a category')
+                    if (!image) return setValidationError('Upload an image')
+                    setValidationError(null)
                     createRecipeClicked({
                         name,
                         categories: chosenCategories.map((category) => category.id),
@@ -174,11 +182,16 @@ export const Admin = () => {
                         }
                     />
                 </SettingLayout>
+                {(validationError || createError) && (
+                    <SettingLayout columnStart={1} columnEnd={3}>
+                        <ErrorMessage>{validationError || createError}</ErrorMessage>
+                    </SettingLayout>
+                )}
                 <SettingLayout columnStart={1} columnEnd={2}>
                     <TextButton>Delete recipe</TextButton>
                 </SettingLayout>
                 <SettingLayout columnStart={2} columnEnd={3}>
-                    <BigButton>Save</BigButton>
+                    <BigButton disabled={creating}>{creating ? 'Saving…' : 'Save'}</BigButton>
                 </SettingLayout>
             </Layout>
         </div>
@@ -221,6 +234,11 @@ const Title = styled.h2`
     font-size: 20px;
     line-height: 20px;
     color: #ffffff;
+`
+
+const ErrorMessage = styled.div`
+    ${TEXT_SIZE_5}
+    color: ${COLORS.danger};
 `
 
 const NutritionMark = styled.span`

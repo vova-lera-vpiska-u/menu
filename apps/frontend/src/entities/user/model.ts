@@ -34,27 +34,34 @@ const logoutFx = createEffect(async () => {
 })
 
 const $user = createStore<string | null>(null).reset(logout)
+const $loginError = createStore<string | null>(null)
 
 sample({
     clock: login,
     target: loginFx,
 })
 sample({
+    clock: [login, loginFx.done],
+    fn: () => null,
+    target: $loginError,
+})
+sample({
     clock: loginFx.doneData,
     target: $user,
+})
+sample({
+    clock: loginFx.fail,
+    fn: () => 'Wrong username or password',
+    target: $loginError,
 })
 
 sample({
     clock: logout,
     target: logoutFx,
 })
-sample({
-    clock: logoutFx.fail,
-    fn: () => 'err',
-    target: $user,
-})
 
 export const userModel = {
-    stores: { user: $user },
+    effects: { loginFx },
+    stores: { user: $user, loginError: $loginError, loginPending: loginFx.pending },
     events: { login, logout },
 }
