@@ -1,13 +1,13 @@
 import express from "express";
-import { expressjwt, type Request as JWTRequest } from "express-jwt";
-import { jwt } from "../jwt.ts";
+import { type Request as JWTRequest } from "express-jwt";
+import { requireAuth } from "../jwt.ts";
 import { db } from "../db/db.ts";
 
 export const sectionsRouter = express.Router();
 
 sectionsRouter.post(
   "/",
-  expressjwt({ secret: jwt.secret, algorithms: jwt.algorithms }),
+  requireAuth,
   async (req: JWTRequest, res: express.Response, next: express.NextFunction) => {
     try {
       const newCategory = req.body;

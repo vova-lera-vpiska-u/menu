@@ -1,6 +1,5 @@
 import express from "express";
-import { expressjwt } from "express-jwt";
-import { jwt } from "../jwt.ts";
+import { requireAuth } from "../jwt.ts";
 import { db } from "../db/db.ts";
 import type { TablesInsert } from "../db/supabase.ts";
 
@@ -8,7 +7,7 @@ export const categoriesRouter = express.Router();
 
 categoriesRouter.post(
   "/",
-  expressjwt({ secret: jwt.secret, algorithms: jwt.algorithms }),
+  requireAuth,
   async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
       const newCategory: TablesInsert<"tags"> = {

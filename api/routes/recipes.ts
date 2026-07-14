@@ -1,6 +1,6 @@
 import express from "express";
-import { expressjwt, type Request as JWTRequest } from "express-jwt";
-import { jwt } from "../jwt.ts";
+import { type Request as JWTRequest } from "express-jwt";
+import { requireAuth } from "../jwt.ts";
 import { put } from "@vercel/blob";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
@@ -63,7 +63,7 @@ const safeJsonParse = <T,>(raw: unknown, fallback: T): T => {
 // POST /recipes
 recipesRouter.post(
   "/",
-  expressjwt({ secret: jwt.secret, algorithms: jwt.algorithms }),
+  requireAuth,
   upload.single("image"),
   async (req: MulterRequest, res: express.Response, next: express.NextFunction) => {
     try {
@@ -135,7 +135,7 @@ recipesRouter.post(
 // PUT /recipes/:id
 recipesRouter.put(
   "/:id",
-  expressjwt({ secret: jwt.secret, algorithms: jwt.algorithms }),
+  requireAuth,
   async (req: JWTRequest, res: express.Response, next: express.NextFunction) => {
     try {
       const { id } = req.params;
@@ -155,7 +155,7 @@ recipesRouter.put(
 // DELETE /recipes/:id
 recipesRouter.delete(
   "/:id",
-  expressjwt({ secret: jwt.secret, algorithms: jwt.algorithms }),
+  requireAuth,
   async (req: JWTRequest, res: express.Response, next: express.NextFunction) => {
     try {
       const { id } = req.params;
