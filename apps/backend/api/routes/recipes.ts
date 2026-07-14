@@ -141,7 +141,7 @@ recipesRouter.put(
       const { id } = req.params;
       const updates: TablesUpdate<"food"> = req.body;
 
-      const { data, error } = await db.from("food").update(updates).eq("id", id).select();
+      const { data, error } = await db.from("food").update(updates).eq("id", String(id)).select();
 
       if (error) return res.status(400).json({ error: error.message });
 
@@ -160,7 +160,7 @@ recipesRouter.delete(
     try {
       const { id } = req.params;
 
-      const { data, error } = await db.from("food").delete().eq("id", id).select();
+      const { data, error } = await db.from("food").delete().eq("id", String(id)).select();
 
       if (error) return res.status(400).json({ error: error.message });
 
