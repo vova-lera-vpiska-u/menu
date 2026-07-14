@@ -4,12 +4,13 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import jsonwebtoken from "jsonwebtoken";
+import { type Request as JWTRequest } from "express-jwt";
 
 import { recipesRouter } from "./routes/recipes.ts";
 import { categoriesRouter } from "./routes/categories.ts";
 import { sectionsRouter } from "./routes/sections.ts";
 import { ingredientsRouter } from "./routes/ingredients.ts";
-import { getPrivateKey } from "./jwt.ts";
+import { getPrivateKey, requireAuth } from "./jwt.ts";
 
 const app = express();
 const isVercel = process.env.VERCEL === "1" || false;
@@ -59,6 +60,16 @@ app.post("/login", async (req: express.Request, res: express.Response) => {
   }
 
   res.status(401).send("Unauthorized");
+});
+
+// Session restore route: verifies the httpOnly jwt cookie and returns the
+// current user so the frontend can rehydrate auth state on page load.
+app.get("/me", requireAuth, (req: JWTRequest, res: express.Response) => {
+  const auth = req.auth;
+  if (!auth || typeof auth === "string") {
+    return res.status(401).send("Unauthorized");
+  }
+  return res.status(200).json({ username: auth.username, role: auth.role });
 });
 
 // Logout route

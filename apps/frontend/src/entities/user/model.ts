@@ -1,5 +1,7 @@
 import { createEffect, createEvent, createStore, sample } from 'effector'
 
+import { appStarted } from '@shared/model'
+
 import { url } from '@shared/api/consts'
 
 type Login = {
@@ -7,8 +9,10 @@ type Login = {
     password: string
 }
 
-const login = createEvent<Login>()
-const logout = createEvent()
+type Session = {
+    username: string
+    role: string
+}
 
 const loginFx = createEffect(async ({ username, password }: Login) => {
     const response = await fetch(`${url}/login`, {
@@ -33,8 +37,37 @@ const logoutFx = createEffect(async () => {
     })
 })
 
-const $user = createStore<string | null>(null).reset(logout)
+const checkSessionFx = createEffect(async () => {
+    const response = await fetch(`${url}/me`, {
+        method: 'GET',
+        credentials: 'include',
+    })
+    if (!response.ok) throw new Error(response.statusText)
+    const session: Session = await response.json()
+    return session.username
+})
+
+const $user = createStore<string | null>(null)
 const $loginError = createStore<string | null>(null)
+const $sessionChecked = createStore(false)
+
+const login = createEvent<Login>()
+const logout = createEvent()
+
+// Restore auth state from the httpOnly jwt cookie on app load.
+sample({
+    clock: appStarted,
+    target: checkSessionFx,
+})
+sample({
+    clock: checkSessionFx.doneData,
+    target: $user,
+})
+sample({
+    clock: checkSessionFx.finally,
+    fn: () => true,
+    target: $sessionChecked,
+})
 
 sample({
     clock: login,
@@ -59,9 +92,19 @@ sample({
     clock: logout,
     target: logoutFx,
 })
+sample({
+    clock: logout,
+    fn: () => null,
+    target: $user,
+})
 
 export const userModel = {
     effects: { loginFx },
-    stores: { user: $user, loginError: $loginError, loginPending: loginFx.pending },
+    stores: {
+        user: $user,
+        loginError: $loginError,
+        loginPending: loginFx.pending,
+        sessionChecked: $sessionChecked,
+    },
     events: { login, logout },
 }

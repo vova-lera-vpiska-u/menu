@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-07-15
+
+### Added
+
+- Recipe create/update now persist ingredients. `POST /recipes` and
+  `PUT /recipes/:id` accept an `ingredients` array (`{name, amount, unit,
+  optional}`), find-or-create each ingredient by name, and rebuild the
+  `food_ingredients` join rows (amount/unit/optional columns added by migration).
+
+## [1.1.0] - 2026-07-15
+
+### Added
+
+- `GET /me` endpoint that verifies the httpOnly `jwt` cookie via `requireAuth`
+  and returns `{ username, role }`, letting the frontend restore auth state on
+  page load instead of logging the user out on every reload.
+
 ## [1.0.2] - 2026-07-15
 
 ### Fixed

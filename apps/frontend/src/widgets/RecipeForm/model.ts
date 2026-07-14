@@ -15,10 +15,23 @@ export type Nutrition = {
     carbs: string
 }
 
+export type IngredientFormRow = {
+    name: string
+    amount: string
+    unit: string
+    optional: boolean
+}
+
+// consts
+export const UNIT_OPTIONS = ['g', 'kg', 'ml', 'l', 'pcs', 'tsp', 'tbsp', 'pinch']
+
+export const EMPTY_INGREDIENT: IngredientFormRow = { name: '', amount: '', unit: '', optional: false }
+
 export type CreateRecipePayload = {
     name: string
     section: string
     categories: string[]
+    ingredients: IngredientFormRow[]
     image: File
     recipe?: string
     timeToCook?: string
@@ -31,6 +44,7 @@ export type UpdateRecipePayload = {
     name: string
     categoryId: string
     categories: string[]
+    ingredients: IngredientFormRow[]
     recipe: string | null
     rating: number | null
     timeToCook: number | null
@@ -48,6 +62,7 @@ export const createRecipeFx = createEffect(async (payload: CreateRecipePayload) 
     formData.append('name', payload.name)
     formData.append('section', payload.section)
     formData.append('categories', JSON.stringify(payload.categories))
+    formData.append('ingredients', JSON.stringify(payload.ingredients))
     if (payload.recipe) formData.append('recipe', payload.recipe)
     if (payload.timeToCook) formData.append('timeToCook', payload.timeToCook)
     if (payload.rating) formData.append('rating', payload.rating.toString())
@@ -74,6 +89,7 @@ export const updateRecipeFx = createEffect(async (payload: UpdateRecipePayload) 
         fat: toNumberOrNull(payload.nutrition?.fat),
         carbs: toNumberOrNull(payload.nutrition?.carbs),
         tags: payload.categories,
+        ingredients: payload.ingredients,
     }
 
     const response = await fetch(`${url}/recipes/${payload.id}`, {

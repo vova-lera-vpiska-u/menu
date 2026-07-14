@@ -6,31 +6,6 @@ export type Database = {
     __InternalSupabase: {
         PostgrestVersion: '13.0.5'
     }
-    graphql_public: {
-        Tables: {
-            [_ in never]: never
-        }
-        Views: {
-            [_ in never]: never
-        }
-        Functions: {
-            graphql: {
-                Args: {
-                    extensions?: Json
-                    operationName?: string
-                    query?: string
-                    variables?: Json
-                }
-                Returns: Json
-            }
-        }
-        Enums: {
-            [_ in never]: never
-        }
-        CompositeTypes: {
-            [_ in never]: never
-        }
-    }
     public: {
         Tables: {
             categories: {
@@ -54,6 +29,7 @@ export type Database = {
                     cocktail_id: string
                     id: string
                     ingredient_id: string
+                    is_optional: boolean
                     volume: number | null
                 }
                 Insert: {
@@ -61,6 +37,7 @@ export type Database = {
                     cocktail_id: string
                     id?: string
                     ingredient_id: string
+                    is_optional?: boolean
                     volume?: number | null
                 }
                 Update: {
@@ -68,6 +45,7 @@ export type Database = {
                     cocktail_id?: string
                     id?: string
                     ingredient_id?: string
+                    is_optional?: boolean
                     volume?: number | null
                 }
                 Relationships: [
@@ -94,6 +72,7 @@ export type Database = {
                     id: string
                     method: string | null
                     name: string
+                    recipe: string | null
                 }
                 Insert: {
                     cover_url?: string | null
@@ -101,6 +80,7 @@ export type Database = {
                     id?: string
                     method?: string | null
                     name: string
+                    recipe?: string | null
                 }
                 Update: {
                     cover_url?: string | null
@@ -108,6 +88,7 @@ export type Database = {
                     id?: string
                     method?: string | null
                     name?: string
+                    recipe?: string | null
                 }
                 Relationships: [
                     {
@@ -174,19 +155,28 @@ export type Database = {
             }
             food_ingredients: {
                 Row: {
+                    amount: number | null
                     food_id: string
                     id: string
                     ingredient_id: string
+                    optional: boolean
+                    unit: string | null
                 }
                 Insert: {
+                    amount?: number | null
                     food_id: string
                     id?: string
                     ingredient_id: string
+                    optional?: boolean
+                    unit?: string | null
                 }
                 Update: {
+                    amount?: number | null
                     food_id?: string
                     id?: string
                     ingredient_id?: string
+                    optional?: boolean
+                    unit?: string | null
                 }
                 Relationships: [
                     {
@@ -418,9 +408,6 @@ export type CompositeTypes<
       : never
 
 export const Constants = {
-    graphql_public: {
-        Enums: {},
-    },
     public: {
         Enums: {},
     },

@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-07-15
+
+### Added
+
+- Recipe form now has an **Ingredients** section: rows with name, count, unit
+  (fixed dropdown: g, kg, ml, l, pcs, tsp, tbsp, pinch) and an `optional` flag,
+  plus add/remove rows. Ingredients are pre-filled on edit and saved via
+  create/update; blank rows are dropped before submit.
+
+## [0.9.0] - 2026-07-15
+
+### Fixed
+
+- Session is no longer lost on page reload. On app start the frontend calls the
+  new `GET /me` endpoint to restore auth state from the httpOnly `jwt` cookie,
+  and protected/public routes wait for the session check before redirecting, so
+  entering the app while the cookie is still valid no longer bounces the user to
+  the login screen.
+
 ## [0.8.0] - 2026-07-15
 
 ### Added

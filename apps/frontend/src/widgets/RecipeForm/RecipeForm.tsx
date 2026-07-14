@@ -21,9 +21,10 @@ import { FieldBig } from '@shared/ui/FieldBig'
 import { FieldSmall } from '@shared/ui/FieldSmall'
 import { ToggleButtonSmall } from '@shared/ui/ToggleButtonSmall'
 
+import { IngredientRow } from './IngredientRow'
 import { NutritionFactsTable } from './NutritionFactsTable'
 import * as model from './model'
-import { Nutrition } from './model'
+import { EMPTY_INGREDIENT, IngredientFormRow, Nutrition } from './model'
 
 const TIME_UNITS = ['h', 'min']
 
@@ -38,6 +39,7 @@ type RecipeFormValues = {
     setChosenCategories: (categories: Tag[]) => void
     setNutrition: (nutrition: Nutrition) => void
     setRecipeText: (recipeText: string) => void
+    setIngredients: (ingredients: IngredientFormRow[]) => void
 }
 
 // Prefill the form fields once the edited recipe (and tag list) have loaded.
@@ -46,8 +48,17 @@ const usePrefillFromRecipe = (
     categoryList: Tag[] | null,
     setters: RecipeFormValues,
 ) => {
-    const { setName, setSection, setRating, setTimeAmount, setTimeType, setChosenCategories, setNutrition, setRecipeText } =
-        setters
+    const {
+        setName,
+        setSection,
+        setRating,
+        setTimeAmount,
+        setTimeType,
+        setChosenCategories,
+        setNutrition,
+        setRecipeText,
+        setIngredients,
+    } = setters
 
     useEffect(() => {
         if (!recipe) return
@@ -55,6 +66,16 @@ const usePrefillFromRecipe = (
         setSection(recipe.category.name)
         setRating(recipe.rating ?? 0)
         setRecipeText(recipe.recipe ?? '')
+        if (recipe.ingredients.length > 0) {
+            setIngredients(
+                recipe.ingredients.map((row) => ({
+                    name: row.ingredient?.name ?? '',
+                    amount: row.amount === null ? '' : String(row.amount),
+                    unit: row.unit ?? '',
+                    optional: row.optional,
+                })),
+            )
+        }
         if (recipe.time_to_cook !== null) {
             setTimeAmount(String(recipe.time_to_cook))
             setTimeType('min')
@@ -79,6 +100,7 @@ const usePrefillFromRecipe = (
         setChosenCategories,
         setNutrition,
         setRecipeText,
+        setIngredients,
     ])
 }
 
@@ -154,6 +176,7 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
     const [image, setImage] = useState<File | null>(null)
     const [nutrition, setNutrition] = useState<Nutrition>(EMPTY_NUTRITION)
     const [recipeText, setRecipeText] = useState('')
+    const [ingredients, setIngredients] = useState<IngredientFormRow[]>([EMPTY_INGREDIENT])
     const [newTag, setNewTag] = useState('')
     const [validationError, setValidationError] = useState<string | null>(null)
 
@@ -166,6 +189,7 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
         setChosenCategories,
         setNutrition,
         setRecipeText,
+        setIngredients,
     })
     useNavigateOnSuccess(recipe?.id)
     useSelectCreatedTag(categoryList, setChosenCategories)
@@ -186,6 +210,7 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
                 name,
                 categoryId: selectedSection.id,
                 categories: chosenCategories.map((category) => category.id),
+                ingredients: cleanIngredients(ingredients),
                 recipe: recipeText.trim() || null,
                 rating: rating || null,
                 timeToCook: toMinutes(timeAmount, timeType),
@@ -199,6 +224,7 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
         createRecipeClicked({
             name,
             categories: chosenCategories.map((category) => category.id),
+            ingredients: cleanIngredients(ingredients),
             section: selectedSection.id,
             recipe: recipeText.trim() || undefined,
             rating,
@@ -217,6 +243,18 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
         if (!newTag.trim()) return
         tagCreated(newTag)
         setNewTag('')
+    }
+
+    const handleIngredientChange = (index: number, row: IngredientFormRow) => {
+        setIngredients((prev) => prev.map((current, currentIndex) => (currentIndex === index ? row : current)))
+    }
+
+    const handleIngredientRemove = (index: number) => {
+        setIngredients((prev) => (prev.length > 1 ? prev.filter((_row, currentIndex) => currentIndex !== index) : prev))
+    }
+
+    const handleIngredientAdd = () => {
+        setIngredients((prev) => [...prev, EMPTY_INGREDIENT])
     }
 
     return (
@@ -307,6 +345,23 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
             </SettingLayout>
 
             <SettingLayout columnStart={1} columnEnd={3}>
+                <Name>Ingredients</Name>
+                <IngredientsWrapper>
+                    {ingredients.map((row, index) => (
+                        <IngredientRow
+                            key={index}
+                            value={row}
+                            onChange={(value) => handleIngredientChange(index, value)}
+                            onRemove={() => handleIngredientRemove(index)}
+                        />
+                    ))}
+                    <AddRowButton type="button" onClick={handleIngredientAdd}>
+                        + Add
+                    </AddRowButton>
+                </IngredientsWrapper>
+            </SettingLayout>
+
+            <SettingLayout columnStart={1} columnEnd={3}>
                 <Name>Recipe</Name>
                 <RecipeTextArea
                     placeholder="Write something…"
@@ -351,6 +406,11 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
             </SettingLayout>
         </Layout>
     )
+}
+
+// Drop blank rows (no name) before sending ingredients to the API.
+function cleanIngredients(rows: IngredientFormRow[]): IngredientFormRow[] {
+    return rows.filter((row) => row.name.trim().length > 0)
 }
 
 // Render a nullable numeric column as an editable field string.
@@ -481,6 +541,30 @@ const AddTagButton = styled.button`
     &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+    }
+`
+
+const IngredientsWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+`
+
+const AddRowButton = styled.button`
+    align-self: flex-start;
+    padding: 0;
+
+    background-color: transparent;
+    border: none;
+    ${TEXT_SIZE_4}
+    color: ${COLORS.oliveGreen};
+
+    transition: opacity 0.2s ease;
+
+    &:hover {
+        opacity: 0.7;
     }
 `
 

@@ -60,6 +60,49 @@ const safeJsonParse = <T,>(raw: unknown, fallback: T): T => {
   }
 };
 
+// Shape the frontend sends for each ingredient row.
+type IngredientInput = {
+  name?: unknown;
+  amount?: unknown;
+  unit?: unknown;
+  optional?: unknown;
+};
+
+// Look up an ingredient by name (case-insensitive), creating it if missing.
+// Returns the ingredient id, or null when the name is blank / the write fails.
+const findOrCreateIngredient = async (rawName: unknown): Promise<string | null> => {
+  const name = typeof rawName === "string" ? rawName.trim() : "";
+  if (!name) return null;
+
+  const { data: existing } = await db.from("ingredients").select("id").ilike("name", name).limit(1);
+  if (existing && existing.length > 0) return existing[0].id;
+
+  const { data: created, error } = await db.from("ingredients").insert({ name }).select("id");
+  if (error || !created || created.length === 0) return null;
+  return created[0].id;
+};
+
+// Insert food_ingredients rows for a recipe. Returns an error message or null.
+const insertFoodIngredients = async (foodId: string, ingredients: IngredientInput[]): Promise<string | null> => {
+  const rows: TablesInsert<"food_ingredients">[] = [];
+  for (const item of ingredients) {
+    if (!item) continue;
+    const ingredientId = await findOrCreateIngredient(item.name);
+    if (!ingredientId) continue;
+    const unit = typeof item.unit === "string" && item.unit.trim() ? item.unit.trim() : null;
+    rows.push({
+      food_id: foodId,
+      ingredient_id: ingredientId,
+      amount: toNumberOrNull(item.amount),
+      unit,
+      optional: Boolean(item.optional),
+    });
+  }
+  if (rows.length === 0) return null;
+  const { error } = await db.from("food_ingredients").insert(rows);
+  return error ? error.message : null;
+};
+
 // POST /recipes
 recipesRouter.post(
   "/",
@@ -76,6 +119,7 @@ recipesRouter.post(
       //   image, timeToCook ("3h"/"20min"/"1h 30min"), rating, nutrition (JSON)
       const { name, section, rating, timeToCook, recipe: recipeText, description } = req.body;
       const tagIds = safeJsonParse<string[]>(req.body.categories, []);
+      const ingredients = safeJsonParse<IngredientInput[]>(req.body.ingredients, []);
       const nutrition = safeJsonParse<{ calories?: unknown; protein?: unknown; fat?: unknown; carbs?: unknown }>(
         req.body.nutrition,
         {}
@@ -125,6 +169,14 @@ recipesRouter.post(
         }
       }
 
+      // Link ingredients via the food_ingredients join table
+      if (Array.isArray(ingredients) && ingredients.length > 0) {
+        const ingredientsError = await insertFoodIngredients(created.id, ingredients);
+        if (ingredientsError) {
+          return res.status(207).json({ ...created, ingredientsError });
+        }
+      }
+
       res.status(201).json(created);
     } catch (err) {
       next(err);
@@ -141,9 +193,9 @@ recipesRouter.put(
       const { id } = req.params;
       const foodId = String(id);
 
-      // `tags` is not a column on food — pull it out and sync the join table
-      // separately so it isn't passed to the food update.
-      const { tags, ...foodUpdates } = req.body;
+      // `tags` and `ingredients` are not columns on food — pull them out and
+      // sync the join tables separately so they aren't passed to the update.
+      const { tags, ingredients, ...foodUpdates } = req.body;
       const updates: TablesUpdate<"food"> = foodUpdates;
 
       const { data, error } = await db.from("food").update(updates).eq("id", foodId).select();
@@ -163,6 +215,15 @@ recipesRouter.put(
           const { error: insertError } = await db.from("food_tags").insert(tagRows);
           if (insertError) return res.status(400).json({ error: insertError.message });
         }
+      }
+
+      // Replace the whole ingredient set for this recipe when the client sends it.
+      if (Array.isArray(ingredients)) {
+        const { error: deleteError } = await db.from("food_ingredients").delete().eq("food_id", foodId);
+        if (deleteError) return res.status(400).json({ error: deleteError.message });
+
+        const ingredientsError = await insertFoodIngredients(foodId, ingredients);
+        if (ingredientsError) return res.status(400).json({ error: ingredientsError });
       }
 
       res.status(200).json(data[0]);

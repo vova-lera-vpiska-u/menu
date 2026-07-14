@@ -8,12 +8,21 @@ import { userModel } from '@entities/user/model'
 import { LOGIN_PATH } from '@shared/routes/public-paths'
 
 export const ProtectedRoutes = () => {
-    const [user, redirected] = useUnit([userModel.stores.user, routingModel.events.redirected])
+    const [user, sessionChecked, redirected] = useUnit([
+        userModel.stores.user,
+        userModel.stores.sessionChecked,
+        routingModel.events.redirected,
+    ])
     const location = useLocation()
+
+    if (!sessionChecked) {
+        return null
+    }
 
     if (!user) {
         redirected(location.pathname)
+        return <Navigate to={LOGIN_PATH} replace />
     }
 
-    return user ? <Outlet /> : <Navigate to={LOGIN_PATH} replace />
+    return <Outlet />
 }
