@@ -15,7 +15,7 @@ import { Clock } from '@shared/icons/Clock'
 import { Star } from '@shared/icons/Star'
 import { HOMEPAGE_PATH, RECIPE_PATH } from '@shared/routes/shared-paths'
 import { COLORS } from '@shared/styles/colors'
-import { TEXT_SIZE_3_LIGHT, TEXT_SIZE_5 } from '@shared/styles/fonts'
+import { TEXT_SIZE_3_LIGHT, TEXT_SIZE_4, TEXT_SIZE_5 } from '@shared/styles/fonts'
 import { DropdownMenu } from '@shared/ui/DropdownMenu'
 import { FieldBig } from '@shared/ui/FieldBig'
 import { FieldSmall } from '@shared/ui/FieldSmall'
@@ -106,6 +106,22 @@ const useNavigateOnSuccess = (recipeId: string | undefined) => {
     }, [deleteDone, navigate])
 }
 
+// Once a freshly created tag shows up in the refreshed list, select it. Guarded
+// by the created id so a user who later deselects it isn't fighting the effect.
+const useSelectCreatedTag = (categoryList: Tag[] | null, setChosenCategories: (updater: (prev: Tag[]) => Tag[]) => void) => {
+    const createdTag = useUnit(model.$lastCreatedTag)
+    const handledId = useRef<string | null>(null)
+
+    useEffect(() => {
+        if (!createdTag || !categoryList) return
+        if (handledId.current === createdTag.id) return
+        const fromList = categoryList.find((category) => category.id === createdTag.id)
+        if (!fromList) return
+        handledId.current = createdTag.id
+        setChosenCategories((prev) => (prev.some((category) => category.id === fromList.id) ? prev : [...prev, fromList]))
+    }, [createdTag, categoryList, setChosenCategories])
+}
+
 type RecipeFormProps = {
     mode: 'create' | 'edit'
     recipe?: Recipe | null
@@ -116,15 +132,17 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
 
     const [sections, sectionOptions] = useUnit([model.$sections, model.$sectionOptions])
     const [categoryList, formError] = useUnit([recipesModel.$categories, model.$formError])
-    const [createRecipeClicked, updateRecipeClicked, deleteRecipeClicked] = useUnit([
+    const [createRecipeClicked, updateRecipeClicked, deleteRecipeClicked, tagCreated] = useUnit([
         model.createRecipeClicked,
         model.updateRecipeClicked,
         model.deleteRecipeClicked,
+        model.tagCreated,
     ])
-    const [creating, updating, deleting] = useUnit([
+    const [creating, updating, deleting, creatingTag] = useUnit([
         model.createRecipeFx.pending,
         model.updateRecipeFx.pending,
         model.deleteRecipeFx.pending,
+        model.createTagFx.pending,
     ])
 
     const [name, setName] = useState('')
@@ -136,6 +154,7 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
     const [image, setImage] = useState<File | null>(null)
     const [nutrition, setNutrition] = useState<Nutrition>(EMPTY_NUTRITION)
     const [recipeText, setRecipeText] = useState('')
+    const [newTag, setNewTag] = useState('')
     const [validationError, setValidationError] = useState<string | null>(null)
 
     usePrefillFromRecipe(mode === 'edit' ? recipe : null, categoryList, {
@@ -149,6 +168,7 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
         setRecipeText,
     })
     useNavigateOnSuccess(recipe?.id)
+    useSelectCreatedTag(categoryList, setChosenCategories)
 
     const saving = creating || updating
 
@@ -193,6 +213,12 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
         if (window.confirm('Delete this recipe? This action cannot be undone.')) deleteRecipeClicked(recipe.id)
     }
 
+    const handleAddTag = () => {
+        if (!newTag.trim()) return
+        tagCreated(newTag)
+        setNewTag('')
+    }
+
     return (
         <Layout onSubmit={handleSubmit}>
             <SettingLayout columnStart={1} columnEnd={3}>
@@ -218,6 +244,22 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
             <SettingLayout columnStart={1} columnEnd={3}>
                 <Name>Tags</Name>
                 <TagsWrapper>
+                    <AddTagField>
+                        <AddTagInput
+                            placeholder="New tag"
+                            value={newTag}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setNewTag(event.target.value)}
+                            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                                if (event.key === 'Enter') {
+                                    event.preventDefault()
+                                    handleAddTag()
+                                }
+                            }}
+                        />
+                        <AddTagButton type="button" onClick={handleAddTag} disabled={creatingTag || !newTag.trim()}>
+                            Add +
+                        </AddTagButton>
+                    </AddTagField>
                     {categoryList?.map((category) => (
                         <ToggleButtonSmall<Tag>
                             key={category.id}
@@ -391,6 +433,55 @@ const RateWrapper = styled.div`
     flex: none;
     order: 1;
     flex-grow: 0;
+`
+
+const AddTagField = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 4px;
+`
+
+const AddTagInput = styled.input`
+    width: 96px;
+    box-sizing: border-box;
+    padding: 8px;
+
+    background-color: transparent;
+    border: 1px solid ${COLORS.oliveGreen};
+    border-radius: 4px;
+    ${TEXT_SIZE_4}
+    color: ${COLORS.white};
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    &::placeholder {
+        color: ${COLORS.oliveGreenDisable};
+    }
+`
+
+const AddTagButton = styled.button`
+    padding: 8px 16px;
+    box-sizing: border-box;
+
+    background-color: transparent;
+    border: 1px solid ${COLORS.oliveGreen};
+    border-radius: 4px;
+    ${TEXT_SIZE_4}
+    color: ${COLORS.oliveGreen};
+    white-space: nowrap;
+
+    transition: opacity 0.2s ease;
+
+    &:hover:not(:disabled) {
+        opacity: 0.7;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 `
 
 const TagsWrapper = styled.div`

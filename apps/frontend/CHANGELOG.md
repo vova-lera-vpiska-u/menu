@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-07-15
+
+### Added
+
+- Tags section in the recipe form now has an **Add +** control to create a new
+  tag inline (`POST /categories`). The tag list refreshes and the new tag is
+  auto-selected.
+
 ## [0.7.0] - 2026-07-15
 
 ### Added

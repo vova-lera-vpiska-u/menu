@@ -5,7 +5,7 @@ import { recipesModel } from '@entities/recipe'
 
 import { url } from '@shared/api/consts'
 import { db } from '@shared/api/db'
-import { Category } from '@shared/api/recipes'
+import { Category, Tag } from '@shared/api/recipes'
 
 // types
 export type Nutrition = {
@@ -85,6 +85,17 @@ export const updateRecipeFx = createEffect(async (payload: UpdateRecipePayload) 
     if (!response.ok) throw new Error(String(response.status))
 })
 
+export const createTagFx = createEffect(async (name: string): Promise<Tag> => {
+    const response = await fetch(`${url}/categories`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+    })
+    if (!response.ok) throw new Error(String(response.status))
+    return await response.json()
+})
+
 export const deleteRecipeFx = createEffect(async (id: string) => {
     const response = await fetch(`${url}/recipes/${id}`, {
         method: 'DELETE',
@@ -102,11 +113,13 @@ export const $sectionOptions = $sections.map((sections) => sections?.map((sectio
 export const $formError = createStore<string | null>(null)
 export const $updateDoneCount = createStore(0)
 export const $deleteDoneCount = createStore(0)
+export const $lastCreatedTag = createStore<Tag | null>(null)
 
 // events
 export const createRecipeClicked = createEvent<CreateRecipePayload>()
 export const updateRecipeClicked = createEvent<UpdateRecipePayload>()
 export const deleteRecipeClicked = createEvent<string>()
+export const tagCreated = createEvent<string>()
 
 // logic
 sample({
@@ -130,18 +143,45 @@ sample({
 })
 
 sample({
+    clock: tagCreated,
+    filter: (name) => name.trim().length > 0,
+    fn: (name) => name.trim(),
+    target: createTagFx,
+})
+
+sample({
     clock: getSectionsFx.doneData,
     target: $sections,
 })
 
+// Refresh the tag list after a new tag is created, then remember the created
+// tag so the form can auto-select it once the refreshed list arrives.
 sample({
-    clock: [createRecipeClicked, updateRecipeClicked, createRecipeFx.done, updateRecipeFx.done, deleteRecipeClicked],
+    clock: createTagFx.done,
+    target: recipesModel.getCategoriesFx,
+})
+
+sample({
+    clock: createTagFx.doneData,
+    target: $lastCreatedTag,
+})
+
+sample({
+    clock: [
+        createRecipeClicked,
+        updateRecipeClicked,
+        createRecipeFx.done,
+        updateRecipeFx.done,
+        deleteRecipeClicked,
+        tagCreated,
+        createTagFx.done,
+    ],
     fn: () => null,
     target: $formError,
 })
 
 sample({
-    clock: [createRecipeFx.failData, updateRecipeFx.failData, deleteRecipeFx.failData],
+    clock: [createRecipeFx.failData, updateRecipeFx.failData, deleteRecipeFx.failData, createTagFx.failData],
     fn: (error) => (error.message === '401' ? 'Session expired — please log in again' : 'Something went wrong'),
     target: $formError,
 })
@@ -154,6 +194,9 @@ sample({
 
 $updateDoneCount.on(updateRecipeFx.done, (count) => count + 1)
 $deleteDoneCount.on(deleteRecipeFx.done, (count) => count + 1)
+
+// Clear the "just created" tag on (re)mount so a stale one isn't auto-selected.
+$lastCreatedTag.reset(RecipeFormGate.open)
 
 // utility functions
 function toNumberOrNull(raw?: string): number | null {
