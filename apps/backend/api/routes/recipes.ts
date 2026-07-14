@@ -90,12 +90,14 @@ const insertFoodIngredients = async (foodId: string, ingredients: IngredientInpu
     const ingredientId = await findOrCreateIngredient(item.name);
     if (!ingredientId) continue;
     const unit = typeof item.unit === "string" && item.unit.trim() ? item.unit.trim() : null;
+    // Preserve the order the user arranged rows in — position drives display order.
     rows.push({
       food_id: foodId,
       ingredient_id: ingredientId,
       amount: toNumberOrNull(item.amount),
       unit,
       optional: Boolean(item.optional),
+      position: rows.length,
     });
   }
   if (rows.length === 0) return null;

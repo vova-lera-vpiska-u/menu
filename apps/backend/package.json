@@ -2,7 +2,7 @@
   "name": "@menu/backend",
   "private": true,
   "type": "module",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-esm --esm api/index.ts",

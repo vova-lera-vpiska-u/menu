@@ -23,16 +23,36 @@ const FOOD_SELECT =
     '*, category:categories!inner(*), tags:food_tags(tag:tags(*)), ingredients:food_ingredients(amount, unit, optional, ingredient:ingredients(*))'
 
 export const getRecipesFx = createEffect(async (name?: string): Promise<Recipe[] | null> => {
-    if (name) return (await db.from('food').select(FOOD_SELECT).like('name', `%${name}%`)).data
-    return (await db.from('food').select(FOOD_SELECT)).data
+    if (name)
+        return (
+            await db
+                .from('food')
+                .select(FOOD_SELECT)
+                .like('name', `%${name}%`)
+                .order('position', { referencedTable: 'food_ingredients' })
+        ).data
+    return (await db.from('food').select(FOOD_SELECT).order('position', { referencedTable: 'food_ingredients' })).data
 })
 
 export const getSectionRecipesFx = createEffect(async (section: string) => {
-    return (await db.from('food').select(FOOD_SELECT).eq('categories.name', section)).data
+    return (
+        await db
+            .from('food')
+            .select(FOOD_SELECT)
+            .eq('categories.name', section)
+            .order('position', { referencedTable: 'food_ingredients' })
+    ).data
 })
 
 export const getRecipeFx = createEffect(async (id: string) => {
-    return (await db.from('food').select(FOOD_SELECT).eq('id', id).single()).data
+    return (
+        await db
+            .from('food')
+            .select(FOOD_SELECT)
+            .eq('id', id)
+            .order('position', { referencedTable: 'food_ingredients' })
+            .single()
+    ).data
 })
 
 export type UpdateRecipeRequest = { recipe: Recipe; id: string }

@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-07-15
+
+### Added
+
+- `food_ingredients` now has a `position` column and a public read policy.
+  Recipe writes persist each ingredient row's position by array index so the
+  arranged order is preserved, and the anon client can read the join table
+  (previously blocked by RLS with no SELECT policy). See migrations
+  `food_ingredients_position.sql` and `food_ingredients_public_read.sql`.
+
+## [1.2.1] - 2026-07-15
+
+### Fixed
+
+- Auth session lifetime bumped from 24h to 30 days: the `/login` JWT
+  (`expiresIn`) and the httpOnly `jwt` cookie `expires` now both last 30 days,
+  so the single admin no longer gets logged out daily.
+- Logout now clears the `jwt` cookie with matching `sameSite: "none"` so the
+  cookie is reliably removed (attributes must match the ones set on `/login`).
+
 ## [1.2.0] - 2026-07-15
 
 ### Added

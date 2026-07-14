@@ -17,13 +17,13 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
                 navigate(`/recipes/${recipe.id}`)
             }}
         >
-            {recipe.ingredients && (
+            {recipe.ingredients && recipe.ingredients.length > 0 && (
                 <Ingredients>
-                    ingredients
+                    <IngredientsLabel>Ingredients</IngredientsLabel>
                     <Divider />
                     <IngredientsGrid amount={recipe.ingredients.length}>
                         {recipe.ingredients.map(({ ingredient }) => (
-                            <div key={ingredient?.name}>{ingredient?.name}</div>
+                            <IngredientItem key={ingredient?.name}>{ingredient?.name}</IngredientItem>
                         ))}
                     </IngredientsGrid>
                 </Ingredients>
@@ -34,7 +34,10 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
                     {recipe.time_to_cook && (
                         <>
                             <Clock height="20" width="20" />
-                            {recipe.time_to_cook}
+                            <TimeValue>
+                                <span>{recipe.time_to_cook}</span>
+                                <span>min</span>
+                            </TimeValue>
                         </>
                     )}
                 </Time>
@@ -78,12 +81,34 @@ const Time = styled.div`
     display: flex;
     align-items: center;
     gap: 6px;
+    font-size: 20px;
+    line-height: 1.2;
+    color: ${COLORS.lightGray};
+`
+
+const TimeValue = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 3px;
 `
 
 const Ingredients = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 6px;
+`
+
+const IngredientsLabel = styled.span`
+    font-size: 20px;
+    line-height: 1.2;
+    color: ${COLORS.lightGray};
+`
+
+const IngredientItem = styled.div`
+    font-size: 20px;
+    line-height: 1.2;
+    color: ${COLORS.white};
 `
 
 const Divider = styled.div`

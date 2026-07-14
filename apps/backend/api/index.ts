@@ -46,14 +46,14 @@ app.post("/login", async (req: express.Request, res: express.Response) => {
   const adminPassword = process.env.ADMIN_PASSWORD;
 
   if (username === "admin" && password === adminPassword) {
-    const token = jsonwebtoken.sign({ username, role: "admin" }, getPrivateKey(), { algorithm: "RS256", expiresIn: "24h" });
+    const token = jsonwebtoken.sign({ username, role: "admin" }, getPrivateKey(), { algorithm: "RS256", expiresIn: "30d" });
 
     return res
       .cookie("jwt", token, {
         secure: process.env.NODE_ENV !== "development",
         httpOnly: true,
         sameSite: "none",
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       })
       .status(200)
       .send("");
@@ -78,6 +78,7 @@ app.post("/logout", (_req: express.Request, res: express.Response) => {
     .clearCookie("jwt", {
       secure: process.env.NODE_ENV !== "development",
       httpOnly: true,
+      sameSite: "none",
     })
     .status(200)
     .send("OK");

@@ -160,6 +160,7 @@ export type Database = {
                     id: string
                     ingredient_id: string
                     optional: boolean
+                    position: number
                     unit: string | null
                 }
                 Insert: {
@@ -168,6 +169,7 @@ export type Database = {
                     id?: string
                     ingredient_id: string
                     optional?: boolean
+                    position?: number
                     unit?: string | null
                 }
                 Update: {
@@ -176,6 +178,7 @@ export type Database = {
                     id?: string
                     ingredient_id?: string
                     optional?: boolean
+                    position?: number
                     unit?: string | null
                 }
                 Relationships: [

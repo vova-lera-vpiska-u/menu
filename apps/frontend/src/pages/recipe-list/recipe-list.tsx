@@ -5,7 +5,6 @@ import styled from 'styled-components'
 
 import { Filters } from '@widgets/Filters'
 import { GoBackButton } from '@widgets/GoBackButton'
-import { Logo } from '@widgets/Logo'
 import { RecipeCard } from '@widgets/RecipeCard'
 
 import { recipesModel } from '@entities/recipe'
@@ -18,9 +17,17 @@ import { useHideNavbarOnScroll } from './use-hide-navbar-on-scroll'
 
 export const RecipeList = ({ title }: { title: string }) => {
     useGate(model.RecipesListGate, title)
-    const menu = useUnit(recipesModel.$recipes)
+    const [menu, sectionPending, allPending] = useUnit([
+        recipesModel.$recipes,
+        recipesModel.getSectionRecipesFx.pending,
+        recipesModel.getRecipesFx.pending,
+    ])
     const visible = useHideNavbarOnScroll()
     const [filter, setFilter] = useState<string | null>(null)
+
+    // `menu === null` means the first load hasn't resolved yet; an empty array
+    // means the category resolved but simply has no recipes.
+    const isLoading = sectionPending || allPending || menu === null
 
     const filteredMenu = useMemo(() => {
         if (!menu) return []
@@ -30,37 +37,33 @@ export const RecipeList = ({ title }: { title: string }) => {
         return menu
     }, [filter, menu])
 
+    const filterList = useMemo(() => {
+        const names = (menu ?? [])
+            .flatMap((recipe) => recipe.tags.map((category) => category.tag?.name))
+            .filter((name): name is string => Boolean(name))
+        return [...new Set(names)]
+    }, [menu])
+
     return (
         <Layout>
-            {filteredMenu.length > 0 ? (
-                <>
-                    <Flex>
-                        {filteredMenu.map((recipe) => (
-                            <RecipeCard key={recipe.name} recipe={recipe} />
-                        ))}
-                    </Flex>
-                    <Navbar $hidden={!visible}>
-                        <Logo />
-                        <GoBackButton />
-                        <Title>{title}</Title>
-                        <Filters
-                            selected={filter}
-                            setSelected={setFilter}
-                            filterList={[
-                                ...new Set(
-                                    (
-                                        (menu || [])
-                                            .map((recipe) => recipe.tags.map((category) => category.tag?.name))
-                                            .filter(Boolean) as string[][]
-                                    ).flat(),
-                                ),
-                            ]}
-                        />
-                    </Navbar>
-                </>
-            ) : (
-                <Center>Loading</Center>
-            )}
+            <Flex>
+                {isLoading ? (
+                    <Center>Loading</Center>
+                ) : filteredMenu.length > 0 ? (
+                    filteredMenu.map((recipe) => <RecipeCard key={recipe.name} recipe={recipe} />)
+                ) : (
+                    <Empty>В этой категории пока нет рецептов</Empty>
+                )}
+            </Flex>
+            <Navbar $hidden={!visible}>
+                <Header>
+                    <GoBackButton />
+                    <Title>{title}</Title>
+                </Header>
+                {!isLoading && filterList.length > 0 && (
+                    <Filters selected={filter} setSelected={setFilter} filterList={filterList} />
+                )}
+            </Navbar>
         </Layout>
     )
 }
@@ -71,11 +74,23 @@ const Layout = styled.div`
     max-width: 100%;
 `
 
+const Header = styled.div`
+    position: relative;
+    height: 3.625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+
+const Empty = styled.div`
+    padding-top: 2rem;
+    text-align: center;
+    color: #d8d8d8;
+`
+
 const Title = styled.h2`
-    height: 20px;
     margin: 0;
-    padding-bottom: 8px;
-    text-align: start;
+    text-align: center;
 
     font-family: 'Enthalpy 298';
     font-style: normal;
@@ -86,7 +101,7 @@ const Title = styled.h2`
 `
 
 const Flex = styled.div`
-    margin-top: 165px;
+    margin-top: 126px;
     padding-top: 10px;
     padding-bottom: 20px;
     display: flex;

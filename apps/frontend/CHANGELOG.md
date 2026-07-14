@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-07-15
+
+### Added
+
+- Recipe cards now display the full info: cook time with a `min` label,
+  the star rating, and the ingredient list (columns of up to five) under an
+  `Ingredients` divider.
+- Recipe page now renders the **Ingredients** section (name + amount/unit,
+  optional items marked with a `*` in their normal position, not moved to the
+  end), the **Recipe** section with preserved line breaks, and a nutrition
+  table (Calories / Proteins / Fats / Carbohydrates).
+- Category list shows an explicit empty state ("В этой категории пока нет
+  рецептов") instead of hanging on the loading placeholder.
+
+### Changed
+
+- Category list header now matches the design: back button on the left and a
+  centered category title (the standalone logo/search was removed here).
+- Ingredients are fetched and displayed in a stable order, sorted by the new
+  `food_ingredients.position` column.
+
+### Fixed
+
+- Category pages that resolve to zero recipes no longer show an endless
+  "Loading" spinner with no way back — loading (`null`) is now distinguished
+  from a resolved-but-empty (`[]`) result, and the header stays visible.
+
 ## [0.10.0] - 2026-07-15
 
 ### Added
