@@ -32,7 +32,7 @@ export type CreateRecipePayload = {
     section: string
     categories: string[]
     ingredients: IngredientFormRow[]
-    image: File
+    image?: File | null
     recipe?: string
     timeToCook?: string
     rating?: number
@@ -57,7 +57,7 @@ export const getSectionsFx = createEffect(async (): Promise<Category[] | null> =
     return data
 })
 
-export const createRecipeFx = createEffect(async (payload: CreateRecipePayload) => {
+export const createRecipeFx = createEffect(async (payload: CreateRecipePayload): Promise<string> => {
     const formData = new FormData()
     formData.append('name', payload.name)
     formData.append('section', payload.section)
@@ -67,7 +67,7 @@ export const createRecipeFx = createEffect(async (payload: CreateRecipePayload) 
     if (payload.timeToCook) formData.append('timeToCook', payload.timeToCook)
     if (payload.rating) formData.append('rating', payload.rating.toString())
     if (payload.nutrition) formData.append('nutrition', JSON.stringify(payload.nutrition))
-    formData.append('image', payload.image)
+    if (payload.image) formData.append('image', payload.image)
 
     const response = await fetch(`${url}/recipes`, {
         method: 'POST',
@@ -75,6 +75,9 @@ export const createRecipeFx = createEffect(async (payload: CreateRecipePayload) 
         body: formData,
     })
     if (!response.ok) throw new Error(String(response.status))
+
+    const created: { id: string } = await response.json()
+    return created.id
 })
 
 export const updateRecipeFx = createEffect(async (payload: UpdateRecipePayload) => {
@@ -129,6 +132,7 @@ export const $sectionOptions = $sections.map((sections) => sections?.map((sectio
 export const $formError = createStore<string | null>(null)
 export const $updateDoneCount = createStore(0)
 export const $deleteDoneCount = createStore(0)
+export const $createdRecipeId = createStore<string | null>(null)
 export const $lastCreatedTag = createStore<Tag | null>(null)
 
 // events
@@ -210,9 +214,13 @@ sample({
 
 $updateDoneCount.on(updateRecipeFx.done, (count) => count + 1)
 $deleteDoneCount.on(deleteRecipeFx.done, (count) => count + 1)
+$createdRecipeId.on(createRecipeFx.doneData, (_, id) => id)
 
 // Clear the "just created" tag on (re)mount so a stale one isn't auto-selected.
 $lastCreatedTag.reset(RecipeFormGate.open)
+
+// Clear a stale created id on (re)mount so we don't navigate away immediately.
+$createdRecipeId.reset(RecipeFormGate.open)
 
 // utility functions
 function toNumberOrNull(raw?: string): number | null {

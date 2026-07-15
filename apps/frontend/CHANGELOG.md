@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-07-15
+
+### Changed
+
+- After creating a recipe the app now navigates straight to the new recipe's
+  page instead of staying on the form.
+- Recipe creation now requires only a name and a category; the image is
+  optional (label updated to "Upload image (optional)").
+
 ## [0.11.0] - 2026-07-15
 
 ### Added

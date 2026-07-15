@@ -112,13 +112,9 @@ recipesRouter.post(
   upload.single("image"),
   async (req: MulterRequest, res: express.Response, next: express.NextFunction) => {
     try {
-      if (!req.file) {
-        return res.status(400).json({ error: "Image file is required" });
-      }
-
       // Frontend sends multipart/form-data:
       //   name, section (= categories.id), categories (JSON tags.id[]),
-      //   image, timeToCook ("3h"/"20min"/"1h 30min"), rating, nutrition (JSON)
+      //   image (optional), timeToCook ("3h"/"20min"/"1h 30min"), rating, nutrition (JSON)
       const { name, section, rating, timeToCook, recipe: recipeText, description } = req.body;
       const tagIds = safeJsonParse<string[]>(req.body.categories, []);
       const ingredients = safeJsonParse<IngredientInput[]>(req.body.ingredients, []);
@@ -127,12 +123,16 @@ recipesRouter.post(
         {}
       );
 
-      // Upload image to Vercel Blob
-      const blobFilename = `recipes/${uuidv4()}${path.extname(req.file.originalname)}`;
-      const { url: cover_url } = await put(blobFilename, req.file.buffer, {
-        access: "public",
-        contentType: req.file.mimetype,
-      });
+      // Upload image to Vercel Blob when one was provided; otherwise leave cover empty.
+      let cover_url: string | null = null;
+      if (req.file) {
+        const blobFilename = `recipes/${uuidv4()}${path.extname(req.file.originalname)}`;
+        const uploaded = await put(blobFilename, req.file.buffer, {
+          access: "public",
+          contentType: req.file.mimetype,
+        });
+        cover_url = uploaded.url;
+      }
 
       // Build insert object
       const newRecipe: TablesInsert<"food"> = {

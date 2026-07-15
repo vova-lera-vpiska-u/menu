@@ -109,7 +109,11 @@ const usePrefillFromRecipe = (
 // avoid navigating on mount just because a previous edit already succeeded.
 const useNavigateOnSuccess = (recipeId: string | undefined) => {
     const navigate = useNavigate()
-    const [updateDone, deleteDone] = useUnit([model.$updateDoneCount, model.$deleteDoneCount])
+    const [updateDone, deleteDone, createdRecipeId] = useUnit([
+        model.$updateDoneCount,
+        model.$deleteDoneCount,
+        model.$createdRecipeId,
+    ])
     const baselineUpdate = useRef(updateDone)
     const baselineDelete = useRef(deleteDone)
 
@@ -126,6 +130,10 @@ const useNavigateOnSuccess = (recipeId: string | undefined) => {
             navigate(HOMEPAGE_PATH)
         }
     }, [deleteDone, navigate])
+
+    useEffect(() => {
+        if (createdRecipeId) navigate(RECIPE_PATH.replace(':id', createdRecipeId))
+    }, [createdRecipeId, navigate])
 }
 
 // Once a freshly created tag shows up in the refreshed list, select it. Guarded
@@ -219,7 +227,6 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
             return
         }
 
-        if (!image) return setValidationError('Upload an image')
         setValidationError(null)
         createRecipeClicked({
             name,
@@ -379,7 +386,7 @@ export const RecipeForm = ({ mode, recipe }: RecipeFormProps) => {
 
             {mode === 'create' && (
                 <SettingLayout columnStart={1} columnEnd={3}>
-                    <Name>Upload image</Name>
+                    <Name>Upload image (optional)</Name>
                     <FilesInput
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                             setImage(event.target.files ? event.target.files[0] : null)

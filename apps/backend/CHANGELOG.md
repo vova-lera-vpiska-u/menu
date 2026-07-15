@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.3] - 2026-07-15
+
+### Changed
+
+- `POST /recipes` no longer requires an image. When no file is sent the recipe
+  is created with an empty `cover_url` instead of returning a 400.
+
 ## [1.2.2] - 2026-07-15
 
 ### Added
