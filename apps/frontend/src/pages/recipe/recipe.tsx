@@ -19,14 +19,18 @@ import { Image } from '@shared/ui/image'
 import { Rating } from '@shared/ui/rating'
 
 // Pulls the data plate up so it overlaps the cover image by the header's height.
-const usePlateOverlap = (headerRef: RefObject<HTMLDivElement>, plateRef: RefObject<HTMLDivElement>) => {
+// Without a cover there's nothing to overlap, so the plate stays in normal flow
+// instead of being dragged up onto the nav.
+const usePlateOverlap = (headerRef: RefObject<HTMLDivElement>, plateRef: RefObject<HTMLDivElement>, hasCover: boolean) => {
     useLayoutEffect(() => {
         const header = headerRef.current
         const plate = plateRef.current
+        if (!plate) return
 
-        if (header && plate) {
-            const headerHeight = header.offsetHeight
-            plate.style.marginTop = `${-headerHeight - 30}px`
+        if (header && hasCover) {
+            plate.style.marginTop = `${-header.offsetHeight - 30}px`
+        } else {
+            plate.style.marginTop = ''
         }
     })
 }
@@ -38,15 +42,18 @@ export const Recipe = () => {
     const headerRef = useRef<HTMLDivElement>(null)
     const plateRef = useRef<HTMLDivElement>(null)
 
-    usePlateOverlap(headerRef, plateRef)
-
     const [recipe, categories, user] = useUnit([
         recipesModel.$recipe,
         recipesModel.$categories,
         userModel.stores.user,
     ])
 
+    usePlateOverlap(headerRef, plateRef, Boolean(recipe?.cover_url))
+
     if (!recipe || !id || !categories) return null
+
+    const hasNutrition =
+        recipe.calories != null || recipe.protein != null || recipe.fat != null || recipe.carbs != null
 
     return (
         <Page>
@@ -94,24 +101,26 @@ export const Recipe = () => {
                         <RecipeText>{recipe.recipe}</RecipeText>
                     </Section>
                 )}
-                <NutritionTable>
-                    <NutritionCell>
-                        <NutritionName>Calories</NutritionName>
-                        <NutritionValue>{recipe.calories ?? '—'}</NutritionValue>
-                    </NutritionCell>
-                    <NutritionCell>
-                        <NutritionName>Proteins</NutritionName>
-                        <NutritionValue>{recipe.protein ?? '—'}</NutritionValue>
-                    </NutritionCell>
-                    <NutritionCell>
-                        <NutritionName>Fats</NutritionName>
-                        <NutritionValue>{recipe.fat ?? '—'}</NutritionValue>
-                    </NutritionCell>
-                    <NutritionCell>
-                        <NutritionName>Carbohydrates</NutritionName>
-                        <NutritionValue>{recipe.carbs ?? '—'}</NutritionValue>
-                    </NutritionCell>
-                </NutritionTable>
+                {hasNutrition && (
+                    <NutritionTable>
+                        <NutritionCell>
+                            <NutritionName>Calories</NutritionName>
+                            <NutritionValue>{recipe.calories ?? '—'}</NutritionValue>
+                        </NutritionCell>
+                        <NutritionCell>
+                            <NutritionName>Proteins</NutritionName>
+                            <NutritionValue>{recipe.protein ?? '—'}</NutritionValue>
+                        </NutritionCell>
+                        <NutritionCell>
+                            <NutritionName>Fats</NutritionName>
+                            <NutritionValue>{recipe.fat ?? '—'}</NutritionValue>
+                        </NutritionCell>
+                        <NutritionCell>
+                            <NutritionName>Carbohydrates</NutritionName>
+                            <NutritionValue>{recipe.carbs ?? '—'}</NutritionValue>
+                        </NutritionCell>
+                    </NutritionTable>
+                )}
             </DataPlate>
         </Page>
     )
